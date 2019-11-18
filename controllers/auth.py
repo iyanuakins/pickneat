@@ -38,29 +38,15 @@ def login_handler(request, database):
     #Remembers Logged In User
     session["username"] = user[0]["username"]
 
-
     #Handles DashBoard Display
-    logged_in(database=database)
+    return logged_in(database=database)
 
 
 def logged_in(database):
     if not session.get("username"):
         return redirect("/login")
 
-    #Recieves Information about User from Database
-    user = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))
-        
-    #Displays appropriate Page Based On User Detail
-    if user[0]["user_type"] == "user" or (user[0]["user_type"] == "vendor" and user[0]["user_view"] == "user"):
-        return render_template("user_dashboard.html")
-
-    if user[0]["user_type"] == "admin":
-        return render_template("admin_dashboard.html")
-
-    if user[0]["user_type"] == "vendor":
-        return render_template("vendor_dashboard.html")
-    
-    return redirect("/login")
+    return redirect("/dashboard")
 
 
 def error(message, code):
