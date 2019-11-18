@@ -1,5 +1,7 @@
 import os
+from datetime import datetime
 
+from controllers.auth import login_handler
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session
 from flask_session import Session
@@ -27,6 +29,7 @@ def after_request(response):
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+app.config["secret_key"] = 'UNIQUE_SECRET_KEY'
 Session(app)
 
 # Configure CS50 Library to use SQLite database
@@ -34,3 +37,6 @@ db = SQL("sqlite:///pickneat.db")
 
 app = Flask(__name__)
 
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    return login_handler(request, database=db)
