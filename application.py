@@ -7,7 +7,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from controllers.error import error
-from controllers.auth import register_handler
+from controllers.auth import login_handler,register_handler
 
 # Configure application
 app = Flask(__name__)
@@ -23,7 +23,6 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
@@ -36,3 +35,7 @@ db = SQL("sqlite:///pickneat.db")
 @app.route("/register", methods=["GET", "POST"])
 def register():
     return register_handler(request, database = db)
+  
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    return login_handler(request, database=db)
