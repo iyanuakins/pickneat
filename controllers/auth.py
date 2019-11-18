@@ -56,7 +56,7 @@ def login_handler(request, database):
     #Handles Logged In State
     try:
         if session.get("username"):
-            return logged_in(database=database)
+            return logged_in()
     except:
         pass
 
@@ -89,10 +89,10 @@ def login_handler(request, database):
     session["username"] = user[0]["username"]
 
     #Handles DashBoard Display
-    return logged_in(database=database)
+    return logged_in()
 
 
-def logged_in(database):
+def logged_in():
     if not session.get("username"):
         return redirect("/login")
 
