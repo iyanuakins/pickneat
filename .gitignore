@@ -1,5 +1,7 @@
 pickneat.db
-env/
-__pycache__/
+env/*
+__pycache__/*
 .gitignore
-templates/
+templates/*
+flask_session/*
+controllers/*
