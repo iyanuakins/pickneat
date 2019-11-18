@@ -1,5 +1,6 @@
 pickneat.db
 venv/*
+.vscode/*
 **/__pycache__
 env/*
 flask_session
