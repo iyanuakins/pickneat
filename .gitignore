@@ -1,1 +1,5 @@
 pickneat.db
+env/
+__pycache__/
+.gitignore
+templates/
