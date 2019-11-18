@@ -2,3 +2,5 @@ pickneat.db
 venv/*
 **/__pycache__
 env/*
+flask_session
+env/

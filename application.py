@@ -8,6 +8,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from controllers.error import error
 from controllers.auth import login_handler,register_handler
+from controllers.dashboard import dashboard_handler
 
 # Configure application
 app = Flask(__name__)
@@ -39,3 +40,7 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     return login_handler(request, database=db)
+
+@app.route("/dashboard")
+def dashboard():
+    return dashboard_handler(database=db)

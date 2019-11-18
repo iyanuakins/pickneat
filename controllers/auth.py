@@ -1,5 +1,6 @@
 from flask import render_template, session, redirect
 from werkzeug.security import check_password_hash, generate_password_hash
+from controllers.error import error
 
 #Registration Handler
 def register_handler(request, database):
