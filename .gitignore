@@ -1,7 +1,13 @@
 pickneat.db
+env/
+flask_session/
+templates/
+__pycache__/
+
+
 env/*
 __pycache__/*
 .gitignore
 templates/*
 flask_session/*
-controllers/*
+
