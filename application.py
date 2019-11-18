@@ -1,12 +1,12 @@
-
-
+import os
+from datetime import datetime
 from cs50 import SQL
 from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-
+from controllers.auth import login_handler,register_handler
 
 # # Configure application
 app = Flask(__name__)
@@ -22,7 +22,6 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
@@ -32,6 +31,10 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///pickneat.db")
 
-@app.route("/")
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    return register_handler(request, database = db)
+  
+@app.route("/login", methods=["GET", "POST"])
 def login():
-    return render_template("index.html")
+    return login_handler(request, database=db)
