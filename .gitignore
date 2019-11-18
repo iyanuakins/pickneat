@@ -1,4 +1,5 @@
 pickneat.db
 venv/*
+.vscode/*
 **/__pycache__
 env/*

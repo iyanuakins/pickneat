@@ -1,18 +1,17 @@
 import os
 from datetime import datetime
 from cs50 import SQL
-from flask import Flask, flash, jsonify, redirect, render_template, request, session
+from flask import Flask, flash, jsonify, redirect, render_template, request, session, url_for
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-from controllers.error import error
 from controllers.auth import login_handler,register_handler
 
-# Configure application
+# # Configure application
 app = Flask(__name__)
 
-# Ensure templates are auto-reloaded
+# # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 # Ensure responses aren't cached
