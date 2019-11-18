@@ -8,6 +8,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from controllers.auth import login_handler,register_handler
 from controllers.dashboard import dashboard_handler
+from controllers.profile import profile_handler
 
 # # Configure application
 app = Flask(__name__)
@@ -30,16 +31,20 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///pickneat.db")
+database = SQL("sqlite:///pickneat.db")
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    return register_handler(request, database = db)
+    return register_handler(request, database)
   
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return login_handler(request, database=db)
+    return login_handler(request, database)
 
 @app.route("/dashboard")
 def dashboard():
-    return dashboard_handler(database=db)
+    return dashboard_handler(database)
+
+@app.route("/profile")
+def profile():
+    return profile_handler(request, database)
