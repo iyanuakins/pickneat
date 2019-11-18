@@ -1,1 +1,3 @@
 pickneat.db
+venv/*
+.vscode/*
