@@ -9,6 +9,7 @@ def dashboard_handler(database):
     #Retrieves User Information To Enable Processing
     user = database.execute("SELECT (user_type, user_view) FROM users WHERE username=:username", username=session.get("username"))
     session["user_type"] = user[0]["user_type"]
+    session["user_view"] = user[0]["user_view"]
     user_type = user[0]["user_type"]
     user_view = user[0]["user_view"]
 
