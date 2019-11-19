@@ -15,19 +15,18 @@
 </head>
 <body>
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
-                <a class="navbar-brand" href="/"><span class="blue">Pick</span><span class="red">n</span><span class="yellow">Eat</span><span class="green"></a>
+                <a class="navbar-brand" href="/dashboard"><span class="green">Pick</span><span class="white">n</span><span class="green">Eat</span><span class="green"></a>
                 <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbar">
                         <ul class="navbar-nav ml-auto mt-2">
-                                <li class="nav-item"><a class="nav-link" href="/profile">{{username}}</a></li>
-                            <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                                <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{username}}</span></a></li>
+                            <li class="nav-item"><a class="nav-link" href="/logout"><span class="btn btn-danger">Log Out</span></a></li>
                         </ul>
                 </div>
             </nav>
 
-            <main class="container p-5">
                     <div class="wrapper">
                             <!-- Sidebar Holder -->
                             <nav id="sidebar">
@@ -78,11 +77,11 @@
                                         <span></span>
                                     </label>
                                 </div>
-                                
-                                {% block main %}{% endblock main %}
+                                <main>
+                                    {% block main %}{% endblock main %}
+                                </main>
                                 
                             </div>
-            </main>
             <script>
                 let isSidebarActive = false;
                 $("document").ready(function(){
