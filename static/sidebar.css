@@ -1,0 +1,201 @@
+.sidebar {
+    position: relative;
+    top:0;
+    left:0;
+    width:250px;
+    transition: all 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+    box-shadow: inset -1px 0 10px rgba(0, 0, 0, 0.4);
+    background: #e9ecef;
+    /* height: 40rem; */
+}
+.sidebar:after {
+    content: '';
+    background-color: #253238;
+    position: absolute;
+    top: 0;
+    z-index: -1;
+    height: 100%;
+    width: 58px;
+}
+.sidebar ul {
+    list-style:none;
+    padding-left:10px;
+}
+.sidebar ul li {
+    padding:10px;
+    border-bottom: #64917c 1px solid;
+}
+.sidebar ul li a {
+    color:#343a40;
+    display:block;
+    padding-left:50px;
+}
+.sidebar ul li i {
+    float:left;
+    color:grey;
+    margin-left:-58px;
+    font-size:24px;
+    padding-left:20px;
+}
+.sidebar ul li:hover {
+    background:#343a40;
+    color:#fff;
+}
+.sidebar ul li a:hover {
+    color:#fff;
+    text-decoration:none;
+}
+/* .sidebar ul li:hover i {
+    background:#343a40;
+    color:#fff;
+    text-decoration:none;
+} */
+.sidebar ul li a.active {
+    border-left: #28a745 5px solid;
+    color: #237e38;
+    font-size: 1.25em;
+    height: 100%;
+    /* background:#28a745;
+    color: rgb(209, 243, 213); */
+}
+
+.sidebar ul li:hover a.active {
+    background:#28a745;
+    color: #343a40;
+}
+
+/* ---------------------------------------------------
+    SIDEBAR STYLE
+----------------------------------------------------- */
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+    perspective: 1500px;
+}
+
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    transition: all 300ms cubic-bezier(0.65, 0.05, 0.36, 1);
+    box-shadow: inset -1px 0 10px rgba(0, 0, 0, 0.4);
+    background: #e9ecef;
+    transform-origin: bottom left;
+}
+
+#sidebar.deactivate {
+    margin-left: -250px;
+    transform: rotateY(100deg);
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+#content {
+    width: 100%;
+    padding: 20px;
+    min-height: 90vh;
+    transition: all 0.3s;
+}
+
+#sidebarCollapse {
+    width: 40px;
+    height: 40px;
+    background: #f5f5f5;
+    cursor: pointer;
+}
+
+#sidebarCollapse span {
+    width: 80%;
+    height: 2px;
+    margin: 0 auto;
+    display: block;
+    background: #555;
+    transition: all 0.8s cubic-bezier(0.810, -0.330, 0.345, 1.375);
+    transition-delay: 0.2s;
+}
+
+#sidebarCollapse span:first-of-type {
+    transform: rotate(45deg) translate(2px, 2px);
+}
+#sidebarCollapse span:nth-of-type(2) {
+    opacity: 0;
+}
+#sidebarCollapse span:last-of-type {
+    transform: rotate(-45deg) translate(1px, -1px);
+}
+
+
+#sidebarCollapse.deactivate span {
+    transform: none;
+    opacity: 1;
+    margin: 5px auto;
+}
+
+.card-body {
+    border-bottom: #28a745 2px solid;
+}
+
+.navi-btn > label > span { 
+    display: block;
+    width: 25px;
+    height: 7px;
+    border-top: 2px solid #28a745;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -250px;
+        transform: rotateY(90deg);
+    }
+    #sidebar.deactivate {
+        margin-left: 0;
+        transform: none;
+    }
+    #sidebarCollapse span:first-of-type,
+    #sidebarCollapse span:nth-of-type(2),
+    #sidebarCollapse span:last-of-type {
+        transform: none;
+        opacity: 1;
+        margin: 5px auto;
+    }
+    #sidebarCollapse.deactivate span {
+        margin: 0 auto;
+    }
+    #sidebarCollapse.deactivate span:first-of-type {
+        transform: rotate(45deg) translate(2px, 2px);
+    }
+    #sidebarCollapse.deactivate span:nth-of-type(2) {
+        opacity: 0;
+    }
+    #sidebarCollapse.deactivate span:last-of-type {
+        transform: rotate(-45deg) translate(1px, -1px);
+    }
+
+    .text-sm-center {
+        text-align: center;
+    }
+
+    .scroll-x {
+        overflow-x: scroll;
+    }
+}

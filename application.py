@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from controllers.auth import login_handler,register_handler
 from controllers.dashboard import dashboard_handler
 from controllers.profile import profile_handler
+from controllers.user import application_handler
 
 # # Configure application
 app = Flask(__name__)
@@ -34,6 +35,10 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 database = SQL("sqlite:///pickneat.db")
 
+@app.route("/")
+def index():
+    return render_template("index.html")
+
 @app.route("/register", methods=["GET", "POST"])
 def register():
     return register_handler(request, database)
@@ -54,3 +59,7 @@ def profile():
 def logout():
     session.clear()
     return redirect("/login")
+
+@app.route("/apply", methods=["GET", "POST"])
+def apply():
+    return application_handler(request, database)
