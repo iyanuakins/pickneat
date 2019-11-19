@@ -33,13 +33,13 @@ def profile_handler(request, database):
     elif not extension:
         if not extension.upper() in ["JPEG", "JPG", "PNG", "GIF"]:
             user_image = user[0]["user_image"]
-    else:
+    elif user[0]["user_image"]:
         #Removes previous User Image
        os.remove(os.path.join("static/images", user[0]["user_image"]))
 
     #Updates User Information to Database
-    database.execute("UPDATE users SET (name, email, phone_number, address, user_image, business_name, business_address, business_number)=(:name, :email, :phone_number, :address, :user_image, :business_name, :business_address, :business_number) WHERE username=:username",
-                            name = request.form.get("name") if request.form.get("name") else user[0]["name"],
+    database.execute("UPDATE users SET (full_name, email, phone_number, address, user_image, business_name, business_address, business_number)=(:name, :email, :phone_number, :address, :user_image, :business_name, :business_address, :business_number) WHERE username=:username",
+                            name = request.form.get("full_name") if request.form.get("full_name") else user[0]["full_name"],
                             email = request.form.get("email") if request.form.get("email") else user[0]["email"],
                             phone_number = request.form.get("phone_number") if request.form.get("phone_number") else user[0]["phone_number"],
                             address = request.form.get("address") if request.form.get("address") else user[0]["address"],

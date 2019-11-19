@@ -1,9 +1,14 @@
 from flask import render_template, session, redirect
 from werkzeug.security import check_password_hash, generate_password_hash
+from datetime import datetime
 from controllers.error import error
 
 #Registration Handler
 def register_handler(request, database):
+    
+    if session.get("username"):
+        return redirect("/dashboard")
+
     if request.method == "POST":
         # Ensure name was submitted
         if not request.form.get("full_name"):

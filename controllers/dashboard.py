@@ -15,7 +15,7 @@ def dashboard_handler(database):
 
     #Renders Admin DashBoard
     if user_type == "admin":
-        userdetail = database.execute("SELECT name, username, email, phone_number, address, user_image, balance FROM users WHERE username=:username",
+        userdetail = database.execute("SELECT full_name, username, email, phone_number, address, user_image, balance FROM users WHERE username=:username",
                                                                         username=session.get("username"))
         return render_template("admin_dashboard.html", user=userdetail[0])
 
@@ -27,7 +27,7 @@ def dashboard_handler(database):
 
     #Renders Buyer DashBoard
     if user_type == "user" or user_view == "user":
-        userdetail = database.execute("SELECT name, username, email, phone_number,	address, user_image, balance, status, user_view FROM users WHERE username=:username",
+        userdetail = database.execute("SELECT full_name, username, email, phone_number,	address, user_image, balance, status, user_view FROM users WHERE username=:username",
                                                                         username=session.get("username"))
         return render_template("dashboard.html", user=userdetail[0])
     
