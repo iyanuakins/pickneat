@@ -2,7 +2,6 @@ from flask import render_template, session, redirect
 from werkzeug.security import check_password_hash, generate_password_hash
 from controllers.error import error
 
-
 #Registration Handler
 def register_handler(request, database):
     if request.method == "POST":
@@ -88,6 +87,7 @@ def login_handler(request, database):
 
     #Remembers Logged In User
     session["username"] = user[0]["username"]
+    session["user_type"] = user[0]["user_type"]
 
     #Handles DashBoard Display
     return logged_in()

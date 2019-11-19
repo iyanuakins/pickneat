@@ -1,9 +1,90 @@
 {%extends "layout.html" %}
 
 {% block title %}
-    Log In 
+    Profile 
 {%endblock%}
 
 {% block main %}
-    <p>There was an error</p>
+<form action="/profile" method="POST" enctype="multipart/form-data">
+        <div class="col-lg-10 form-group">
+            <img src={{"static/images/"+user["user_image"]}} class="img-fluid" alt="Picture Unavailable" />
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="name_prepend">Name</span>
+                </div>
+                <input type="text" class="form-control" name="name" value={{user["name"]}} aria-label="name" aria-describedby="name_prepend">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="phone_number_prepend">Phone Number</span>
+                </div>
+                <input type="text" class="form-control" name="phone_number" value={{user["phone_number"]}} aria-label="phone_number" aria-describedby="phone_number_prepend">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="email_prepend">@</span>
+                </div>
+                <input type="text" class="form-control" name="email" value={{user["email"]}} aria-label="email" aria-describedby="email_prepend">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="username_prepend">Username</span>
+                </div>
+                <input type="text" class="form-control" value={{session["username"]}} aria-label="username" aria-describedby="username_prepend" readonly>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="address_prepend">Address</span>
+                </div>
+                <input type="text" class="form-control" name="address" value={{user["address"]}} aria-label="address" aria-describedby="address_prepend">
+            </div>
+        </div>
+        {% if session["user_type"] == "vendor" %}
+            <div class="form-group">
+                <div class="col-lg-10 input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="business_name_prepend">Business Name</span>
+                    </div>
+                    <input type="text" class="form-control" name="business_name" value={{user["business_name"]}} aria-label="business_name" aria-describedby="business_name_prepend">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="business_address_prepend">Business Address</span>
+                    </div>
+                    <input type="text" class="form-control" name="business_address" value={{user["business_address"]}} aria-label="business_address" aria-describedby="business_address_prepend">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="business_number_prepend">Business Number</span>
+                    </div>
+                    <input type="text" class="form-control" name="business_number" value={{user["business_number"]}} aria-label="business_number" aria-describedby="business_number_prepend">
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-lg-10 form-group">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="user_image" id="user_image">
+              <label class="custom-file-label" for="user_image">Change Profile Picture</label>
+            </div>
+        </div> 
+
+    <div class="col-lg-10 form-group">
+        <button type="submit" class="btn btn-primary">Update Profile</button>
+    </div>
+
+</form>
 {% endblock %}
