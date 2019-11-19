@@ -29,12 +29,17 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # Configure CS50 Library to use SQLite database
-db = SQL("sqlite:///pickneat.db")
+database = SQL("sqlite:///pickneat.db")
+
+@app.route("/")
+def index():
+    return render_template("index.html")
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
-    return register_handler(request, database = db)
+    return register_handler(request, database)
   
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    return login_handler(request, database=db)
+    return login_handler(request, database)

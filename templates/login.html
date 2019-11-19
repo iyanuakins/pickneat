@@ -4,14 +4,19 @@
     Log In 
 {%endblock title%}
 
+
 {% block main %}
-    <form action="/login" method="post">
-        <div class="form-group form">
-            <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
-        </div>
-        <div class="form-group">
-            <input class="form-control" name="password" placeholder="Password" type="password">
-        </div>
-        <button class="btn btn-primary" type="submit">Log In</button>
-    </form>
+        <form action="/login" method="post" class="form-container" id="login">
+            <div class="form-group form">
+                <input autocomplete="off" autofocus class="form-control" name="username" placeholder="Username" type="text">
+            </div>
+            <div class="form-group">
+                <input class="form-control" name="password" placeholder="Password" type="password">
+            </div> <br>
+            <div class="form-group">
+                <button class="btn btn-success btn-block" type="submit">Log In</button>
+            </div>
+            
+        </form>
+    
 {% endblock main %}

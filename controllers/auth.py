@@ -35,14 +35,14 @@ def register_handler(request, database):
             return error("Passwords entered does not match", 403)
 
         # Query database for username
-        rows = db.execute("SELECT * FROM users WHERE username = :username",
+        rows = database.execute("SELECT * FROM users WHERE username = :username",
                           username=request.form.get("username"))
 
         if len(rows) > 0:
             return error("Username taken, try another", 403)
 
         # Query database for username
-        db.execute("INSERT INTO users (full_name, username, email, phone_number, address, user_type, password, time_stamp) VALUES ( :full_name, :username, :email, :phone_number, :address, :user_type, :password, :time_stamp)",
+        database.execute("INSERT INTO users (full_name, username, email, phone_number, address, user_type, password, time_stamp) VALUES ( :full_name, :username, :email, :phone_number, :address, :user_type, :password, :time_stamp)",
                                                  full_name = request.form.get("full_name"), username = request.form.get("username").strip(), email = request.form.get("email").strip(), phone_number = request.form.get("phone_number"), address = request.form.get("address"),
                                                   user_type = "user", password = generate_password_hash(request.form.get("password").strip()), time_stamp = datetime.now())
 
@@ -57,7 +57,7 @@ def login_handler(request, database):
     #Handles Logged In State
     try:
         if session.get("username"):
-            return logged_in(database=database)
+            return logged_in()
     except:
         pass
 
@@ -90,10 +90,10 @@ def login_handler(request, database):
     session["username"] = user[0]["username"]
 
     #Handles DashBoard Display
-    return logged_in(database=database)
+    return logged_in()
 
 
-def logged_in(database):
+def logged_in():
     if not session.get("username"):
         return redirect("/login")
 
