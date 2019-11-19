@@ -8,6 +8,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from controllers.auth import login_handler,register_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler
+from controllers.log import transaction_history_handler, order_history_handler
 
 # # Configure application
 app = Flask(__name__)
@@ -65,3 +66,11 @@ def apply():
 @app.route("/contact", methods=["GET", "POST"])
 def complain():
     return complain_handler(request, database)
+
+@app.route("/transaction_history")
+def transaction_history():
+    return transaction_history_handler(request, database)
+
+@app.route("/order_history")
+def order_history():
+    return order_history_handler(request, database)
