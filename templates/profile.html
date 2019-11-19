@@ -7,14 +7,14 @@
 {% block main %}
 <form action="/profile" method="POST" enctype="multipart/form-data">
         <div class="col-lg-10 form-group">
-            <img src={{"static/images/"+user["user_image"]}} class="img-fluid" alt="Picture Unavailable" />
+            <img src={{user["user_image"]}} class="img-fluid" alt="Picture Unavailable" />
         </div>
         <div class="form-group">
             <div class="col-lg-10 input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="name_prepend">Name</span>
+                    <span class="input-group-text" id="full_name_prepend">Name</span>
                 </div>
-                <input type="text" class="form-control" name="name" value={{user["full_name"]}} aria-label="name" aria-describedby="name_prepend">
+                <input type="text" class="form-control" name="full_name" value={{user["full_name"]}} aria-label="name" aria-describedby="full_name_prepend">
             </div>
         </div>
         <div class="form-group">
@@ -23,22 +23,6 @@
                     <span class="input-group-text" id="phone_number_prepend">Phone Number</span>
                 </div>
                 <input type="text" class="form-control" name="phone_number" value={{user["phone_number"]}} aria-label="phone_number" aria-describedby="phone_number_prepend">
-            </div>
-            <div class="form-group">
-                <div class="col-lg-10 input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="name_prepend">Name</span>
-                    </div>
-                    <input type="text" class="form-control" name="name" value={{user["full_name"]}} aria-label="name" aria-describedby="name_prepend">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-lg-10 input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="phone_number_prepend">Phone Number</span>
-                    </div>
-                    <input type="text" class="form-control" name="phone_number" value={{user["phone_number"]}} aria-label="phone_number" aria-describedby="phone_number_prepend">
-                </div>
             </div>
             <div class="form-group">
                 <div class="col-lg-10 input-group mb-3">
