@@ -63,3 +63,9 @@ def logout():
 @app.route("/apply", methods=["GET", "POST"])
 def apply():
     return application_handler(request, database)
+
+@app.route("/")
+def landing():
+    foods = database.execute("SELECT * FROM menu WHERE price > 2000")
+    return render_template("index.html", menu=foods)
+

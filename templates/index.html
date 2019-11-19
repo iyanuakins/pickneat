@@ -1,7 +1,7 @@
 {%extends "layout.html" %}
 
 {% block title %}
-    Log In 
+   Landing
 {%endblock%}
 
 {% block main %}
@@ -13,21 +13,21 @@
     <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
   </div> <br>
 <div class="container row">
-    <div class="card" style="width: 18rem;">
-        <img src="..." class="card-img-top" alt="...">
-        <div class="card-body">
-          <h5 class="card-title">Food Name</h5>
-          <p class="card-text">Some quick example text about the food and availability</p>
-          {% if not session.user_id %}
-          <a href="/templates/login.html" class="btn btn-primary">Order</a>
-          {% else %}
-          <a href="/templates/order_view.html" class="btn btn-primary">Order</a>
-          {% endif %}
-
+  {% for index in range(5)%}
+    {% if True %}
+      <div class="card" style="width: 18rem;">
+          <img src="..." class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Food Name</h5>
+            <p class="card-text">Some quick example text about the food and availability</p>
+              {% if not session["username"] %}
+              <a href="/login" class="btn btn-primary">Order</a>
+              {% else %}
+              <a href="/order" class="btn btn-primary">Order</a>
+              {% endif %}
+          </div>
         </div>
       </div>
-
-</div>
-  
-
+    {% endif %}
+  {% endfor %}
 {% endblock %}
