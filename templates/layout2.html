@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/styles.css" rel="stylesheet">
+    <link href="/static/sidebar.css" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <title> {% block title %}{% endblock title %}</title>
+</head>
+<body>
+        <nav class="navbar navbar-expand-md navbar-light bg-light border">
+                <a class="navbar-brand" href="/"><span class="blue">Pick</span><span class="red">n</span><span class="yellow">Eat</span><span class="green"></a>
+                <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar">
+                        <ul class="navbar-nav ml-auto mt-2">
+                                <li class="nav-item"><a class="nav-link" href="/profile">{{username}}</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/logout">Log Out</a></li>
+                        </ul>
+                </div>
+            </nav>
+
+            <main class="container p-5">
+                    <div class="wrapper">
+                            <!-- Sidebar Holder -->
+                            <nav id="sidebar">
+                                <div class="sidebar">
+                                        {% if session["user_type"] == "admin" %}
+                                            <ul>
+                                                    <li><a href='/dashboard' > Dashboard </a></li>
+                                                    <li><a href='/transaction_log' > View Transactions </a></li>
+                                                    <li><a href='/manage_menu' > Manage Menu </a></li>
+                                                    <li><a href='/manage_users' > Manage Users </a></li>
+                                                    <li><a href='/order_log' > View Orders </a></li>
+                                                    <li><a href='/approve_vendor' > Approve Vendor </a></li>
+                                                    <li><a href='/approve_vendor' > Approve Vendor </a></li>
+                                            </ul>
+                                    {% elif  session["user_type"] == "vendor" and session["user_view"] == "vendor" %}
+                                        <ul>
+                                                <li><a href='/dashboard' > Dashboard </a></li>
+                                                <li><a href='/mange_order' > Manage Orders </a></li>
+                                                <li><a href='/withdraw' > Withdraw </a></li>
+                                                <li><a href='/profile' > Edit Profile </a></li>
+                                                <li><a href='/manage_menu' > Manage Menu </a></li>
+                                                <li><a href='/transaction_history' > Transaction History </a></li>
+                                                <li><a href='/order_history' > Order History </a></li>
+                                                <li><a href='/complain' > Contact Admin </a></li>
+                                        </ul>
+                                    {% else %}
+                                        <ul>
+                                                <li><a href='/dashboard'> Dashboard </a></li>
+                                                    <li><a href='/fund' > Fund Account </a></li>
+                                                    <li><a href='/menu' > Order Food </a></li>
+                                                    <li><a href='/profile' > Edit Profile </a></li>
+                                                    <li><a href='/apply' > Become a Vendor </a></li>
+                                                    <li><a href='/transaction_history' > Transaction History </a></li>
+                                                    <li><a href='/order_history' > Order History </a></li>
+                                                    <li><a href='/complain' > Contact Admin </a></li>
+                                        </ul>
+                                    {% endif %}
+                                    
+                                </div>
+                            </nav>
+                
+                            <!-- Page Content Holder -->
+                            <div id="content">
+                                <div class="navi-btn" id="toggle-sidebar">
+                                    <label for="navi-check" class="pointer">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </label>
+                                </div>
+                                
+                                {% block main %}{% endblock main %}
+                                
+                            </div>
+            </main>
+            <script>
+                let isSidebarActive = false;
+                $("document").ready(function(){
+                        $("#toggle-sidebar").on("click", function(){
+                            if (!isSidebarActive) {
+                                $("#sidebar").addClass('deactivate');
+                                isSidebarActive = true;
+                            } else {
+                                $("#sidebar").removeClass('deactivate');
+                                isSidebarActive = false;
+                            }
+                        })
+                    })
+            </script>
+</body>
+</html>
