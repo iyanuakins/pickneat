@@ -1,9 +1,12 @@
 {%extends "layout.html" %}
 
 {% block title %}
-    Log In 
+    DashBoard
 {%endblock%}
 
 {% block main %}
-    <p>There was an error</p>
+
+    {% if user %}
+    {{user.name}}
+    {% endif %}
 {% endblock %}
