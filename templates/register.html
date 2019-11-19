@@ -5,23 +5,23 @@
 {%endblock%}
 
 {% block main %}
-<form>
+<form class="form-container" id="register">
     <div class="form-row">
-        <div class="col-md-6">
+        <div class="col-md-12">
         <input type="text" class="form-control" name="fullname" placeholder="Enter Fullname">
         </div>
-    </div><br>
+    </div><br><br>
     <div class="form-row">
         <div class="form-group col-md-6">
         <input type="email" class="form-control" placeholder="Email">
-        </div>
+        </div><br>
         <div class="form-group col-md-6">
         <input type="password" class="form-control" placeholder="Phone Number">
         </div>
-    </div>
+    </div><br><br>
     <div class="form-group">
         <input type="text" name="address" class="form-control" placeholder="Address">
-    </div>
+    </div><br><br>
     <div class="form-row">
         <div class="form-group col-md-6">
                 <input type="password" name="password" placeholder="Password" class="form-control" id="inputCity">
@@ -29,8 +29,11 @@
         <div class="form-group col-md-6">
                 <input type="password" name="confirmation" placeholder="Confirm Password" class="form-control" id="inputCity">
         </div>
+    </div><br>
+    <div class="form-group">
+        <button type="submit" class="btn  btn-lg btn-primary float-right">Register</button>
     </div>
-    <button type="submit" class="btn btn-primary">Register</button>
+    
     </form>
 </form>
 {% endblock %}
