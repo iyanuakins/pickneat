@@ -1,31 +1,25 @@
 {%extends "layout.html" %}
 
 {% block title %}
-   Landing
+    Pick 'n' Eat
 {%endblock%}
 
 {% block main %}
-<div class="jumbotron">
-    <h1 class="display-4">Welcome to Pick'n'Eat!</h1>
-    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-    <hr class="my-4">
-    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-  </div> <br>
+<div class="header">
+    <h1 class="bold-4">Welcome to Pick'n'Eat!</h1>
+    <p class="bold-2">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+    <hr class="">
+    <p class="bold-2">It uses utility classes for typography and spacing to space content out within the larger container.</p>
+    <p class="btn-2"><a  href="/register" class="btn btn-success btn-lg"> Try Now</a></p>
+  </div>
+
 <div class="container row">
-  {% for index in range(5)%}
-    {% if True %}
-      <div class="card" style="width: 18rem;">
-          <img src="..." class="card-img-top" alt="...">
-          <div class="card-body">
-            <h5 class="card-title">Food Name</h5>
-            <p class="card-text">Some quick example text about the food and availability</p>
-              {% if not session["username"] %}
-              <a href="/login" class="btn btn-primary">Order</a>
-              {% else %}
-              <a href="/order" class="btn btn-primary">Order</a>
-              {% endif %}
-          </div>
+    <div class="card" style="width: 18rem;">
+        <img src="..." class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">Food Name</h5>
+          <p class="card-text">Some quick example text about the food and availability</p>
+          <a href="/order" class="btn btn-success">Order</a>
         </div>
       </div>
     {% endif %}

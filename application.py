@@ -7,9 +7,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from controllers.auth import login_handler,register_handler
-from controllers.dashboard import dashboard_handler
-from controllers.profile import profile_handler
-from controllers.user import application_handler
+from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler
 
 # # Configure application
 app = Flask(__name__)
@@ -64,8 +62,6 @@ def logout():
 def apply():
     return application_handler(request, database)
 
-@app.route("/")
-def landing():
-    foods = database.execute("SELECT * FROM menu WHERE price > 2000")
-    return render_template("index.html", menu=foods)
-
+@app.route("/contact", methods=["GET", "POST"])
+def complain():
+    return complain_handler(request, database)

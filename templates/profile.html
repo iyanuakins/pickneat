@@ -5,11 +5,24 @@
 {%endblock%}
 
 {% block main %}
-<div class="container">
-    
-    <form action="/profile" method="POST" enctype="multipart/form-data">
-            <div class="col-lg-10 form-group">
-                <img src={% if user["user_image"] %}{{"static/images/"+user["user_image"]}}{% else %}"static/images/images"{% endif %} class="img-fluid" alt="Picture Unavailable" />
+<form action="/profile" method="POST" enctype="multipart/form-data">
+        <div class="col-lg-10 form-group">
+            <img src={{"static/images/"+user["user_image"]}} class="img-fluid" alt="Picture Unavailable" />
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="name_prepend">Name</span>
+                </div>
+                <input type="text" class="form-control" name="name" value={{user["full_name"]}} aria-label="name" aria-describedby="name_prepend">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="phone_number_prepend">Phone Number</span>
+                </div>
+                <input type="text" class="form-control" name="phone_number" value={{user["phone_number"]}} aria-label="phone_number" aria-describedby="phone_number_prepend">
             </div>
             <div class="form-group">
                 <div class="col-lg-10 input-group mb-3">
@@ -88,7 +101,9 @@
             <button type="submit" class="btn btn-primary">Update Profile</button>
         </div>
 
-    </form>
+    <div class="col-lg-10 form-group">
+        <button type="submit" class="btn btn-success">Update Profile</button>
+    </div>
 
 </div>
 {% endblock %}
