@@ -1,0 +1,40 @@
+{%extends "layout2.html" %}
+
+{% block title %}
+    Transaction History 
+{%endblock%}
+
+{% block main %}
+    <!-- Default Page Rendering in Table -->
+    {% if default_table %}
+            <table>
+                <thead>
+                    <tr>
+                        <th> </th>
+                        <th> </th>
+                        <th> </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td> </td>
+                        <td> </td>
+                    </tr>
+                </tbody>
+            </table>
+    {% endif %}
+    
+    <!-- Sorted Tabled Based on User Preference -->
+    {% if sorted_table %}
+    {% endif %}
+
+    <!-- Default Page Rendering in Chart -->
+    {% if default_chart %}
+    {% endif %}
+
+    <!-- Sorted Chart Based on User Preference -->
+    {% if sorted_chart %}
+    {% endif %}
+
+{% endblock %}
