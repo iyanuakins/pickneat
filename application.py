@@ -28,6 +28,7 @@ def after_request(response):
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
+
 Session(app)
 
 # Configure CS50 Library to use SQLite database
@@ -45,6 +46,11 @@ def login():
 def dashboard():
     return dashboard_handler(database)
 
-@app.route("/profile")
+@app.route("/profile", methods=["GET", "POST"])
 def profile():
     return profile_handler(request, database)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect("/login")
