@@ -27,12 +27,11 @@ def application_handler(request, database):
 #User complaint Handler
 def complain_handler(request, database):
     #Handles Authentication of User
-    # if not session.get("username"):
-    #     return redirect("/login")
+    if not session.get("username"):
+        return redirect("/login")
 
     #Retrieves User Information from Database
-    # user = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))
-    user = [{"full_name": "Ayoola", "email": "ayoa@hah.ha"}]
+    user = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))
 
     if request.method == "GET":
         return render_template("contact.html", user = user[0])
