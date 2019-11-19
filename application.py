@@ -7,6 +7,7 @@ from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from controllers.auth import login_handler,register_handler
+from controllers.admin import user_management_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler
 
 # # Configure application
@@ -65,3 +66,7 @@ def apply():
 @app.route("/contact", methods=["GET", "POST"])
 def complain():
     return complain_handler(request, database)
+
+@app.route("/manage_user", methods=["GET", "POST"])
+def manage_user():
+    return user_management_handler(request, database)
