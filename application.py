@@ -6,7 +6,8 @@ from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
-from controllers.auth import login_handler,register_handler
+from controllers.auth import login_handler, register_handler
+from controllers.user import application_handler
 
 # # Configure application
 app = Flask(__name__)
@@ -38,3 +39,7 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     return login_handler(request, database=db)
+
+@app.route("/apply", methods=["GET", "POST"])
+def apply():
+    return application_handler(request, database = db)
