@@ -1,4 +1,4 @@
-{%extends "layout.html" %}
+{%extends "layout2.html" %}
 
 {% block title %}
     Profile 
@@ -14,7 +14,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="name_prepend">Name</span>
                 </div>
-                <input type="text" class="form-control" name="name" value={{user["name"]}} aria-label="name" aria-describedby="name_prepend">
+                <input type="text" class="form-control" name="name" value={{user["full_name"]}} aria-label="name" aria-describedby="name_prepend">
             </div>
         </div>
         <div class="form-group">
@@ -83,7 +83,7 @@
         </div> 
 
     <div class="col-lg-10 form-group">
-        <button type="submit" class="btn btn-primary">Update Profile</button>
+        <button type="submit" class="btn btn-success">Update Profile</button>
     </div>
 
 </form>
