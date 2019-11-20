@@ -13,7 +13,7 @@ def user_management_handler(request, database):
 
     #Retrieves User Information from Database
     if  request.form.get("filters"):
-        if request.form.get("filters") == "all_user":
+        if request.form.get("filters") == "all_users":
             users = database.execute("SELECT id, full_name, username, email, user_type, status FROM users")
             return render_template("user_management.html", users = users)
         users = database.execute("SELECT id, full_name, username, email, user_type, status FROM users WHERE user_type = :user_type", user_type = request.form.get("filters"))
