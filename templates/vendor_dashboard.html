@@ -5,5 +5,10 @@
 {%endblock%}
 
 {% block main %}
-    <p>There was an error</p>
+<div class="jumbotron-fluid float-left">
+        <div class="container">
+            <h1 class="display-4">Welcome, {{session["username"]}}.</h1>
+            <p class="lead">You are registered as a {{session["user_type"]}}</p>
+        </div>
+    </div>
 {% endblock %}

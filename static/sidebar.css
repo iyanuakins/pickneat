@@ -159,6 +159,11 @@
     cursor: pointer;
 }
 
+.bg-image-contacts {
+    background-image: url('/static/images/img_contacts.jpg');
+    background-size: cover;
+}
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
