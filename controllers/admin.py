@@ -6,6 +6,10 @@ from datetime import datetime
 
 
 def user_management_handler(request, database):
+    #Handles Authentication of User
+    if not session.get("username"):
+        return redirect("/login")
+        
     if request.method == "GET":
         #Retrieves all users from Database
         users = database.execute("SELECT id, full_name, username, email, user_type, status FROM users")
@@ -24,6 +28,10 @@ def user_management_handler(request, database):
 
 
 def user_view_handler(request, database):
+    #Handles Authentication of User
+    if not session.get("username"):
+        return redirect("/login")
+
     if request.method == "GET":
         return redirect("/manage_users")
 
