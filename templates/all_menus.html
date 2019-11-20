@@ -5,8 +5,8 @@
 {%endblock%}
 
 {% block main %}
-<div class="container mt-5">
-  <div class="row items-container">
+<div class="container ">
+  <div class="row items-container mt-5">
       {% for menu in menus %}
         <div class="col-md-3 col-sm-12 mt-2 mb-3 text-center item item-visible">
           <div class="card">
@@ -41,8 +41,7 @@
 
     // Toggle items
     $('body').on('change', '.js-toggle-items', function(e) {
-
-    e.preventDefault();
+      e.preventDefault();
 
         var checked = this.checked;
 

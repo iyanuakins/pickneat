@@ -133,3 +133,10 @@ def view_menu_handler(request, database):
     if request.method == "GET":
         menus = database.execute("SELECT * FROM menu WHERE status = 'available'")
         return render_template("all_menus.html", menus = menus)
+
+def single_view_menu_handler(id, request, database):
+    if request.method == "GET":
+        menu = database.execute("SELECT * FROM menu WHERE id = :id ", id = id)
+        vendor = menu[0]["vendor"]
+        user = database.execute("SELECT business_name, business_address, user_image FROM users WHERE username = :vendor ", vendor = vendor)
+        return render_template("single_menu.html", menu = menu[0], vendor = user[0])
