@@ -71,7 +71,7 @@ def delete_menu_handler(id,request, database):
     if request.method == "GET":
         database.execute("DELETE FROM menu WHERE id=:id", id=id)
     return redirect("/manage_menu")
-
+  
 #Adds Menu to Gallery
 def add_menu_handler(request, database):
 
@@ -129,3 +129,7 @@ def manage_order_handler(id, request, database):
         orders = database.execute("SELECT * FROM orders WHERE vendor=:vendor and status='pending'", vendor=session.get("username"))
         return render_template("order_view.html", orders=orders)      
     
+def view_menu_handler(request, database):
+    if request.method == "GET":
+        menus = database.execute("SELECT * FROM menu WHERE status = 'available'")
+        return render_template("all_menus.html", menus = menus)
