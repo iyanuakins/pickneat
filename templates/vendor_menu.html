@@ -5,9 +5,11 @@
 {%endblock%}
 
 {% block main %}
-<div class="container">
-  <div style="margin-bottom: 10px;">
-    <button type="button" class="btn btn-info btn-block" onclick="add_menu()">Add New Menu</button>
+<div class="container mb-3">
+  <div>
+    <a href="/add_menu">
+      <button type="submit" class="btn btn-info btn-block">Add New Menu</button>
+    </a>
   </div>
   {%if not menus %}
     <div class="card-group">
@@ -19,19 +21,21 @@
       </div>
     </div>
     {% endif %}
-
-    {% for menu in menus %}
-        <div class="card" style="width: 18rem" onclick="edit_menu({{menu['id']}})">
-            <img src={{menu["image"]}} class="card-img-top" alt="Preview Unavailiable">
-            <div class="card-body">
-              <h5 class="card-title">{{menu["name"]}}</h5>
-              <p class="card-text">{{menu["description"]}}.</p>
+    <div class="row">
+        {% for menu in menus %}
+        <div class="col-lg-4 col-sm-12 mt-2 mb-3 text-center">
+          <a href="/edit_menu/{{menu['id']}}">
+          <div class="card" style="width: 18rem">
+                <img src={{menu["image"]}}  type="submit" class="card-img-top" alt="Preview Unavailiable">
+                <div class="card-body">
+                  <h5 class="card-title">{{menu["name"]}}</h5>
+                  <p class="card-text">{{menu["description"]}}.</p>
+                </div>
             </div>
-        </div>
-    {% endfor %}
+          </a>
+          </div>
+        {% endfor %}
+    </div>
+    
 </div>
-<script>
-  const edit_menu = id => $.get('/manage_menu/'+id)
-  const add_menu = () => $.get('/manage_menu/1')
-</script>
 {% endblock %}
