@@ -71,6 +71,6 @@ def complain():
 def transaction_history():
     return transaction_history_handler(request, database)
 
-@app.route("/order_history")
+@app.route("/order_history", methods=["GET", "POST"])
 def order_history():
     return order_history_handler(request, database)
