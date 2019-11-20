@@ -66,7 +66,59 @@ def edit_menu_handler(request, database, id):
     #Refreshes Page
     return redirect("/manage_menu")
 
+#Deletes Single Menu
 def delete_menu_handler(id,request, database):
     if request.method == "GET":
         database.execute("DELETE FROM menu WHERE id=:id", id=id)
     return redirect("/manage_menu")
+
+#Adds Menu to Gallery
+def add_menu_handler(request, database):
+
+    if request.method == "GET":
+        return render_template("menu_add.html")
+
+    #Dummy for Image Url
+    user_image = ""
+    extension = ""
+
+    #Create Filename for File
+    if request.files["image"]:
+        image = request.files["image"]
+        image_name = secure_filename(image.filename)
+        menu_image = image.filename
+        extension = menu_image.rsplit(".", 1)[1]
+        menu_image = "static/images/"+datetime.now().strftime("%m%d%Y%H%M%S")+"."+extension
+
+    #Checks for Image ELigibility for possible change to default
+    if not "." in menu_image or not extension.upper() in ["JPEG", "JPG", "PNG", "GIF"]:
+        return error("Supply Appropriate Image", 400)
+        
+    if not request.form.get("name").strip():
+        return error("Enter a valid name", 400)
+
+    if not int(request.form.get("price")) > 0:
+        return error("Enter a valid price", 400)
+
+    if not request.form.get("description").strip():
+        return error("Please Describe Your Meal", 400)
+
+    database.execute("INSERT INTO menu (image, vendor, time_stamp, name, price, description) VALUES (:image, :vendor, :time_stamp, :name, :price, :description)",
+                                                                                                            image = menu_image,
+                                                                                                            vendor =  session.get("username"),
+                                                                                                            name =  request.form.get("name"),
+                                                                                                            price =  request.form.get("price"),
+                                                                                                            description =  request.form.get("description"),
+                                                                                                            time_stamp = datetime.now(),
+                                                                                                            )
+
+    #Stores New Image in Project
+    if request.files["image"]:
+        add_image = menu_image.rsplit("/images/", 1)[1]
+        image.save(os.path.join("static/images", add_image))
+
+    return redirect("/manage_menu")
+
+#Attend to Order
+def manage_order_handler(database):
+    pass
