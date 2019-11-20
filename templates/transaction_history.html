@@ -17,7 +17,6 @@
             </div>
             <div class="col-3">
                 <select name="transaction" class="custom-select">
-                    <option value="" selected>All</option>
                     <option value="funding">Funding</option>
                     <option value="withdrawal">Withdrawals</option>
                 </select>     
@@ -66,6 +65,8 @@
         <p id="pointSelected">Point selected:</p>
     </div>
     {% endif %}
+
+    <!-- Rendering Querried Transaction -->
     {% if detail_table %}
     <div class="container">
         <table id="table_view" class="table table-striped" style="width:100%">
