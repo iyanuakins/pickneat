@@ -27,7 +27,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbar">
                         <ul class="navbar-nav ml-auto mt-2">
-                                <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{username}}</span></a></li>
+                                <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{session["username"]}}</span></a></li>
                             <li class="nav-item"><a class="nav-link" href="/logout"><span class="btn btn-danger">Log Out</span></a></li>
                         </ul>
                 </div>
@@ -76,13 +76,11 @@
                 
                             <!-- Page Content Holder -->
                             <div id="content">
-                                <div class="navi-btn" id="toggle-sidebar">
-                                    <label for="navi-check" class="pointer">
+                                <label  id="toggle-sidebar" class="btn  btn-success"  type="button">
                                         <span></span>
                                         <span></span>
                                         <span></span>
-                                    </label>
-                                </div>
+                                </label>
                                 <main>
                                     {% block main %}{% endblock main %}
                                 </main>
