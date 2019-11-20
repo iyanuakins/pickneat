@@ -1,0 +1,118 @@
+{%extends "layout2.html" %}
+
+{% block title %}
+    Manage user
+{%endblock%}
+
+{% block main %}
+    <div class="container">
+        <form action="/manage_user" method="POST">
+                <div class="form-group">
+                    <div class="col-lg-12 input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="name_prepend">Name</span>
+                        </div>
+                        <input type="text" class="form-control" readonly value="{{user[0]["full_name"]}}" aria-label="name" aria-describedby="name_prepend">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-12 input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="phone_number_prepend">Phone Number</span>
+                        </div>
+                        <input type="text" class="form-control" readonly  value="{{user[0]["phone_number"]}}" aria-label="phone_number" aria-describedby="phone_number_prepend">
+                    </div>
+                    
+                    <div class="form-group">
+                        <div class="col-lg-12 input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="email_prepend">@</span>
+                            </div>
+                            <input type="text" class="form-control" readonly  value="{{user[0]["email"]}}" aria-label="email" aria-describedby="email_prepend">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-12 input-group mb-3">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="username_prepend">Username</span>
+                            </div>
+                            <input type="text" class="form-control" readonly value="{{user[0]["username"]}}" aria-label="username" aria-describedby="username_prepend" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-12 mb-3">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                            <span class="input-group-text">Address</span>
+                            </div>
+                            <textarea class="form-control" readonly aria-label="Address">{{user[0]["address"]}}</textarea>
+                        </div>
+                    </div>
+                    {% if user[0]["user_type"] == "vendor" %}
+                        <div class="form-group">
+                            <div class="col-lg-12 input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="business_name_prepend">Business Name</span>
+                                </div>
+                                <input type="text" class="form-control" readonly  value="{{user[0]["business_name"]}}" aria-label="business_name" aria-describedby="business_name_prepend">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 mb-3">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                <span class="input-group-text">Buiness Address</span>
+                                </div>
+                                <textarea class="form-control" readonly  aria-label="Address">"{{user[0]["business_address"]}}"</textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12 input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="business_number_prepend">Business Number</span>
+                                </div>
+                                <input type="text" class="form-control" readonly  value="{{user[0]["business_number"]}}" aria-label="business_number" aria-describedby="business_number_prepend">
+                            </div>
+                        </div>
+                        {% endif %}
+                        <div class="form-group">
+                                <div class="col-lg-12 input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <input type="number" class="form-control" readonly name="id"  value="{{user[0]["id"]}}" hidden>
+                                </div>
+                            </div>
+                        <div class="form-group">
+                            <div class="col-lg-12 input-group mb-3">
+                                <div class="input-group-prepend">
+                                <div class="input-group-text">Select action </div>
+                                    <select name="action" id="filter" >
+                                        <option value="">
+                                            {% if user[0]["user_type"] == "vendor" %}
+                                                Manage Vendor
+                                            {% else %}
+                                            Manage User
+                                            {% endif %}
+                                        </option>
+                                        <option value="suspend">
+                                                {% if user[0]["user_type"] == "vendor" %}
+                                                    Suspend Vendor
+                                                {% else %}
+                                                    Suspend User
+                                                {% endif %}
+                                            </option>
+                                        <option value="active">
+                                            {% if user[0]["user_type"] == "vendor" %}
+                                                Activate Vendor
+                                            {% else %}
+                                                Activate User
+                                            {% endif %}
+                                        </option>
+                                    </select>
+                            </div>
+                        </div>
+                    <div class="col-lg-12 form-group">
+                        <button type="submit" class="btn btn-success float-right">Manage user</button>
+                    </div>
+                </div>
+            </form>
+    </div>
+    
+{% endblock %}

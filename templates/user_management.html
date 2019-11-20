@@ -1,9 +1,65 @@
-{%extends "layout.html" %}
+{%extends "layout2.html" %}
 
 {% block title %}
-    Log In 
+    Manage users 
 {%endblock%}
 
 {% block main %}
-    <p>There was an error</p>
+    <form action="/manage_users" method="post">
+        <div class="col-sm-3 float-right mb-2 mt-1">
+                <label class="sr-only" >Filter</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                    <div class="input-group-text">Filter Users</div>
+                        <select name="filters" id="filter" >
+                            <option value="">Select</option>
+                            <option value="all_users">All users</option>
+                            <option value="user">View users Only</option>
+                            <option value="vendor">View vendors Only</option>
+                        </select>
+                </div>
+            </div>
+        </div>
+        <input type="submit" id="filter_button" hidden value="Manage User" class="btn btn-success">
+    </form>
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>S/N</th>
+                <th>Full name</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>User Type</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{loop.index}}</td>
+                    <td>{{user["full_name"]}}</td>
+                    <td>{{user["username"]}}</td>
+                    <td>{{user["email"] }}</td>
+                    <td>{{user["user_type"]}}</td>
+                    <td>{{user["status"]}}</td>
+                    <td> 
+                        <form action="/manage_users" method="post">
+                            <input type="text" hidden name="id" value="{{user["id"]}}">
+                            <input type="submit" value="Manage User" class="btn btn-success">
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        $(document).ready(function () {
+            $("#filter").on("change", function (e) {
+                e.preventDefault();
+                $( "#filter_button" ).click();
+            })
+        });
+    </script>
 {% endblock %}

@@ -8,6 +8,10 @@ from datetime import datetime
 
 #Vendor application Handler
 def application_handler(request, database):
+    #Handles Authentication of User
+    if not session.get("username"):
+        return redirect("/login")
+        
     if request.method == "GET":
         return render_template("vendor_application.html")
 
