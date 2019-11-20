@@ -17,7 +17,9 @@
 
     <title> {% block title %}{% endblock title %}</title>
 </head>
+{% block body%}
 <body>
+{% endblock %}
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
                 <a class="navbar-brand" href="/dashboard"><span class="green">Pick</span><span class="white">n</span><span class="green">Eat</span><span class="green"></a>
                 <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
@@ -54,7 +56,7 @@
                                                 <li><a href='/manage_menu' > Manage Menu </a></li>
                                                 <li><a href='/transaction_history' > Transaction History </a></li>
                                                 <li><a href='/order_history' > Order History </a></li>
-                                                <li><a href='/complain' > Contact Admin </a></li>
+                                                <li><a href='/contact' > Contact Admin </a></li>
                                         </ul>
                                     {% else %}
                                         <ul>
@@ -65,7 +67,7 @@
                                                     <li><a href='/apply' > Become a Vendor </a></li>
                                                     <li><a href='/transaction_history' > Transaction History </a></li>
                                                     <li><a href='/order_history' > Order History </a></li>
-                                                    <li><a href='/complain' > Contact Admin </a></li>
+                                                    <li><a href='/contact' > Contact Admin </a></li>
                                         </ul>
                                     {% endif %}
                                     
