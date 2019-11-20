@@ -1,13 +1,13 @@
 {%extends "layout2.html" %}
 
 {% block title %}
-    Order History 
+    Transaction History 
 {%endblock%}
 
 {% block main %}
 
     <div class="container">
-        <form method="POST" action="/order_history" id="view">
+        <form method="POST" action="/transaction_history" id="view">
         <div class="row">
             <div class="col-3">
                 <select name="date_type" class="custom-select">
@@ -16,11 +16,9 @@
                 </select>
             </div>
             <div class="col-3">
-                <select name="status" class="custom-select">
-                    <option value="pending" selected>Pending</option>
-                    <option value="success">Success</option>
-                    <option value="failed">Failed</option>
-                    <option value="revert">Reverted</option>
+                <select name="transaction" class="custom-select">
+                    <option value="funding">Funding</option>
+                    <option value="withdrawal">Withdrawals</option>
                 </select>     
             </div>
             <div class="col-3">
@@ -37,24 +35,22 @@
     <!-- Default Page Rendering in Table -->
     {% if table %}
     <div class="container">
-            <table id="table_id" class="table table-striped" style="width:100%">
+            <table id="table_view" class="table table-striped" style="width:100%">
                     <thead>
-                        <tr> 
-                            <th>Vendor</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Status</th>
+                        <tr>
+                            <th>Transaction Type</th>
+                            <th>Amount</th>
+                            <th>Description</th>
                             <th>Time</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for order in table %}
+                        {% for transaction in table %}
                             <tr>
-                                <td>{{order["vendor"]}}</td>
-                                <td>{{order["price"]}}</td>
-                                <td>{{order["quantity"]}}</td>
-                                <td>{{order["status"]}}</td>
-                                <td>{{order["time_stamp"]}}</td>
+                                <td>{{transaction["transaction_type"].upper()}}</td>
+                                <td>{{transaction["amount"]}}</td>
+                                <td>{{transaction["description"]}}</td>
+                                <td>{{transaction["time_stamp"]}}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -70,10 +66,10 @@
     </div>
     {% endif %}
 
-    <!-- Rendering Sample of Table -->
+    <!-- Rendering Querried Transaction -->
     {% if detail_table %}
     <div class="container">
-        <table id="table_id" class="table table-striped" style="width:100%">
+        <table id="table_view" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -86,7 +82,7 @@
                     <tr>
                         <td>{{item}}</td>
                         <td>{{detail_table[item]}}</td>
-                        <td>{{status_type.upper()}}</td>
+                        <td>{{transaction_type.upper()}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -94,14 +90,13 @@
     </div>
     {% endif %}
 
-
 <script>
     // Responds to View Select
     const select_view = () => $("#history_view").val() ? $("#view").submit() : False
 
     //Handles Table Behaviour
     $(document).ready( function () {
-        $('#table_id').DataTable();
+        $('#table_view').DataTable();
     } );
 
     // Global parameters:
