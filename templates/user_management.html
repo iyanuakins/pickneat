@@ -5,7 +5,7 @@
 {%endblock%}
 
 {% block main %}
-    <form action="/manage_user" method="post">
+    <form action="/manage_users" method="post">
         <div class="col-sm-3 float-right mb-2 mt-1">
                 <label class="sr-only" >Filter</label>
                 <div class="input-group">
@@ -45,7 +45,7 @@
                     <td>{{user["user_type"]}}</td>
                     <td>{{user["status"]}}</td>
                     <td> 
-                        <form action="/manage_user" method="post">
+                        <form action="/manage_users" method="post">
                             <input type="text" hidden name="id" value="{{user["id"]}}">
                             <input type="submit" value="Manage User" class="btn btn-success">
                         </form>

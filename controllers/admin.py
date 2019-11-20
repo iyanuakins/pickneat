@@ -21,3 +21,15 @@ def user_management_handler(request, database):
     if request.form.get("id"):
         user = database.execute("SELECT * FROM users WHERE id = :id", id = request.form.get("id"))
         return render_template("view_user.html", user = user)
+
+
+def user_view_handler(request, database):
+    if request.method == "GET":
+        return redirect("/manage_users")
+
+    if request.method == "POST":
+        #Retrieves User Information from Database
+        if  not request.form.get("action"):
+            error("Action must be selected", 400)
+        database.execute("UPDATE users SET status = :status WHERE id = :id", status = request.form.get("action"), id = request.form.get("id"))
+        return redirect("/manage_users")
