@@ -126,3 +126,53 @@ a:link {
   a:active {
     text-decoration: none;
   }
+
+  /* ------------------------------------------
+                Pagination style
+    -------------------------------------------*/
+
+    .items-container {
+        margin-top: 50px;
+        min-height: 160px;
+    }
+    
+    /* .items-container .item {
+        padding: 0 0 10px 0;
+    } */
+    
+    .items-container .item span {
+        font-size: 11px;
+        color: rgb(189, 189, 189);
+    }
+    
+    .pagination-indicator {
+        font-size: 14px;
+        color: rgb(189, 189, 189);
+        text-align: left;
+    }
+    
+    .pagination-container {
+        list-style: none;
+    }
+    
+    .pagination-container .pagination__item {
+        margin: 0 10px 0 0;
+        padding: 0;
+        display: inline-block;
+        text-align: right;
+    }
+    
+    .pagination-container .pagination__item .pagination__link {
+        display: block;
+        padding: 10px 15px;
+        background-color: rgba(85, 85, 85, .1);
+        color: #28a745;
+        text-decoration: none;
+        border-radius: 27px;
+    }
+    
+    .pagination-container .pagination__item--current .pagination__link {
+        color: rgb(255, 255, 255);
+        background-color: #28a745;
+        font-weight: 500;
+    }
