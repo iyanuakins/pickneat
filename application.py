@@ -9,7 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from controllers.auth import login_handler,register_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler
 from controllers.log import transaction_history_handler, order_history_handler
-from controllers.menu import menu_handler, edit_menu_handler
+from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler
 
 # # Configure application
 app = Flask(__name__)
@@ -83,3 +83,11 @@ def menu_manage():
 @app.route("/edit_menu/<id>", methods=["GET", "POST"])
 def edit_menu(id):
     return edit_menu_handler(request, database, id)
+
+@app.route("/add_menu")
+def add_menu():
+    return render_template("menu_add.html")
+
+@app.route("/delete_menu/<id>")
+def delete_menu(id):
+    return delete_menu_handler(id, request, database)
