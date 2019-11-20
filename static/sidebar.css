@@ -148,6 +148,11 @@
     border-bottom: #28a745 2px solid;
 }
 
+.bg-image-contacts {
+    background-image: url('/static/images/img_contacts.jpg');
+    background-size: cover;
+}
+
 .navi-btn > label > span { 
     display: block;
     width: 25px;

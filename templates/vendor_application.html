@@ -4,6 +4,11 @@
     Vendor Application
 {%endblock%}
 
+{% block body %}
+    <body class="bg-image-contacts">
+    </body>
+{% endblock %}
+
 {% block main %}
     <form action="/apply" id="apply-form" method="POST">
             <div  class="form-group">
@@ -16,7 +21,7 @@
                 <input type="text" class="form-control" placeholder="Enter Business address">
             </div>
             <div class="form-group">
-                <button type="submit" class="btn  btn-lg btn-primary float-right">Apply</button>
+                <button type="submit" class="btn  btn-lg btn-success float-right">Apply</button>
             </div>
     </form>
     <script>
