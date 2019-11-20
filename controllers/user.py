@@ -66,7 +66,7 @@ def profile_handler(request, database):
         image_name = secure_filename(image.filename)
         user_image = image.filename
         extension = user_image.rsplit(".", 1)[1]
-        user_image = datetime.now().strftime("%m%d%Y%H%M%S")+"."+extension
+        user_image = "static/images/"+datetime.now().strftime("%m%d%Y%H%M%S")+"."+extension
 
     #Checks for Image ELigibility for possible change to default
     if not "." in user_image:
@@ -74,25 +74,27 @@ def profile_handler(request, database):
     elif not extension:
         if not extension.upper() in ["JPEG", "JPG", "PNG", "GIF"]:
             user_image = user[0]["user_image"]
-    else:
+    elif user[0]["user_image"]:
         #Removes previous User Image
-       os.remove(os.path.join("static/images", user[0]["user_image"]))
+        remove_image = user[0]["user_image"].rsplit("/images/", 1)[1]
+        os.remove(os.path.join("static/images", remove_image))
 
     #Updates User Information to Database
     database.execute("UPDATE users SET (full_name, email, phone_number, address, user_image, business_name, business_address, business_number)=(:full_name, :email, :phone_number, :address, :user_image, :business_name, :business_address, :business_number) WHERE username=:username",
-                            full_name = request.form.get("name") if request.form.get("name") else user[0]["full_name"],
-                            email = request.form.get("email") if request.form.get("email") else user[0]["email"],
-                            phone_number = request.form.get("phone_number") if request.form.get("phone_number") else user[0]["phone_number"],
-                            address = request.form.get("address") if request.form.get("address") else user[0]["address"],
+                            full_name = request.form.get("full_name") if request.form.get("full_name").strip() else user[0]["full_name"],
+                            email = request.form.get("email") if request.form.get("email").strip() else user[0]["email"],
+                            phone_number = request.form.get("phone_number") if request.form.get("phone_number").strip() else user[0]["phone_number"],
+                            address = request.form.get("address") if request.form.get("address").strip() else user[0]["address"],
                             user_image = user_image,
-                            business_name = request.form.get("business_name") if request.form.get("business_name") else user[0]["business_name"],
-                            business_address = request.form.get("business_address") if request.form.get("business_address") else user[0]["business_address"],
-                            business_number = request.form.get("business_number") if request.form.get("business_number") else user[0]["business_number"],
+                            business_name = request.form.get("business_name") if request.form.get("business_name").strip() else user[0]["business_name"],
+                            business_address = request.form.get("business_address") if request.form.get("business_address").strip() else user[0]["business_address"],
+                            business_number = request.form.get("business_number") if request.form.get("business_number").strip() else user[0]["business_number"],
                             username=session.get("username"))
 
     #Stores New Image in Project
     if request.files["user_image"]:
-        image.save(os.path.join("static/images", user_image))
+        add_image = user_image.rsplit("/images/", 1)[1]
+        image.save(os.path.join("static/images", add_image))
     
     #Refreshes Page
     return redirect("/profile")

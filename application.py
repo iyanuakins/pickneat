@@ -9,6 +9,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from controllers.auth import login_handler,register_handler
 from controllers.admin import user_management_handler, user_view_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler
+from controllers.log import transaction_history_handler, order_history_handler
 
 # # Configure application
 app = Flask(__name__)
@@ -74,3 +75,11 @@ def manage_users():
 @app.route("/manage_user", methods=["GET", "POST"])
 def manage_user():
     return user_view_handler(request, database)
+  
+@app.route("/transaction_history", methods=["GET", "POST"])
+def transaction_history():
+    return transaction_history_handler(request, database)
+
+@app.route("/order_history", methods=["GET", "POST"])
+def order_history():
+    return order_history_handler(request, database)
