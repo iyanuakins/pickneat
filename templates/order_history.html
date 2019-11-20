@@ -7,7 +7,7 @@
 {% block main %}
 
     <div class="container">
-        <form method="POST" action="/transaction_history" id="view">
+        <form method="POST" action="/order_history" id="view">
         <div class="row">
             <div class="col-3">
                 <select name="date_type" class="custom-select">
@@ -16,8 +16,9 @@
                 </select>
             </div>
             <div class="col-3">
-                <select name="transaction" class="custom-select">
-                    <option value="sucess" selected>Sucess</option>
+                <select name="status" class="custom-select">
+                    <option value="pending" selected>Pending</option>
+                    <option value="success">Success</option>
                     <option value="failed">Failed</option>
                     <option value="revert">Reverted</option>
                 </select>     
@@ -36,22 +37,24 @@
     <!-- Default Page Rendering in Table -->
     {% if table %}
     <div class="container">
-            <table id="table_view" class="table table-striped" style="width:100%">
+            <table id="table_id" class="table table-striped" style="width:100%">
                     <thead>
-                        <tr>
-                            <th>Transaction Type</th>
-                            <th>Amount</th>
-                            <th>Description</th>
+                        <tr> 
+                            <th>Vendor</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Status</th>
                             <th>Time</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for transaction in table %}
+                        {% for order in table %}
                             <tr>
-                                <td>{{transaction["transaction_type"].upper()}}</td>
-                                <td>{{transaction["amount"]}}</td>
-                                <td>{{transaction["description"]}}</td>
-                                <td>{{transaction["time_stamp"]}}</td>
+                                <td>{{order["vendor"]}}</td>
+                                <td>{{order["price"]}}</td>
+                                <td>{{order["quantity"]}}</td>
+                                <td>{{order["status"]}}</td>
+                                <td>{{order["time_stamp"]}}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -66,9 +69,11 @@
         <p id="pointSelected">Point selected:</p>
     </div>
     {% endif %}
+
+    <!-- Rendering Sample of Table -->
     {% if detail_table %}
     <div class="container">
-        <table id="table_view" class="table table-striped" style="width:100%">
+        <table id="table_id" class="table table-striped" style="width:100%">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -81,7 +86,7 @@
                     <tr>
                         <td>{{item}}</td>
                         <td>{{detail_table[item]}}</td>
-                        <td>{{transaction_type.upper()}}</td>
+                        <td>{{status_type.upper()}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -89,13 +94,14 @@
     </div>
     {% endif %}
 
+
 <script>
     // Responds to View Select
     const select_view = () => $("#history_view").val() ? $("#view").submit() : False
 
     //Handles Table Behaviour
     $(document).ready( function () {
-        $('#table_view').DataTable();
+        $('#table_id').DataTable();
     } );
 
     // Global parameters:
@@ -147,7 +153,7 @@
             mode: 'single',
             callbacks: {
               label: function(tooltipItems, data) {
-                       return '#'+tooltipItems.yLabel;
+                       return 'NGN '+tooltipItems.yLabel;
                      }
             }
           },
