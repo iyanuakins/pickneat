@@ -148,13 +148,17 @@
     border-bottom: #28a745 2px solid;
 }
 
-.navi-btn > label > span { 
-    display: block;
-    width: 25px;
-    height: 7px;
-    border-top: 2px solid #28a745;
+.bg-image-contacts {
+    background-image: url('/static/images/img_contacts.jpg');
+    background-size: cover;
 }
 
+#toggle-sidebar > span {
+    display: block;
+    width: 1.5em;
+    height: 0.5em;
+    border-bottom: #28a745 2px solid;
+}
 .pointer {
     cursor: pointer;
 }

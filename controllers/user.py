@@ -8,6 +8,10 @@ from datetime import datetime
 
 #Vendor application Handler
 def application_handler(request, database):
+    #Handles Authentication of User
+    if not session.get("username"):
+        return redirect("/login")
+        
     if request.method == "GET":
         return render_template("vendor_application.html")
 
@@ -59,7 +63,10 @@ def profile_handler(request, database):
     #Create Filename for File
     if request.files["user_image"]:
         image = request.files["user_image"]
-        image_name = secure_filename(image.filename)
+        imag
+        
+        
+        e_name = secure_filename(image.filename)
         user_image = image.filename
         extension = user_image.rsplit(".", 1)[1]
         user_image = "static/images/"+datetime.now().strftime("%m%d%Y%H%M%S")+"."+extension
