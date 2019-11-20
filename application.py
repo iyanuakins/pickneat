@@ -10,7 +10,7 @@ from controllers.auth import login_handler,register_handler
 from controllers.admin import user_management_handler, user_view_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler
 from controllers.log import transaction_history_handler, order_history_handler
-from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler, view_menu_handler
+from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler, add_menu_handler, manage_order_handler, view_menu_handler
 
 # # Configure application
 app = Flask(__name__)
@@ -93,9 +93,9 @@ def menu_manage():
 def edit_menu(id):
     return edit_menu_handler(request, database, id)
 
-@app.route("/add_menu")
+@app.route("/add_menu", methods=["GET", "POST"])
 def add_menu():
-    return render_template("menu_add.html")
+    return add_menu_handler(request, database)
 
 @app.route("/all_menus")
 def all_menus():
@@ -105,6 +105,11 @@ def all_menus():
 def delete_menu(id):
     return delete_menu_handler(id, request, database)
 
+@app.route("/manage_order")
+@app.route("/manage_order/<id>")
+def manage_order(id='14.info'):
+    return manage_order_handler(id, request, database)
+  
 @app.route("/browse", methods=["GET", "POST"])
 def view_menu():
     return view_menu_handler(request, database)
