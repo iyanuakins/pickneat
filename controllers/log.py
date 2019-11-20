@@ -7,44 +7,78 @@ def transaction_history_handler(request, database):
         records = database.execute("SELECT * FROM transactions WHERE username=:username", username=session.get("username"))
         return render_template("transaction_history.html", table=records)
     
+    
     username = session.get("username")
+    type = request.form.get("date_type")
+    transaction = request.form.get("transaction")
+    time = []
+    amount = []
     transactions = {}
+    months = {1:'Jan', 2:'Feb', 3:'Mar', 4:'Apr', 5:'May', 6:'Jun', 7:'Jul', 8:'Aug', 9:'Sep', 10:'Oct', 11:'Nov', 12:'Dec'}
 
-    #Renders Table for User
-    if request.form.get("view") == "table" and request.form.get("data_type") == "yearly":
-        records = database.execute("SELECT * FROM transactions WHERE username=:username", username=session.get("username"))
+    #Renders Table in Year for User
+    if request.form.get("view") == "table" and request.form.get("date_type") == "yearly":
+        records = database.execute("SELECT * FROM transactions WHERE username=:username and transaction_type=:transaction", username=username, transaction=transaction)
+        #Cummulate the Sum of all particular Transaction Based on Year
         for transaction in records:
-            transactions[transaction["time_stamp"].split(",")[0]] += int(transaction["time_stamp"].split(",")[0])
-            pass
-        return render_template("transaction_history.html", table="transactions")
+            month = transaction["time_stamp"].split("/")[0]
+            try:
+                transactions[month] += transaction["amount"]
+            except:
+                transactions[month] = transaction["amount"]
+
+        #Transaction is a Dictionary of Items
+        return render_template("transaction_history.html", detail_table=transactions, transaction_type=transaction["transaction_type"])
+    
+    #Renders Table in Months for User
+    elif request.form.get("view") == "table":
+        records = database.execute("SELECT * FROM transactions WHERE username=:username and transaction_type=:transaction", username=username, transaction=transaction)
+
+        for transaction in records:
+            year = months[int(transaction["time_stamp"].split("/")[1])]
+            try:
+                transactions[year+", "+month] += transaction["amount"]
+            except:
+                transactions[year+", "+month] = transaction["amount"]
+        #Transaction is a Dictionary of Items
+        return render_template("transaction_history.html", detail_table=transactions, month=months)
+
+    #Render Chart in Year for User
+    if request.form.get("view") == "chart" and request.form.get("date_type") == "yearly":
+
+        records = database.execute("SELECT * FROM transactions WHERE username=:username and transaction_type=:transaction",  username=username, transaction=transaction)
+
+        #Cummulate the Sum of all particular Transaction Based on Year
+        for transaction in records:
+            month = transaction["time_stamp"].split("/")[0]
+            try:
+                transactions[month] += transaction["amount"]
+            except:
+                transactions[month] = transaction["amount"]
+
+        for key in transactions:
+            amount.append(transactions[key])
+            time.append(key)
+
+        #Transaction is a Dictionary of Items
+        return render_template("transaction_history.html", chart=transactions, values=amount, labels=time, legend="YEARLY")
+    
+    #Render Chart in Months for User
     else:
-        records = database.execute("SELECT * FROM transactions WHERE username=:username", username=session.get("username"))
+        records = database.execute("SELECT * FROM transactions WHERE username=:username and transaction_type=:transaction",  username=username, transaction=transaction)
         for transaction in records:
-            transaction["time_stamp"].split(",")[1]
-            pass
-        return render_template("transaction_history.html", table="transactions")
+            year = months[int(transaction["time_stamp"].split("/")[1])]
+            try:
+                transactions[year+", "+month] += transaction["amount"]
+            except:
+                transactions[year+", "+month] = transaction["amount"]
+        for key in transactions:
+            amount.append(transactions[key])
+            time.append(key)            
+
+        #Transaction is a Dictionary of Items
+        return render_template("transaction_history.html", chart=transactions, values=amount, labels=time, legend="MONTHLY")
 
 
-
-    if request.form.get("view") == "chart":
-
-        legend = "FUNDING" if request.form.get("transaction") == "credit" else "EXPENSES"
-        temperatures = [73.7, 73.4, 73.8, 72.8, 68.7, 65.2,
-                        61.8, 58.7, 58.2, 58.3, 60.5, 65.7,
-                        70.2, 71.4, 71.2, 70.9, 71.3, 71.1]
-        times = ['12:00PM', '12:10PM', '12:20PM', '12:30PM', '12:40PM', '12:50PM',
-                '1:00PM', '1:10PM', '1:20PM', '1:30PM', '1:40PM', '1:50PM',
-                '2:00PM', '2:10PM', '2:20PM', '2:30PM', '2:40PM', '2:50PM']
-
-        if request.form.get("date_type") == "year":
-            records = database.execute("SELECT * FROM transactions WHERE username=:username and time_stamp>:timestamp and transaction_type=:transaction")
-            return render_template("transaction_history.html", chart=transactions, values=temperatures, labels=times, legend=legend)
-        
-        elif request.form.get("date_type") == "month":
-            records = database.execute("SELECT * FROM transactions WHERE username=:username and time_stamp>:timestamp and transaction_type=:transaction")
-            return render_template("transaction_history.html", chart=transactions, values=temperatures, labels=times, legend=legend)
-
-        records = database.execute("SELECT * FROM transactions WHERE username=:username", username=session.get("username"))
-        return render_template("transaction_history.html", chart="default_chart", values=temperatures, labels=times, legend=legend)
 def order_history_handler(request, database):
     pass
