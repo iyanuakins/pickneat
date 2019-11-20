@@ -17,7 +17,9 @@
 
     <title> {% block title %}{% endblock title %}</title>
 </head>
+{% block body%}
 <body>
+{% endblock %}
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
                 <a class="navbar-brand" href="/dashboard"><span class="green">Pick</span><span class="white">n</span><span class="green">Eat</span><span class="green"></a>
                 <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
@@ -25,7 +27,7 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbar">
                         <ul class="navbar-nav ml-auto mt-2">
-                                <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{username}}</span></a></li>
+                                <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{session["username"]}}</span></a></li>
                             <li class="nav-item"><a class="nav-link" href="/logout"><span class="btn btn-danger">Log Out</span></a></li>
                         </ul>
                 </div>
@@ -54,7 +56,7 @@
                                                 <li><a href='/manage_menu' > Manage Menu </a></li>
                                                 <li><a href='/transaction_history' > Transaction History </a></li>
                                                 <li><a href='/order_history' > Order History </a></li>
-                                                <li><a href='/complain' > Contact Admin </a></li>
+                                                <li><a href='/contact' > Contact Admin </a></li>
                                         </ul>
                                     {% else %}
                                         <ul>
@@ -65,7 +67,7 @@
                                                     <li><a href='/apply' > Become a Vendor </a></li>
                                                     <li><a href='/transaction_history' > Transaction History </a></li>
                                                     <li><a href='/order_history' > Order History </a></li>
-                                                    <li><a href='/complain' > Contact Admin </a></li>
+                                                    <li><a href='/contact' > Contact Admin </a></li>
                                         </ul>
                                     {% endif %}
                                     
@@ -74,16 +76,16 @@
                 
                             <!-- Page Content Holder -->
                             <div id="content">
-                                <div class="navi-btn" id="toggle-sidebar">
-                                    <label for="navi-check" class="pointer">
+                                <label  id="toggle-sidebar" class="btn  btn-success"  type="button">
                                         <span></span>
                                         <span></span>
                                         <span></span>
-                                    </label>
+                                </label>
+                                <div class="container">
+                                        <main>
+                                            {% block main %}{% endblock main %}
+                                        </main>
                                 </div>
-                                <main>
-                                    {% block main %}{% endblock main %}
-                                </main>
                                 
                             </div>
             <script>

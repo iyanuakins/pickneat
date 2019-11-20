@@ -4,21 +4,26 @@
     Vendor Application
 {%endblock%}
 
+{% block body %}
+    <body class="bg-image-contacts">
+    </body>
+{% endblock %}
+
 {% block main %}
-    <form action="/apply" id="apply-form" method="POST">
-            <div  class="form-group">
-                <input type="text" class="form-control" name="business_name" placeholder="Enter Business name">
-            </div>
-            <div class="form-group">
-                <input type="tel" class="form-control" placeholder="Enter Business phone number">
-            </div>
-            <div class="form-group">
-                <input type="text" class="form-control" placeholder="Enter Business address">
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn  btn-lg btn-primary float-right">Apply</button>
-            </div>
-    </form>
+        <form action="/apply" id="apply-form" method="POST">
+                <div  class="form-group">
+                    <input type="text" class="form-control" name="business_name" placeholder="Enter Business name">
+                </div>
+                <div class="form-group">
+                    <input type="tel" class="form-control" placeholder="Enter Business phone number">
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-control" placeholder="Enter Business address">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn  btn-lg btn-success float-right">Apply</button>
+                </div>
+        </form>
     <script>
         
     </script>

@@ -4,7 +4,7 @@ def error(message, code):
     if code == 400:
         status_message = "Bad Request"
     elif code == 401:
-        status_message = "Unauthourised"
+        status_message = "Unauthorized"
     elif code == 403:
         status_message = "Forbidden"
 
