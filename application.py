@@ -10,6 +10,7 @@ from controllers.auth import login_handler,register_handler
 from controllers.admin import user_management_handler, user_view_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler
 from controllers.log import transaction_history_handler, order_history_handler
+from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler
 
 # # Configure application
 app = Flask(__name__)
@@ -83,3 +84,20 @@ def transaction_history():
 @app.route("/order_history", methods=["GET", "POST"])
 def order_history():
     return order_history_handler(request, database)
+
+@app.route("/manage_menu")
+def menu_manage():
+    return menu_handler(database)
+
+@app.route("/edit_menu/<id>", methods=["GET", "POST"])
+def edit_menu(id):
+    return edit_menu_handler(request, database, id)
+
+@app.route("/add_menu")
+def add_menu():
+    return render_template("menu_add.html")
+
+@app.route("/delete_menu/<id>")
+def delete_menu(id):
+    return delete_menu_handler(id, request, database)
+

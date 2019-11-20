@@ -1,9 +1,64 @@
-{%extends "layout.html" %}
+{%extends "layout2.html" %}
 
 {% block title %}
-    Log In 
+    Edit Menu
 {%endblock%}
 
 {% block main %}
-    <p>There was an error</p>
+<div class="container">
+    <form action="/edit_menu/{{session["edit_menu"]}}" method="POST" enctype="multipart/form-data">
+        <div class="col-lg-10 form-group">
+                <img src="{{"/"+menu["image"]}}" class="img-fluid" alt="Picture Unavailable" />
+        </div>
+    
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="name">Name</span>
+                </div>
+                <textarea class="form-control" name="name" aria-label="name">{{menu["name"]}}</textarea>                
+            </div>
+        </div>
+    
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="description_prepend">Description</span>
+                </div>
+                <textarea class="form-control" name="description" aria-label="description">{{menu["description"]}}</textarea>
+            </div>
+        </div>
+    
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="price_prepend">NGN</span>
+                </div>
+                <input type="text" class="form-control" name="price" value={{menu["price"]}} aria-label="price" aria-describedby="price_prepend">
+            </div>
+        </div>
+    
+        <div class="col-lg-10 form-group">
+            <select name="status" class="custom-select">
+                <option value="">Update Status</option>
+                <option value="available">Availiable</option>
+                <option value="unavailable">Unavailiable</option>
+            </select>
+        </div>
+
+        <div class="col-lg-10 form-group">
+            <div class="custom-file">
+            <input type="file" class="custom-file-input" name="image" id="image">
+            <label class="custom-file-label" for="image">Change Menu Picture</label>
+            </div>
+        </div> 
+    
+        <div class="col-lg-10 form-group">
+            <button type="submit" class="btn btn-success ml-4">Update Menu</button>
+            <a href="/delete_menu/{{session['edit_menu']}}"><input type="button" class="btn btn-danger ml-4" value="Delete Menu"></a>
+        </div>
+        
+    </form>
+</div>
+
 {% endblock %}

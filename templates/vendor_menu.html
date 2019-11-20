@@ -1,0 +1,41 @@
+{%extends "layout2.html" %}
+
+{% block title %}
+   My Menus
+{%endblock%}
+
+{% block main %}
+<div class="container mb-3">
+  <div>
+    <a href="/add_menu">
+      <button type="submit" class="btn btn-info btn-block">Add New Menu</button>
+    </a>
+  </div>
+  {%if not menus %}
+    <div class="card-group">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">No Preview</h5>
+          <p class="card-text">Upload menu to manage.</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <div class="row">
+        {% for menu in menus %}
+        <div class="col-lg-4 col-sm-12 mt-2 mb-3 text-center">
+          <a href="/edit_menu/{{menu['id']}}">
+          <div class="card" style="width: 18rem">
+                <img src={{menu["image"]}}  type="submit" class="card-img-top" alt="Preview Unavailiable">
+                <div class="card-body">
+                  <h5 class="card-title">{{menu["name"]}}</h5>
+                  <p class="card-text">{{menu["description"]}}.</p>
+                </div>
+            </div>
+          </a>
+          </div>
+        {% endfor %}
+    </div>
+    
+</div>
+{% endblock %}
