@@ -36,8 +36,8 @@ def complain_handler(request, database):
     if request.method == "GET":
         return render_template("contact.html", user = user[0])
     
-    return render_template("dashboard.html")
-        
+    return render_template("dashboard.html")        
+
 
 #Profile view and route handler
 def profile_handler(request, database):
