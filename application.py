@@ -97,6 +97,10 @@ def edit_menu(id):
 def add_menu():
     return render_template("menu_add.html")
 
+@app.route("/all_menus")
+def all_menus():
+    return render_template("all_menus.html")
+
 @app.route("/delete_menu/<id>")
 def delete_menu(id):
     return delete_menu_handler(id, request, database)
