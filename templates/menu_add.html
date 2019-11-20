@@ -1,31 +1,51 @@
-{%extends "layout.html" %}
+{%extends "layout2.html" %}
 
 {% block title %}
     Add Menu
 {%endblock%}
 
 {% block main %}
-    <div class="container">
-        <form>
+<div class="container">
+        <form action="/add_menu" method="POST" enctype="multipart/form-data">      
             <div class="form-group">
-                <label for="exampleInputEmail1">Food</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter name of food">
-                <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                <div class="col-lg-10 input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="name">Name</span>
+                    </div>
+                    <textarea class="form-control" name="name" aria-label="name"></textarea>                
+                </div>
             </div>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Description</label>
-                <input type="textarea" class="form-control" id="food_description" placeholder="Brief description of food">
-            </div>
-            <!-- <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                <label class="form-check-label" for="exampleCheck1">Check me out</label>
-            </div> -->
-            <div class="form-group">
-                <label for="exampleFormControlFile1">Food Image</label>
-                <input type="file" class="form-control-file" id="food_image">
-            </div>
-            <button type="submit" class="btn btn-outline-success">Add</button>
-        </form>
         
+            <div class="form-group">
+                <div class="col-lg-10 input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="description">Description</span>
+                    </div>
+                    <textarea class="form-control" name="description" aria-label="description"></textarea>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <div class="col-lg-10 input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="price_prepend">NGN</span>
+                    </div>
+                    <input type="text" class="form-control" name="price" aria-label="price" aria-describedby="price_prepend">
+                </div>
+            </div>
+        
+    
+            <div class="col-lg-10 form-group">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="image">
+                    <label class="custom-file-label" for="image">Upload Meal Snapshot</label>
+                </div>
+            </div> 
+        
+            <div class="col-lg-10 form-group">
+                <button type="submit" class="btn btn-success">ADD</button>
+            </div>
+            
+        </form>
     </div>
 {% endblock %}
