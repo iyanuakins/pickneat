@@ -70,3 +70,8 @@ def delete_menu_handler(id,request, database):
     if request.method == "GET":
         database.execute("DELETE FROM menu WHERE id=:id", id=id)
     return redirect("/manage_menu")
+
+def view_menu_handler(request, database):
+    if request.method == "GET":
+        menus = database.execute("SELECT * FROM menu WHERE status = 'available'")
+        return render_template("all_menus.html", menus = menus)

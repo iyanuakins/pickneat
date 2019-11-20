@@ -1,31 +1,74 @@
 {%extends "layout.html" %}
 
 {% block title %}
-    Log In 
+    Browse menu
 {%endblock%}
 
 {% block main %}
-<div class="card bg-dark text-white">
-    <img class="card-img" src=".../100px270/#55595c:#373a3c/text:Card image" alt="Card image">
-    <div class="card-img-overlay">
-      <h5 class="card-title">Card title</h5>
-      <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-      <p class="card-text">Last updated 3 mins ago</p>
-    </div>
-  </div>
-
-<div class="card mb-3" style="max-width: 540px;">
-        <div class="row no-gutters">
-          <div class="col-md-4">
-            <img src="..." class="card-img" alt="...">
-          </div>
-          <div class="col-md-8">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-              <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+<div class="container mt-5">
+  <div class="row items-container">
+      {% for menu in menus %}
+        <div class="col-md-3 col-sm-12 mt-2 mb-3 text-center item item-visible">
+          <div class="card">
+                <img src={{menu["image"]}}  type="submit" class="card-img-top" alt="Preview Unavailiable">
+                <div class="card-body">
+                  <h5 class="card-title">Vendor: <a href='/vendor_view/{{menu["vendor"]}}'>{{menu["vendor"]}}</a> </h5>
+                  <h5 class="card-title">{{menu["name"]}}</h5>
+                  <p class="card-text">{{menu["description"]}}.</p>
+                  <p><a href="/order_menu/{{menu['id']}}" class="btn btn-success">Order Menu</a></p>
+                </div>
             </div>
           </div>
-        </div>
-      </div>
+      {% endfor %}
+      <div class="pagination-indicator"></div> 
+      <ul class="pagination-container"></ul>
+  </div>
+</div>
+<script>
+      (function($){
+
+    // Initiate the paginator on the .items-container element.
+    var paginator = new $('.items-container').joldPaginator({
+        'perPage': 8,
+        'items': '.item',
+        'paginator': '.pagination-container',
+        'indicator': {
+            'selector': '.pagination-indicator',
+            'text': 'Showing item {start}-{end} of {total}',
+        }
+    });
+
+
+    // Toggle items
+    $('body').on('change', '.js-toggle-items', function(e) {
+
+    e.preventDefault();
+
+        var checked = this.checked;
+
+        $('.items-container').find('.item')
+            .removeClass('item-hidden')
+            .addClass('item-visible');
+
+        // Include historical reports (invalid)
+        if ( checked == true ) {
+            $('.items-container').find('.item-toggleable')
+                .removeClass('item-hidden')
+                .addClass('item-visible');
+        }
+
+        // Exclude historical reports (invalid)
+        if ( checked == false ) {
+            $('.items-container').find('.item-toggleable')
+                .removeClass('item-visible')
+                .addClass('item-hidden');
+        }
+
+        // Reset the paginator
+        paginator.init();
+
+    });
+
+})(jQuery);
+</script>
 {% endblock %}
