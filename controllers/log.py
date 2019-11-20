@@ -85,7 +85,7 @@ def transaction_history_handler(request, database):
 def order_history_handler(request, database):
     #Default render all orders in table format
     if request.method == "GET":
-        records = database.execute("SELECT * FROM orders WHERE username=:username", username=session.get("username"))
+        records = database.execute("SELECT * FROM orders WHERE user=:username", username=session.get("username"))
         return render_template("order_history.html", table=records)
     
     #Resuable Variables
@@ -99,45 +99,46 @@ def order_history_handler(request, database):
 
     #Renders Table in Year for User
     if request.form.get("view") == "table" and request.form.get("date_type") == "yearly":
-        records = database.execute("SELECT * FROM orders WHERE username=:username and status=:status", username=username, status=status)
+        records = database.execute("SELECT * FROM orders WHERE user=:username and status=:status", username=username, status=status)
         
         #Cummulate the Sum of all particular status Based on Year
         for order in records:
             year = order["time_stamp"].split("/")[0]
             try:
-                orders[year] += order["price"]
+                orders[year] += order["total_cost"]
             except:
-                orders[year] = order["price"]
+                orders[year] = order["total_cost"]
 
         #Order is a Dictionary of Items
-        return render_template("order_history.html", detail_table=orders, status_type=status["status_type"])
+        return render_template("order_history.html", detail_table=orders, status_type=status)
     
     #Renders Table in Months for User
     elif request.form.get("view") == "table":
-        records = database.execute("SELECT * FROM orders WHERE username=:username and status=:status", username=username, status=status)
+        records = database.execute("SELECT * FROM orders WHERE user=:username and status=:status", username=username, status=status)
 
         for order in records:
-            year = months[int(order["time_stamp"].split("/")[1])]
+            month = months[int(order["time_stamp"].split("/")[1])]
+            year = order["time_stamp"].split("/")[0]
             try:
-                orders[year+", "+month] += order["price"]
+                orders[month+", "+year] += order["total_cost"]
             except:
-                orders[year+", "+month] = order["price"]
+                orders[month+", "+year] = order["total_cost"]
 
         #status is a Dictionary of Items
-        return render_template("order_history.html", detail_table=orders)
+        return render_template("order_history.html", detail_table=orders, status_type=status)
 
     #Render Chart in Year for User
     if request.form.get("view") == "chart" and request.form.get("date_type") == "yearly":
 
-        records = database.execute("SELECT * FROM orders WHERE username=:username and status=:status",  username=username, status=status)
+        records = database.execute("SELECT * FROM orders WHERE user=:username and status=:status",  username=username, status=status)
 
         #Cummulate the Sum of all particular status Based on Year
         for order in records:
-            month = order["time_stamp"].split("/")[0]
+            year = order["time_stamp"].split("/")[0]
             try:
-                orders[month] += order["price"]
+                orders[year] += order["total_cost"]
             except:
-                orders[month] = order["price"]
+                orders[year] = order["total_cost"]
 
         for key in orders:
             amount.append(orders[key])
@@ -148,14 +149,14 @@ def order_history_handler(request, database):
     
     #Render Chart in Months for User
     else:
-        records = database.execute("SELECT * FROM orders WHERE username=:username and status=:status",  username=username, status=status)
+        records = database.execute("SELECT * FROM orders WHERE user=:username and status=:status",  username=username, status=status)
         for order in records:
             month = months[int(order["time_stamp"].split("/")[1])]
-            year = int(order["time_stamp"].split("/")[1])
+            year = order["time_stamp"].split("/")[0]
             try:
-                orders[year+", "+month] += order["price"]
+                orders[year+", "+month] += order["total_cost"]
             except:
-                orders[year+", "+month] = order["price"]
+                orders[year+", "+month] = order["total_cost"]
         for key in orders:
             amount.append(orders[key])
             time.append(key)            
