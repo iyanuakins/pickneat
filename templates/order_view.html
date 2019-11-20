@@ -1,9 +1,41 @@
-{%extends "layout.html" %}
+{%extends "layout2.html" %}
 
 {% block title %}
-    Log In 
+    Order View
 {%endblock%}
-
-{% block main %}
-    <p>There was an error</p>
-{% endblock %}
+<div class="container">
+    {% block main %}
+    <table id="table_view" class="table table-striped" style="width:100%">
+        <thead>
+            <tr>
+                <th>Customer</th>
+                <th>Quantity</th>
+                <th>Total Cost</th>
+                <th>View</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if not orders %}
+                <tr>
+                    <td colspan="4" class="text-center">No Orders to Process At the Moment.....</td>
+                </tr>               
+            {% endif %}
+            {% for order in orders %}
+                <tr>
+                    <td>{{order["user"]}}</td>
+                    <td>{{order["quantity"]}}</td>
+                    <td>{{order["total_cost"]}}</td>
+                    <td><a href="/manage_order/{{order['id']}}"><input type="button" class="btn btn-info" value="View Order"></a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+        
+<script>
+    //Handles Table Behaviour
+    $(document).ready( function () {
+        $('#table_view').DataTable();
+    } );
+</script>
+    {% endblock %}
+</div>

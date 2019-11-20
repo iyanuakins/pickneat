@@ -120,5 +120,12 @@ def add_menu_handler(request, database):
     return redirect("/manage_menu")
 
 #Attend to Order
-def manage_order_handler(database):
-    pass
+def manage_order_handler(id, request, database):
+    if not "." in id and id:
+        order = database.execute("SELECT * FROM menu WHERE id=:id", id=int(id))
+        return render_template("single_order.html", order=order)
+
+    if request.method == "GET":
+        orders = database.execute("SELECT * FROM orders WHERE vendor=:vendor and status='pending'", vendor=session.get("username"))
+        return render_template("order_view.html", orders=orders)      
+    

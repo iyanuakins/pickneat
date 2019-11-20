@@ -101,6 +101,7 @@ def add_menu():
 def delete_menu(id):
     return delete_menu_handler(id, request, database)
 
+@app.route("/manage_order")
 @app.route("/manage_order/<id>")
-def manage_order(id):
-    return manage_order_handler(id, datetime)
+def manage_order(id='14.info'):
+    return manage_order_handler(id, request, database)
