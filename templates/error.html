@@ -1,7 +1,12 @@
+
+{% if not session["username"] %}
 {%extends "layout.html" %}
+{% else %}
+{%extends "layout2.html" %}
+{% endif %}
 
 {% block title %}
-    Log In 
+    Error 
 {%endblock%}
 
 {% block main %}

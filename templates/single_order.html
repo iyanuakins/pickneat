@@ -5,6 +5,16 @@
 {%endblock%}
 <div class="container">
     {% block main %}
-    
+          <div class="card mb-3">
+                <img src="/static/images/login-page.jpg" class="card-img-top" alt="Error Fetching Image" style="height:40vh" >
+                <div class="card-body">
+                  <h5 class="card-title">NGN {{order["total_cost"]}}</h5>
+                  <p class="card-text">Swift delivery to <strong>{{user["full_name"].upper()}}</strong> at {{user["address"]}} </p>
+                  <p class="card-text"><small class="text-muted">Reach customer on <i>{{user["phone_number"]}}</i> </small></p>
+                  <a href="/accept_order/{{order['id']}}"><input type="button" class="btn btn-success" value="Accept"></a>
+                  <a href="/cancel_order/{{order['id']}}"><input type="button" class="btn btn-danger float-right" value="Cancel"></a>
+                </div>
+              </div>
     {% endblock %}
 </div>
+
