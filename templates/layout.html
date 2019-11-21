@@ -17,22 +17,23 @@
 {% block body%}
 <body>
 {% endblock %}
-        <nav class="navbar navbar-expand-md navbar-light bg-light border">
-                <a class="navbar-brand" href="/"><span class="green">Pick</span><span class="white">n</span><span class="green">Eat</span><span class="green"></a>
-                <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbar">
-                        <ul class="navbar-nav ml-auto mt-2">
-                            <li class="nav-item"><a class="nav-link" href="/login"><span class="btn btn-outline-success">Log In</span></a></li>
-                            <li class="nav-item"><a class="nav-link" href="/register"><span class="btn btn-success"> Register </span></a></li>
-                        </ul>
-                </div>
-            </nav>
-
-            <div>
-                    {% block main %}{% endblock main %}
+    <nav class="navbar navbar-expand-md navbar-light bg-light border">
+            <a class="navbar-brand" href="/"><span class="green">Pick</span><span class="white">n</span><span class="green">Eat</span><span class="green"></a>
+            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-target="#navbar" data-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item"><a class="nav-link" href="/login"><span class="btn btn-outline-success">Log In</span></a></li>
+                        <li class="nav-item"><a class="nav-link" href="/register"><span class="btn btn-success"> Register </span></a></li>
+                    </ul>
             </div>
-    
+    </nav>
+        <div>
+            {% block main %}{% endblock main %}
+    </div>
+    <script>
+            $(".alert").alert();
+    </script>
 </body>
 </html>

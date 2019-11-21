@@ -1,6 +1,6 @@
 import os
 from functools import wraps
-from flask import render_template, session, redirect
+from flask import flash, render_template, session, redirect
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from controllers.error import error
@@ -17,23 +17,25 @@ def application_handler(request, database):
         return render_template("vendor_application.html")
 
     if not request.form.get("business_name"):
-        return error("Must provide business name", 400)
+        flash("Must provide business name", 'warning')
+        return redirect("/apply")
 
     if not request.form.get("business_number"):
-        return error("Must provide business number", 400)
+        flash("Must provide business number", 'warning')
+        return redirect("/apply")
 
     if not request.form.get("business_address"):
-        return error("Must provide business address", 400)
+        flash("Must provide business address", 'warning')
+        return redirect("/apply")
 
     database.execute("UPDATE users SET business_name = :business_name, business_number = :business_number, business_address = :business_address WHERE usersname = :username",
                                     username = session.get["username"], business_name = request.form.get("business_name"), business_number = request.form.get("business_number"), business_address = request.form.get("business_address"))
+    
+    flash("Business Submitted Successfully", 'success')
     return render_template("dashboard.html")
         
 #User complaint Handler
 def complain_handler(request, database):
-    #Handles Authentication of User
-    if not session.get("username"):
-        return redirect("/login")
 
     #Retrieves User Information from Database
     user = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))
@@ -45,9 +47,6 @@ def complain_handler(request, database):
 
 #Profile view and route handler
 def profile_handler(request, database):
-    #Handles Authentication of User
-    if not session.get("username"):
-        return redirect("/login")
 
     #Retrieves User Information from Database
     user = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))
@@ -64,7 +63,8 @@ def profile_handler(request, database):
             if int(request.form.get("business_number")): #and len(request.form.get("business_number")) < 11 and len(request.form.get("business_number")) < 11
                 pass
     except:
-        return error("Enter Valid Number !", 400)
+        flash("Enter Valid Number", 'danger')
+        return redirect("/profile")
 
     #Get Values from fields or retain former
     full_name = user[0]["full_name"] if not request.form.get("full_name").strip() else request.form.get("full_name")
@@ -119,14 +119,11 @@ def profile_handler(request, database):
         image.save(os.path.join("static/images", add_image))
     
     #Refreshes Page
+    flash("Profile Updated", 'success')
     return redirect("/profile")
 
 #Dashboard view and route handler
 def dashboard_handler(database):
-
-    #Handles Authentication of User
-    if not session.get("username"):
-        return redirect("/login")
 
     #Retrieves User Information To Enable Processing
     user = database.execute("SELECT user_type, user_view FROM users WHERE username=:username", username=session.get("username"))
@@ -167,13 +164,16 @@ def withdrawal_handler(request, database):
     try:
         amount = int(request.form.get("amount"))
     except:
-        return error("Enter Valid Amount To Withdraw", 403)
+        flash("Enter valid amount", 'warning')
+        return redirect("/withdraw")
 
     if amount <= 0 or amount > user[0]["balance"]*0.98:
-        return error("You Don't Have Enough Money To Withdraw", 403)
+        flash("Insufficient Balance", 'danger')
+        return redirect("/withdraw")
 
     database.execute("UPDATE users SET balance=:new_balance WHERE username=:username", new_balance=user[0]["balance"]-amount,  username=session.get("username"))
-
+    
+    flash("Withdraw Successful", 'success')
     return redirect('/dashboard')
 
 #Switch Vendor View

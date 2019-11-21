@@ -1,5 +1,5 @@
 import os
-from flask import render_template, session, redirect, flash
+from flask import flash, render_template, session, redirect, flash
 from controllers.error import error
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -23,7 +23,8 @@ def edit_menu_handler(request, database, id):
     menu = database.execute("SELECT * FROM menu WHERE id=:id and vendor=:user", id=session.get("edit_menu"), user=session.get("username"))
 
     if len(menu) < 1:
-        return error("Error While Processing Your Request", 403)
+        flash("Error While Processing Your Request", 'danger')
+        return redirect("/edit_menu/"+id)
 
     
     #Dummy for Image Url
@@ -92,19 +93,23 @@ def add_menu_handler(request, database):
 
     #Checks for Image ELigibility for possible change to default
     if not "." in menu_image or not extension.upper() in ["JPEG", "JPG", "PNG", "GIF"]:
-        return error("Supply Appropriate Image", 400)
+        flash("Supply appropriate file", 'warning')
+        return redirect("/add_menu")
         
     if not request.form.get("name").strip():
-        return error("Enter a valid name", 400)
+        flash("Enter a valid name", 'danger')
+        return redirect("/add_menu")
 
     try:
         if int(request.form.get("price")) > 0:
             pass
     except:
-        return error("Enter a valid price", 400)
+        flash("Enter a valid price", 'warning')
+        return redirect("/add_menu")
 
     if not request.form.get("description").strip():
-        return error("Please Describe Your Meal", 400)
+        flash("Add description to meal", 'warning')
+        return redirect("/add_menu")
 
     database.execute("INSERT INTO menu (image, vendor, time_stamp, name, price, description) VALUES (:image, :vendor, :time_stamp, :name, :price, :description)",
                                                                                                             image = menu_image,
@@ -120,6 +125,7 @@ def add_menu_handler(request, database):
         add_image = menu_image.rsplit("/images/", 1)[1]
         image.save(os.path.join("static/images", add_image))
 
+    flash("Menu added Successfully", 'success')
     return redirect("/manage_menu")
 
 def view_menu_handler(request, database):
