@@ -5,5 +5,50 @@
 {%endblock%}
 
 {% block main %}
-    
 {% endblock %}
+
+{% block script%}
+
+{{super()}}
+<div class="container float-left" id="payment">
+        <form>
+            <h2 class="form-group">Payment Summary</h2>
+            <p>Food</p>
+            <script src="https://js.paystack.co/v1/inline.js"></script>
+            <button type="button" class="btn btn-primary" onclick="payWithPaystack()">Pay</button> 
+        </form>
+</div>
+
+       
+      <script>
+        function payWithPaystack(){
+          var handler = PaystackPop.setup({
+            key: 'pk_test_ea7bd699c3f04a25dd346ca2b6c9fced161e2ea1',
+            email: "{{user[0]['email']}}",
+            amount: {{order[0]['total_cost']}},
+            currency: "NGN",
+            // ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+            firstname: "{{user[0]['full_name']}}",
+            lastname: "{{user[0]['username']}}",
+            // label: "Optional string that replaces customer email"
+            metadata: {
+               custom_fields: [
+                  {
+                      display_name: "Mobile Number",
+                      variable_name: "mobile_number",
+                      value: "{{user[0]['phone_number']}}"
+                  }
+               ]
+            },
+            callback: function(response){
+                alert('success. transaction ref is ' + response.reference);
+            },
+            onClose: function(){
+                alert('window closed');
+            }
+          });
+          handler.openIframe();
+        }
+      </script>
+{% endblock %}
+
