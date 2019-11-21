@@ -37,16 +37,16 @@
                             <!-- Sidebar Holder -->
                             <nav id="sidebar">
                                 <div class="sidebar">
-                                        {% if session["user_type"] == "admin" %}
-                                            <ul>
-                                                    <li><a href='/dashboard' > Dashboard </a></li>
-                                                    <li><a href='/transaction_log' > View Transactions </a></li>
-                                                    <li><a href='/manage_menu' > Manage Menu </a></li>
-                                                    <li><a href='/manage_users' > Manage Users </a></li>
-                                                    <li><a href='/order_log' > View Orders </a></li>
-                                                    <li><a href='/approve_vendor' > Approve Vendor </a></li>
-                                                    <li><a href='/approve_vendor' > Approve Vendor </a></li>
-                                            </ul>
+                                    {% if session["user_type"] == "admin" %}
+                                        <ul>
+                                                <li><a href='/dashboard' > Dashboard </a></li>
+                                                <li><a href='/transaction_log' > View Transactions </a></li>
+                                                <li><a href='/manage_menu' > Manage Menu </a></li>
+                                                <li><a href='/manage_users' > Manage Users </a></li>
+                                                <li><a href='/order_log' > View Orders </a></li>
+                                                <li><a href='/approve_vendor' > Approve Vendor </a></li>
+                                                <li><a href='/approve_vendor' > Approve Vendor </a></li>
+                                        </ul>
                                     {% elif  session["user_type"] == "vendor" and session["user_view"] == "vendor" %}
                                         <ul>
                                                 <li><a href='/dashboard' > Dashboard </a></li>
@@ -70,8 +70,21 @@
                                                     <li><a href='/contact' > Contact Admin </a></li>
                                         </ul>
                                     {% endif %}
-                                    
                                 </div>
+                                {% if  session["user_type"] == "vendor" and session["user_view"] == "vendor" %}
+                                        <div  style="position: relative; bottom:0;">
+                                            <a href="/switch_view/user">
+                                                <button type="submit" class="btn btn-info btn-block">Switch to Buyer</button>
+                                            </a>
+                                        </div>
+                                {% endif %}
+                                {% if  session["user_type"] == "vendor" and session["user_view"] == "user" %}
+                                <div  style="position: relative; bottom:0;">
+                                    <a href="/switch_view/vendor">
+                                        <button type="submit" class="btn btn-info btn-block">Switch to Seller</button>
+                                    </a>
+                                </div>
+                            {% endif %}
                             </nav>
                 
                             <!-- Page Content Holder -->
