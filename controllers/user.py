@@ -156,7 +156,7 @@ def dashboard_handler(database):
 #Withdrawal Manager
 def withdrawal_handler(request, database):
     
-    user = database.execute("SELECT balance FROM users WHERE username=:username", username=session.get("username"))
+    user = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))
 
     if request.method == "GET":
         return render_template("withdrawal.html", user=user[0])
