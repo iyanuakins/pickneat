@@ -12,8 +12,9 @@ def transaction_history_handler(request, database):
     type = request.form.get("date_type")
     transaction_type = request.form.get("transaction")
     time = []
-    amount = []
+    amount = {}
     transactions = {}
+    sorting_table = []
     months = {1:'Jan', 2:'Feb', 3:'Mar', 4:'Apr', 5:'May', 6:'Jun', 7:'Jul', 8:'Aug', 9:'Sep', 10:'Oct', 11:'Nov', 12:'Dec'}
 
     #Renders Table in Year for User
@@ -21,29 +22,35 @@ def transaction_history_handler(request, database):
         records = database.execute("SELECT * FROM transactions WHERE username=:username and transaction_type=:transaction", username=username, transaction=transaction_type)
         #Cummulate the Sum of all particular Transaction Based on Year
         for transaction in records:
-            month = transaction["time_stamp"].split("/")[0]
+            year = transaction["time_stamp"].split("/")[0]
+            sorting_table.append(year)
             try:
-                transactions[month] += transaction["amount"]
+                transactions[year] += transaction["amount"]
             except:
-                transactions[month] = transaction["amount"]
+                transactions[year] = transaction["amount"]
 
         #Transaction is a Dictionary of Items
-        return render_template("transaction_history.html", detail_table=transactions, transaction_type=transaction_type)
+        sorting_table.sort()
+        display_set = set(sorting_table)
+        return render_template("transaction_history.html", detail_table=transactions, transaction_type=transaction_type, sort=display_set)
     
     #Renders Table in Months for User
     elif request.form.get("view") == "table":
         records = database.execute("SELECT * FROM transactions WHERE username=:username and transaction_type=:transaction", username=username, transaction=transaction_type)
         
         for transaction in records:
-            month = months[int(transaction["time_stamp"].split("/")[1])]
+            month = transaction["time_stamp"].split("/")[1]
             year = transaction["time_stamp"].split("/")[0]
+            sorting_table.append(year+"/"+month)
             try:
-                transactions[month+", "+year] += transaction["amount"]
+                transactions[year+"/"+month] += transaction["amount"]
             except:
-                transactions[month+", "+year] = transaction["amount"]
+                transactions[year+"/"+month] = transaction["amount"]
 
         #Transaction is a Dictionary of Items
-        return render_template("transaction_history.html", detail_table=transactions, month=months, transaction_type = transaction_type)
+        sorting_table.sort()
+        display_set = set(sorting_table)
+        return render_template("transaction_history.html", detail_table=transactions, month=months, transaction_type = transaction_type, sort=display_set)
 
     #Render Chart in Year for User
     if request.form.get("view") == "chart" and request.form.get("date_type") == "yearly":
@@ -52,35 +59,53 @@ def transaction_history_handler(request, database):
 
         #Cummulate the Sum of all particular Transaction Based on Year
         for transaction in records:
-            month = transaction["time_stamp"].split("/")[0]
+            year = transaction["time_stamp"].split("/")[0]
+            sorting_table.append(year)
             try:
-                transactions[month] += transaction["amount"]
+                transactions[year] += transaction["amount"]
             except:
-                transactions[month] = transaction["amount"]
+                transactions[year] = transaction["amount"]
 
         for key in transactions:
-            amount.append(transactions[key])
+            amount[key] = transactions[key]
             time.append(key)
 
+        #sort display of figures
+        sorting_table.sort()
+        display_items = []
+        for i in sorting_table:
+            if not i in display_items:
+                display_items.append(i)
+
         #Transaction is a Dictionary of Items
-        return render_template("transaction_history.html", chart=transactions, values=amount, labels=time, legend="YEARLY")
+        return render_template("transaction_history.html", chart=transactions, values=amount, labels=display_items, legend="YEARLY")
     
     #Render Chart in Months for User
     else:
         records = database.execute("SELECT * FROM transactions WHERE username=:username and transaction_type=:transaction",  username=username, transaction=transaction_type)
         for transaction in records:
-            month = months[int(transaction["time_stamp"].split("/")[1])]
+            month = transaction["time_stamp"].split("/")[1]
             year = transaction["time_stamp"].split("/")[0]
+            sorting_table.append(year+"/"+month)
             try:
-                transactions[month+", "+year] += transaction["amount"]
+                transactions[year+"/"+month] += transaction["amount"]
             except:
-                transactions[month+", "+year] = transaction["amount"]
+                transactions[year+"/"+month] = transaction["amount"]
+
         for key in transactions:
-            amount.append(transactions[key])
+            amount[key] = transactions[key]
             time.append(key)            
 
+        #sort display of figures
+        sorting_table.sort()
+
+        display_items = []
+        for i in sorting_table:
+            if not i in display_items:
+                display_items.append(i)
+
         #Transaction is a Dictionary of Items
-        return render_template("transaction_history.html", chart=transactions, values=amount, labels=time, legend="MONTHLY")
+        return render_template("transaction_history.html", chart=transactions, values=amount, labels=display_items, legend="MONTHLY")
 
 def order_history_handler(request, database):
     #Default render all orders in table format
