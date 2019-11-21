@@ -17,7 +17,8 @@ def manage_single_order_handler(id, database):
 def accept_order_handler(id, database):
     order = database.execute("SELECT * FROM orders WHERE id=:id", id=int(id))
     if not order[0]["status"] == "pending":
-        return error("This Order Has Been Accepted Earlier", 400)
+        flash("Order Does Not Exist", 'danger')
+        return redirect("/manage_order")
 
     database.execute("UPDATE orders SET status='confirmed' WHERE id=:id", id=int(id))
     vendor = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))
@@ -28,7 +29,7 @@ def accept_order_handler(id, database):
                                                 username=session.get("username"),
                                                 amount=order[0]["total_cost"], 
                                                 time_stamp = datetime.now(),)
-
+    flash("Order Accepted Successfully", 'success')
     return redirect("/manage_order")
 
 
@@ -36,7 +37,8 @@ def accept_order_handler(id, database):
 def cancel_order_handler(id, database):
     order = database.execute("SELECT * FROM orders WHERE id=:id", id=int(id))
     if not order[0]["status"] == "pending":
-        return error("This Order Has Been Cancelled Earlier", 400)
+        flash("Order Does Not Exist", 'danger')
+        return redirect("/manage_order")
 
     database.execute("UPDATE orders SET status='cancelled' WHERE id=:id", id=int(id))
     buyer = database.execute("SELECT * FROM users WHERE username=:username", username=order[0]["user"])
@@ -47,5 +49,5 @@ def cancel_order_handler(id, database):
                                                 username=buyer[0]["username"],
                                                 amount=order[0]["total_cost"], 
                                                 time_stamp = datetime.now(),)
-
+    flash("Order Cancelled Successfully", 'warning')
     return redirect("/manage_order")
