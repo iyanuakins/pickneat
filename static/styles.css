@@ -176,7 +176,8 @@ a:link {
     }
     
     .pagination-indicator {
-        font-size: 14px;
+        display: block;
+        font-size: 16px;
         color: rgb(189, 189, 189);
         text-align: left;
     }

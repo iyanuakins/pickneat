@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect
+from flask import render_template, session, redirect, flash
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from controllers.error import error
@@ -8,42 +8,50 @@ def register_handler(request, database):
     if request.method == "POST":
         # Ensure name was submitted
         if not request.form.get("full_name"):
-            return error("Must provide full name", 403)
+            flash("Must provide full name", "danger")
+            return redirect("/register")
 
         # Ensure username was submitted
         if not request.form.get("username").strip():
-            return error("Must provide username", 403)
+            flash("Must provide username", "danger")
+            return redirect("/register")
 
         # Ensure phone number was submitted
         try:
             if int(request.form.get("phone_number")):
                 pass
         except:
-            return error("Must provide phone number", 403)
+            flash("Must provide phone number", "danger")
+            return redirect("/register")
 
 
         # Ensure username was submitted
         if not request.form.get("email"):
-            return error("Must provide email", 403)
+            flash("Must provide email", "danger")
+            return redirect("/register")
 
         # Ensure password was submitted
         elif not request.form.get("password").strip():
-            return error("Must provide password", 403)
+            flash("Must provide password", "danger")
+            return redirect("/register")
 
         # Ensure password confirmation was submitted
         elif not request.form.get("confirmation").strip():
-            return error("Must repeat password enterd for confirmation", 403)
+            flash("Must repeat password enterd for confirmation", "danger")
+            return redirect("/register")
 
         #Confirm Password match
         elif request.form.get("confirmation").strip() != request.form.get("password").strip():
-            return error("Passwords entered does not match", 403)
+            flash("Passwords entered does not match", "danger")
+            return redirect("/register")
 
         # Query database for username
         rows = database.execute("SELECT * FROM users WHERE username = :username",
                           username=request.form.get("username"))
 
         if len(rows) > 0:
-            return error("Username taken, try another", 403)
+            flash("Username taken, try another", "danger")
+            return redirect("/register")
 
         # Query database for username
         database.execute("INSERT INTO users (full_name, username, email, phone_number, address, user_type, password, time_stamp) VALUES ( :full_name, :username, :email, :phone_number, :address, :user_type, :password, :time_stamp)",
@@ -63,11 +71,13 @@ def login_handler(request, database):
 
     #Final Validation of Username
     if not request.form.get("username").strip():
-        return error("Username Field Is Blank", 400)
+        flash("Username Field Is Blank", "danger")
+        return redirect("/login")
 
     #Final Validation of Password
     if not request.form.get("password").strip():
-        return error("Password Field Is Blank", 400)
+        flash("Password Field Is Blank", "danger")
+        return redirect("/login")
 
     #Recieves Information about User from Database
     user = database.execute("SELECT * FROM users WHERE username=:username", username=request.form.get("username"))
@@ -77,9 +87,11 @@ def login_handler(request, database):
         user[0]["username"]
 
         if not check_password_hash(user[0]["password"], request.form.get("password")):
-            return error("Invalid Password", 400)
+            flash("Invalid Password", "danger")
+            return redirect("/login")
     except:
-        return error("Invalid Password/Username", 400)
+        flash("Invalid Password/Username", "danger")
+        return redirect("/login")
     
 
     #Remembers Logged In User
