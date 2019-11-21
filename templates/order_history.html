@@ -92,6 +92,16 @@
     </div>
     {% endif %}
 
+    {%if not table and not chart and not detail_table %}
+    <div class="card-group mt-5">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">No Orders</h5>
+          <p class="card-text">Place an order to view your order history.</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
 
 <script>
     // Responds to View Select
