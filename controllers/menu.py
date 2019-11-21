@@ -97,7 +97,10 @@ def add_menu_handler(request, database):
     if not request.form.get("name").strip():
         return error("Enter a valid name", 400)
 
-    if not int(request.form.get("price")) > 0:
+    try:
+        if int(request.form.get("price")) > 0:
+            pass
+    except:
         return error("Enter a valid price", 400)
 
     if not request.form.get("description").strip():

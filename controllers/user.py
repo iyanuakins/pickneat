@@ -55,8 +55,38 @@ def profile_handler(request, database):
     #Handles GET request to Page
     if request.method == "GET":
         return render_template("profile.html", user=user[0])
+    
+    #Check Whether Numbers are Integers
+    try:
+        if int(request.form.get("phone_number")): #and not len(request.form.get("phone_number")) < 11 and len(request.form.get("phone_number")) < 11
+            pass
+        if session.get("user_type") == "vendor":
+            if int(request.form.get("business_number")): #and len(request.form.get("business_number")) < 11 and len(request.form.get("business_number")) < 11
+                pass
+    except:
+        return error("Enter Valid Number !", 400)
 
-    #Dummy for Image Url
+    #Get Values from fields or retain former
+    full_name = user[0]["full_name"] if not request.form.get("full_name").strip() else request.form.get("full_name")
+    email = user[0]["email"] if not request.form.get("email").strip() else request.form.get("email")
+    address = user[0]["address"] if not request.form.get("address").strip() else request.form.get("address")
+    try:
+        business_name = user[0]["business_name"] if not request.form.get("business_name").strip() else request.form.get("business_name")
+    except:
+        business_name = user[0]["business_name"]
+    try:
+        business_address = user[0]["business_address"] if not request.form.get("business_address").strip() else request.form.get("business_address")
+    except:
+        business_address = user[0]["business_address"]
+    try:
+        phone_number = int("234"+request.form.get("phone_number"))
+    except:
+        phone_number = user[0]["phone_number"]
+    try:
+        business_number = int("234"+request.form.get("business_number"))
+    except:
+        business_number = user[0]["business_number"]
+    
     user_image = ""
     extension = ""
 
@@ -81,15 +111,7 @@ def profile_handler(request, database):
 
     #Updates User Information to Database
     database.execute("UPDATE users SET (full_name, email, phone_number, address, user_image, business_name, business_address, business_number)=(:full_name, :email, :phone_number, :address, :user_image, :business_name, :business_address, :business_number) WHERE username=:username",
-                            full_name = request.form.get("full_name") if request.form.get("full_name").strip() else user[0]["full_name"],
-                            email = request.form.get("email") if request.form.get("email").strip() else user[0]["email"],
-                            phone_number = request.form.get("phone_number") if request.form.get("phone_number").strip() else user[0]["phone_number"],
-                            address = request.form.get("address") if request.form.get("address").strip() else user[0]["address"],
-                            user_image = user_image,
-                            business_name = request.form.get("business_name") if request.form.get("business_name").strip() else user[0]["business_name"],
-                            business_address = request.form.get("business_address") if request.form.get("business_address").strip() else user[0]["business_address"],
-                            business_number = request.form.get("business_number") if request.form.get("business_number").strip() else user[0]["business_number"],
-                            username=session.get("username"))
+                                            full_name = full_name, email = email, phone_number = phone_number, address = address, user_image = user_image, business_name = business_name, business_address = business_address,  business_number = business_number, username=session.get("username"))
 
     #Stores New Image in Project
     if request.files["user_image"]:
@@ -134,3 +156,36 @@ def dashboard_handler(database):
     session.clear()
     return redirect("/login")
 
+#Withdrawal Manager
+def withdrawal_handler(request, database):
+    
+    user = database.execute("SELECT balance FROM users WHERE username=:username", username=session.get("username"))
+
+    if request.method == "GET":
+        return render_template("withdrawal.html", user=user[0])
+
+    try:
+        amount = int(request.form.get("amount"))
+    except:
+        return error("Enter Valid Amount To Withdraw", 403)
+
+    if amount <= 0 or amount > user[0]["balance"]*0.98:
+        return error("You Don't Have Enough Money To Withdraw", 403)
+
+    database.execute("UPDATE users SET balance=:new_balance WHERE username=:username", new_balance=user[0]["balance"]-amount,  username=session.get("username"))
+
+    return redirect('/dashboard')
+
+#Switch Vendor View
+def switch_vendor_view(view, database):
+
+    if not session.get("user_type") == "vendor":
+        return redirect("/dashboard")
+
+    if view == "vendor":
+        database.execute("UPDATE users SET user_view='vendor' WHERE username=:username", username=session.get("username"))
+
+    if view == "user":
+        database.execute("UPDATE users SET user_view='user' WHERE username=:username", username=session.get("username"))
+
+    return redirect("/dashboard")
