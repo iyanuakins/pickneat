@@ -87,6 +87,16 @@
     </div>
     {% endif %}
 
+    {%if not table and not chart and not detail_table %}
+    <div class="card-group mt-5">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">No Transactions</h5>
+          <p class="card-text">Fund account to view history.</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
 <script>
     // Responds to View Select
     const select_view = () => $("#history_view").val() ? $("#view").submit() : False

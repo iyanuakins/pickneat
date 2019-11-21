@@ -19,8 +19,12 @@ def register_handler(request, database):
             return error("Must provide username", 403)
 
         # Ensure phone number was submitted
-        if not request.form.get("phone_number"):
+        try:
+            if int(request.form.get("phone_number")):
+                pass
+        except:
             return error("Must provide phone number", 403)
+
 
         # Ensure username was submitted
         if not request.form.get("email"):

@@ -1,0 +1,50 @@
+{%extends "layout2.html" %}
+
+{% block title %}
+    Withdraw
+{%endblock%}
+
+{% block body %}
+    <body class="bg-image-contacts">
+        
+    </body>
+
+{% endblock %}
+
+{% block main %}
+    <form action="/withdraw" id="contact-form" method="POST">
+        <div class="form-group">
+            <div class="col-lg-12 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="name_prepend">Balance</span>
+                </div>
+                <input type="text" class="form-control" readonly value={{user["balance"]}} aria-label="balance" aria-describedby="balance_prepend">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-12 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="available_prepend">Availiable</span>
+                </div>
+                <input type="text" class="form-control" readonly  value={{user["balance"]*0.98}} aria-label="email" aria-describedby="available_prepend">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-12 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="amount_prepend">NGN </span>
+                </div>
+                <input type="text" class="form-control" name="amount" aria-describedby="amount_prepend">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="amount_prepend">Amount To Withdraw</span>
+                </div>
+            </div>
+        </div>
+            <div class="col-lg-12 form-group">
+                <button type="submit" class="btn btn-success float-right">Proceed</button>
+            </div>
+    </form>
+    <script>
+        
+    </script>
+{% endblock %}

@@ -97,7 +97,10 @@ def add_menu_handler(request, database):
     if not request.form.get("name").strip():
         return error("Enter a valid name", 400)
 
-    if not int(request.form.get("price")) > 0:
+    try:
+        if int(request.form.get("price")) > 0:
+            pass
+    except:
         return error("Enter a valid price", 400)
 
     if not request.form.get("description").strip():
@@ -119,16 +122,6 @@ def add_menu_handler(request, database):
 
     return redirect("/manage_menu")
 
-#Attend to Order
-def manage_order_handler(id, request, database):
-    if not "." in id and id:
-        order = database.execute("SELECT * FROM menu WHERE id=:id", id=int(id))
-        return render_template("single_order.html", order=order)
-
-    if request.method == "GET":
-        orders = database.execute("SELECT * FROM orders WHERE vendor=:vendor and status='pending'", vendor=session.get("username"))
-        return render_template("order_view.html", orders=orders)      
-    
 def view_menu_handler(request, database):
     if request.method == "GET":
         menus = database.execute("SELECT * FROM menu WHERE status = 'available'")

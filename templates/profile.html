@@ -6,15 +6,15 @@
 
 {% block main %}
 <form action="/profile" method="POST" enctype="multipart/form-data">
-        <div class="col-lg-10 form-group">
-            <img src={{user["user_image"]}} class="img-fluid" alt="Picture Unavailable" />
+        <div class="col-lg-10 form-group text-center">
+            <img src={{user["user_image"]}} class="img-fluid" alt="Picture Unavailable" style="height: 50vh"/>
         </div>
         <div class="form-group">
             <div class="col-lg-10 input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="full_name_prepend">Name</span>
+                    <span class="input-group-text">Name</span>
                 </div>
-                <input type="text" class="form-control" name="full_name" value={{user["full_name"]}} aria-label="name" aria-describedby="full_name_prepend">
+                <textarea class="form-control" name="full_name" rows="1" aria-label="full_name">{{user["full_name"]}}</textarea>
             </div>
         </div>
         <div class="form-group">
@@ -45,7 +45,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">Address</span>
                     </div>
-                    <textarea class="form-control" name="address" aria-label="Address">{{user["address"]}}</textarea>
+                    <textarea class="form-control" name="address" rows="1" aria-label="Address">{{user["address"]}}</textarea>
                   </div>
             </div>
             {% if session["user_type"] == "vendor" %}
@@ -62,7 +62,7 @@
                         <div class="input-group-prepend">
                           <span class="input-group-text">Buiness Address</span>
                         </div>
-                        <textarea class="form-control" name="business_address" aria-label="Address">{{user["business_address"]}}</textarea>
+                        <textarea class="form-control" name="business_address" rows="1" aria-label="Address">{{user["business_address"]}}</textarea>
                       </div>
                 </div>
                 <div class="form-group">
