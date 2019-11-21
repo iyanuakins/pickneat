@@ -127,6 +127,13 @@ a:link {
     text-decoration: none;
   }
 
+  #toggle-sidebar > span { 
+    display: block;
+    width: 1.5em;
+    height: 0.5em;
+    border-bottom: #28a745 2px solid;
+}
+
   /* ------------------------------------------
                 Pagination style
     -------------------------------------------*/

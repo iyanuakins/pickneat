@@ -10,8 +10,10 @@ from controllers.auth import login_handler,register_handler
 from controllers.admin import user_management_handler, user_view_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler, withdrawal_handler, switch_vendor_view
 from controllers.log import transaction_history_handler, order_history_handler
+from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler, add_menu_handler, manage_order_handler, \
+                      view_menu_handler, single_view_menu_handler, order_handler
 from controllers.order import manage_order_handler,  manage_single_order_handler, accept_order_handler, cancel_order_handler
-from controllers.menu import delete_menu_handler, add_menu_handler, view_menu_handler, edit_menu_handler, menu_handler
+
 
 # # Configure application
 app = Flask(__name__)
@@ -126,6 +128,14 @@ def accept_order(id):
 def view_menu():
     return view_menu_handler(request, database)
 
+@app.route("/order_menu/<int:id>")
+def single_view_menu(id):
+    return single_view_menu_handler(id, request, database)
+
+@app.route("/order", methods = ["POST"])
+def order():
+    return order_handler(request, database)
+  
 @app.route("/withdraw", methods=["GET", "POST"])
 def withdraw_cash():
     return withdrawal_handler(request, database)
@@ -133,4 +143,3 @@ def withdraw_cash():
 @app.route("/switch_view/<view>")
 def switch_view(view):
     return switch_vendor_view(view, database)
-
