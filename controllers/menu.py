@@ -1,5 +1,5 @@
 import os
-from flask import render_template, session, redirect
+from flask import render_template, session, redirect, flash
 from controllers.error import error
 from werkzeug.utils import secure_filename
 from datetime import datetime
@@ -140,3 +140,26 @@ def single_view_menu_handler(id, request, database):
         vendor = menu[0]["vendor"]
         user = database.execute("SELECT business_name, business_address, user_image FROM users WHERE username = :vendor ", vendor = vendor)
         return render_template("single_menu.html", menu = menu[0], vendor = user[0])
+
+
+def order_handler(request, database):
+    if request.method == "POST":
+        # Ensure name was submitted
+        if not request.form.get("quantity"):
+            return error("Must provide quantity", 400)
+
+        # Ensure username was submitted
+        if not request.form.get("menu_id").strip():
+            return error("Must provide Menu ID", 403)
+
+        if session.get("username"):
+            menu = database.execute("SELECT * FROM menu WHERE id = :id ", id = id)
+            vendor = menu[0]["vendor"]
+            price = menu[0]["price"]
+            user = database.execute("SELECT balance FROM users WHERE username = :user ", user = session["username"])
+            user_balance = user[0]["balance"]
+            # if user_balance < price 
+        else:
+            flash("Authentication required to complete order process, please login or register to continue")
+            return redirect("/login")
+
