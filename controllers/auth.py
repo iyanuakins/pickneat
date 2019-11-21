@@ -5,10 +5,6 @@ from controllers.error import error
 
 #Registration Handler
 def register_handler(request, database):
-    
-    if session.get("username"):
-        return redirect("/dashboard")
-
     if request.method == "POST":
         # Ensure name was submitted
         if not request.form.get("full_name"):
@@ -61,14 +57,6 @@ def register_handler(request, database):
       
 #Login Handler
 def login_handler(request, database):
-    
-    #Handles Logged In State
-    try:
-        if session.get("username"):
-            return logged_in()
-    except:
-        pass
-
     #Handles Rendering of Login Page
     if request.method == "GET":
         return render_template("login.html")
@@ -97,13 +85,8 @@ def login_handler(request, database):
     #Remembers Logged In User
     session["username"] = user[0]["username"]
     session["user_type"] = user[0]["user_type"]
+    session["user_view"] = user[0]["user_view"]
 
     #Handles DashBoard Display
-    return logged_in()
-
-
-def logged_in():
-    if not session.get("username"):
-        return redirect("/login")
-
     return redirect("/dashboard")
+
