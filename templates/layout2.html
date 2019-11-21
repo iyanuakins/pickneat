@@ -27,7 +27,9 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbar">
                         <ul class="navbar-nav ml-auto mt-2">
-                                <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{session["username"]}}</span></a></li>
+                            
+                            <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{session["balance"]}}</span></a></li>
+                            <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{session["username"]}}</span></a></li>
                             <li class="nav-item"><a class="nav-link" href="/logout"><span class="btn btn-danger">Log Out</span></a></li>
                         </ul>
                 </div>
@@ -114,6 +116,7 @@
                                 </div>
                                 
                             </div>
+            {% block script%}                            
             <script>
                 let isSidebarActive = false;
                 $("document").ready(function(){
@@ -128,5 +131,6 @@
                         })
                     })
             </script>
+        {% endblock %}
 </body>
 </html>

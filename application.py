@@ -119,6 +119,12 @@ def add_menu():
 def all_menus():
     return render_template("all_menus.html")
 
+@app.route("/fund")
+def fund():
+    user = database.execute("SELECT * FROM users WHERE username = :username", username = session.get("username"))
+    order = database.execute("SELECT * FROM orders WHERE user = :user AND status='pending'", user = session.get("username"))
+    return render_template("funding_page.html", order = order, user = user)
+
 @app.route("/delete_menu/<id>")
 @login_required
 def delete_menu(id):
