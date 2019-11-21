@@ -12,7 +12,8 @@
 {% endblock %}
 
 {% block main %}
-    <form action="/withdraw" id="contact-form" method="POST">
+<div class="container">
+    <form action="/withdraw" id="withdraw_form" method="POST">
         <div class="form-group">
             <div class="col-lg-12 input-group mb-3">
                 <div class="input-group-prepend">
@@ -34,17 +35,48 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="amount_prepend">NGN </span>
                 </div>
-                <input type="text" class="form-control" name="amount" aria-describedby="amount_prepend">
+                <input type="text" class="form-control" id="amount" name="amount" aria-describedby="amount_prepend">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="amount_prepend">Amount To Withdraw</span>
                 </div>
             </div>
         </div>
             <div class="col-lg-12 form-group">
-                <button type="submit" class="btn btn-success float-right">Proceed</button>
+                <script src="https://js.paystack.co/v1/inline.js"></script>
+                <button type="button" class="btn btn-success float-right" onclick="payWithPaystack()">Proceed</button>
             </div>
     </form>
+</div>
+                   
     <script>
-        
+    function payWithPaystack(){
+        var handler = PaystackPop.setup({
+        key: 'pk_test_8e20a017a066bc5e8bd812662af7d9a75a285b8c',
+        email: '{{user["email"]}}',
+        amount: $('#amount').val()*100,
+        currency: "NGN",
+        ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
+        firstname: '{{user["full_name"]}}',
+        lastname: '',
+        // label: "Optional string that replaces customer email"
+        metadata: {
+            custom_fields: [
+                {
+                    display_name: '{{user["username"]}}',
+                    variable_name: '{{user["username"]}}',
+                    value: "+2348012345678"
+                }
+            ]
+        },
+        callback: function(response){
+            $("#withdraw_form").submit()
+        },
+        onClose: function(){
+            alert('Transaction Cancelled');
+        }
+        });
+        handler.openIframe();
+    }
     </script>
+            
 {% endblock %}
