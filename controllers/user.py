@@ -1,4 +1,5 @@
 import os
+from functools import wraps
 from flask import render_template, session, redirect
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
@@ -41,7 +42,6 @@ def complain_handler(request, database):
         return render_template("contact.html", user = user[0])
     
     return render_template("dashboard.html")        
-
 
 #Profile view and route handler
 def profile_handler(request, database):
@@ -189,3 +189,19 @@ def switch_vendor_view(view, database):
         database.execute("UPDATE users SET user_view='user' WHERE username=:username", username=session.get("username"))
 
     return redirect("/dashboard")
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get("username"):
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function
+
+def logout_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session.get("username"):
+            return redirect("/dashboard")
+        return f(*args, **kwargs)
+    return decorated_function
