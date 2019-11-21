@@ -154,8 +154,7 @@ def order_handler(request, database):
             user = database.execute("SELECT balance FROM users WHERE username = :user ", user = session["username"])
             user_balance = user[0]["balance"]
             if user_balance < total_cost:
-                flash("Authentication required to complete order process, please login or register to continue", "danger")
-                return redirect("/dashboard")
+                return "insufficient"
             else:
                 qty = int(request.form.get("quantity"))
                 database.execute("UPDATE users SET balance = :new_balance WHERE username = :user ", new_balance = user_balance - total_cost, user = session["username"])
@@ -164,9 +163,10 @@ def order_handler(request, database):
                 database.execute("INSERT INTO orders (user, vendor, quantity, total_cost, price, time_stamp) VALUES ( :user, :vendor, :quantity, :total_cost, :price, :time_stamp)",
                                                  user = session["username"], vendor = vendor, quantity = qty, total_cost = total_cost, price = price, time_stamp = datetime.now())
                 
+                desc = "Payment for {} plate(s) of {}".format(qty, menu_name)
                 #Insert transaction details into database
-                database.execute("INSERT INTO transactions (username, transaction_type, amount, description, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :time_stamp)",
-                                                 username = session["username"], transaction_type = "order", amount = total_cost, description = f"Payment for {qty} plate(s) {menu_name}", time_stamp = datetime.now())
+                database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :status, :time_stamp)", 
+                                                    username = session["username"], transaction_type = "order", amount = total_cost, description = desc, status = "pending", time_stamp = datetime.now())
                 flash("Order was successful and is been processed.", "success")
                 return redirect("/dashboard")
         else:
