@@ -100,5 +100,7 @@ def login_handler(request, database):
     session["user_view"] = user[0]["user_view"]
 
     #Handles DashBoard Display
+    if session.get("menu_id"):
+        return redirect("/preview")
     return redirect("/dashboard")
 

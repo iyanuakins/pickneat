@@ -143,26 +143,19 @@ def single_view_menu_handler(id, request, database):
 
 def order_handler(request, database):
     if request.method == "POST":
-        # Ensure name was submitted
-        if not request.form.get("quantity"):
-            return error("Must provide quantity", 400)
-
-        # Ensure username was submitted
-        if not request.form.get("menu_id").strip():
-            return error("Must provide Menu ID", 403)
-
+        res = request.get_json()
         if session.get("username"):
-            menu = database.execute("SELECT * FROM menu WHERE id = :id ", id = request.form.get("menu_id").strip())
+            menu = database.execute("SELECT * FROM menu WHERE id = :id ", id = res["menu_id"])
             vendor = menu[0]["vendor"]
             price = int(menu[0]["price"])
             menu_name = menu[0]["name"]
-            total_cost = int(request.form.get("quantity")) * menu[0]["price"]
+            total_cost = int(res["quantity"]) * menu[0]["price"]
             user = database.execute("SELECT balance FROM users WHERE username = :user ", user = session["username"])
             user_balance = user[0]["balance"]
             if user_balance < total_cost:
-                return "insufficient"
+                return {"res": "insufficient"}
             else:
-                qty = int(request.form.get("quantity"))
+                qty = int(res["quantity"])
                 database.execute("UPDATE users SET balance = :new_balance WHERE username = :user ", new_balance = user_balance - total_cost, user = session["username"])
                 
                 #Insert order details into database
@@ -173,11 +166,11 @@ def order_handler(request, database):
                 #Insert transaction details into database
                 database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :status, :time_stamp)", 
                                                     username = session["username"], transaction_type = "order", amount = total_cost, description = desc, status = "pending", time_stamp = datetime.now())
-                if session.get("menu_id"):
-                    session.pop('menu_id')
-                    session.pop('qty')
+                # if session.get("menu_id"):
+                #     session.pop('menu_id')
+                #     session.pop('qty')
                 flash("Order was successful and is been processed.", "success")
-                return redirect("/dashboard")
+                return {"res": "completed"}
 
 
 def order_preview_handler(request, database):
@@ -206,7 +199,7 @@ def order_preview_handler(request, database):
         menu_id = session["menu_id"]
         menu = database.execute("SELECT * FROM menu WHERE id = :id ", id = menu_id)
         qty = session["qty"]
-        total_cost = int(request.form.get("quantity")) * menu[0]["price"]
+        total_cost = qty * menu[0]["price"]
         user = database.execute("SELECT address, phone_number FROM users WHERE username = :user ", user = session["username"])
         return render_template("preview.html", menu = menu[0], qty = qty, user = user[0], total_cost = total_cost)
     else:
