@@ -28,11 +28,11 @@ def application_handler(request, database):
         flash("Must provide business address", 'warning')
         return redirect("/apply")
 
-    database.execute("UPDATE users SET business_name = :business_name, business_number = :business_number, business_address = :business_address WHERE usersname = :username",
-                                    username = session.get["username"], business_name = request.form.get("business_name"), business_number = request.form.get("business_number"), business_address = request.form.get("business_address"))
+    database.execute("UPDATE users SET business_name = :business_name, business_number = :business_number, business_address = :business_address, application = :application WHERE username = :username",
+                                    username = session["username"], business_name = request.form.get("business_name"), business_number = request.form.get("business_number"), business_address = request.form.get("business_address"), application = "pending")
     
-    flash("Business Submitted Successfully", 'success')
-    return render_template("dashboard.html")
+    flash("Application Successfully Submitted", 'success')
+    return redirect("/dashboard")
         
 #User complaint Handler
 def complain_handler(request, database):
