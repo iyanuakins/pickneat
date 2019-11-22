@@ -1,0 +1,36 @@
+{%extends "layout2.html" %}
+
+{% block title %}
+    Preview Order
+{%endblock%}
+
+{% block main %}
+<div class="row">
+        <div class="col-md-8 mt-5">
+            <div class="card mb-3 mt-5">
+                <div class="row no-gutters">
+                    <div class="col-md-4">
+                        <img src="../{{menu["image"]}}"  class="card-img-top" alt="Preview Unavailiable">
+                    </div>
+                    <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">Menu Name: {{menu["name"]}}</h5>
+                        <p class="card-text">Price per quantity: &#8358;{{menu["price"]}}</p>
+                        <p class="card-text font-weight-bold">Quantity: {{qty}}</p>
+                        <p class="card-text font-weight-bold">Total Amount: &#8358;<span id="total_cost">{{total_cost}}</span></p>
+                        <form action="/order" method="post">
+                            <input type="number" hidden value="{{qty}}" name="quantity" id="qty">
+                            <input type="number" name="menu_id" hidden value="{{menu["id"]}}" id="menuId">
+                            <div class="form-group float-right">
+                                <input type="submit" value="Pay from wallet" class="btn btn-success">
+                            </div>
+                        </form>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

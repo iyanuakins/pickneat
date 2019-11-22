@@ -173,9 +173,42 @@ def order_handler(request, database):
                 #Insert transaction details into database
                 database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :status, :time_stamp)", 
                                                     username = session["username"], transaction_type = "order", amount = total_cost, description = desc, status = "pending", time_stamp = datetime.now())
+                if session.get("menu_id"):
+                    session.pop('menu_id')
+                    session.pop('qty')
                 flash("Order was successful and is been processed.", "success")
                 return redirect("/dashboard")
+
+
+def order_preview_handler(request, database):
+    if request.method == "POST":
+        # Ensure name was submitted
+        if not request.form.get("quantity"):
+            return error("Must provide quantity", 400)
+
+        # Ensure username was submitted
+        if not request.form.get("menu_id").strip():
+            return error("Must provide Menu ID", 403)
+
+        if session.get("username"):
+            menu = database.execute("SELECT * FROM menu WHERE id = :id ", id = request.form.get("menu_id").strip())
+            total_cost = int(request.form.get("quantity")) * menu[0]["price"]
+            qty = request.form.get("quantity")
+            user = database.execute("SELECT address, phone_number FROM users WHERE username = :user ", user = session["username"])
+            return render_template("preview.html", menu = menu[0], qty = qty, user = user[0], total_cost = total_cost)
         else:
+            session["menu_id"] = request.form.get("menu_id")
+            session["qty"] = int(request.form.get("quantity"))
             flash("Authentication required to complete order process, please login or register to continue", "danger")
             return redirect("/login")
 
+    if session.get("menu_id"):
+        menu_id = session["menu_id"]
+        menu = database.execute("SELECT * FROM menu WHERE id = :id ", id = menu_id)
+        qty = session["qty"]
+        total_cost = int(request.form.get("quantity")) * menu[0]["price"]
+        user = database.execute("SELECT address, phone_number FROM users WHERE username = :user ", user = session["username"])
+        return render_template("preview.html", menu = menu[0], qty = qty, user = user[0], total_cost = total_cost)
+    else:
+        flash("No incomplete order process", "danger")
+        return redirect("/dashboard")
