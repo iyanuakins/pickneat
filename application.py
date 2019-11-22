@@ -42,7 +42,8 @@ database = SQL("sqlite:///pickneat.db")
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    menus = database.execute("SELECT * FROM menu ORDER BY random() LIMIT 3;")
+    return render_template("index.html", menus = menus)
 
 @app.route("/register", methods=["GET", "POST"])
 @logout_required
