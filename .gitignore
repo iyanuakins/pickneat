@@ -7,3 +7,6 @@ flask_session
 env/
 pickneat.db-journal
 .gitignore
+
+pick/*
+pick/
