@@ -157,6 +157,12 @@ a:link {
     border-bottom: #28a745 2px solid;
 }
 
+.switch {
+    position: absolute;
+    bottom: 0;
+    top: auto;
+}
+
   /* ------------------------------------------
                 Pagination style
     -------------------------------------------*/

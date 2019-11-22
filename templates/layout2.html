@@ -88,14 +88,14 @@
                                     {% endif %}
                                 </div>
                                 {% if  session["user_type"] == "vendor" and session["user_view"] == "vendor" %}
-                                        <div  style="position: relative; bottom:0;">
+                                        <div class="switch">
                                             <a href="/switch_view/user">
                                                 <button type="submit" class="btn btn-info btn-block">Switch to Buyer</button>
                                             </a>
                                         </div>
                                 {% endif %}
                                 {% if  session["user_type"] == "vendor" and session["user_view"] == "user" %}
-                                <div  style="position: relative; bottom:0;">
+                                <div class="switch">
                                     <a href="/switch_view/vendor">
                                         <button type="submit" class="btn btn-info btn-block">Switch to Seller</button>
                                     </a>

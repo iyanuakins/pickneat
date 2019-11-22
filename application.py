@@ -12,7 +12,7 @@ from controllers.user import application_handler, complain_handler, profile_hand
                         login_required, logout_required
 from controllers.log import transaction_history_handler, order_history_handler
 from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler, add_menu_handler, \
-                      view_menu_handler, single_view_menu_handler, order_handler
+                      view_menu_handler, single_view_menu_handler, order_handler, order_preview_handler
 from controllers.order import manage_order_handler,  manage_single_order_handler, accept_order_handler, manage_order_handler, cancel_order_handler
 
 
@@ -155,7 +155,6 @@ def view_menu():
     return view_menu_handler(request, database)
 
 @app.route("/order_menu/<int:id>")
-@login_required
 def single_view_menu(id):
     return single_view_menu_handler(id, request, database)
 
@@ -172,4 +171,8 @@ def withdraw_cash():
 @login_required
 def switch_view(view):
     return switch_vendor_view(view, database)
+
+@app.route("/preview", methods = ["GET","POST"])
+def preview_order():
+    return order_preview_handler(request, database)
 
