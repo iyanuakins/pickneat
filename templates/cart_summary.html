@@ -1,0 +1,34 @@
+{%extends "layout2.html" %}
+
+{% block title %}
+    Cart Summary
+{%endblock%}
+
+{% block main %}
+
+    {% for order in success %}
+        <div class="card-group mt-5">
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title">Name: {{order['name']}}</h5>
+                <p class="card-text">Vendor: {{order['vendor']}}</p>
+                <p class="card-text" style="color:greenyellow;">Status: Your Order Was Processed Successfully..</p>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    {% for order in failure %}
+    <div class="card-group mt-5">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Name: {{order['name']}}</h5>
+                <p class="card-text">Vendor: {{order['vendor']}}</p>
+                <p class="card-text" style="color:red;"> Status: {{order["reason"]}}..</p>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+<script>
+
+</script>
+{% endblock %}
