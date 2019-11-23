@@ -126,11 +126,20 @@ def profile_handler(request, database):
 def dashboard_handler(database):
 
     #Retrieves User Information To Enable Processing
-    user = database.execute("SELECT user_type, user_view FROM users WHERE username=:username", username=session.get("username"))
+    user = database.execute("SELECT user_type, user_view, cart FROM users WHERE username=:username", username=session.get("username"))
     session["user_type"] = user[0]["user_type"]
     session["user_view"] = user[0]["user_view"]
     user_type = user[0]["user_type"]
     user_view = user[0]["user_view"]
+
+    #Process cart Information
+    try:
+        cart = user[0]["cart"].split("-")
+
+        #Set Cart Information on Session
+        session["cart"] = len(cart) - 1
+    except:
+        session["cart"] = 0
 
     #Renders Admin DashBoard
     if user_type == "admin":
