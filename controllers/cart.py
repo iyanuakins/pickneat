@@ -3,6 +3,7 @@ from datetime import datetime
 
 def display_cart_handler(database):
     cart = {}
+    cart_menu = []
 
     try:
         recieved_cart = database.execute("SELECT * FROM users WHERE username=:username", username=session["username"])[0]["cart"].split("-")
@@ -16,14 +17,21 @@ def display_cart_handler(database):
                     cart[menu_id] += int(quantity)
                 except:
                     cart[menu_id] = int(quantity)
-            
+
+        
+        for order in cart:
+            menu = database.execute("SELECT * FROM menu WHERE id=:menu_id", menu_id=order)[0]
+            menu['quantity'] = cart[order]
+
+            cart_menu.append(menu)
 
     except:
-        return render_template('this.html', cart={})
-
+        return render_template('display_cart.html', cart={})
 
     session["cart"] = len(cart)
-    return render_template('this.html', cart=cart)
+
+    return render_template('display_cart.html', cart=cart, cart_menu=cart_menu)
+
 
 def add_cart_handler(id, request, database):
     try:
@@ -44,7 +52,7 @@ def add_cart_handler(id, request, database):
 
     menu = database.execute("SELECT * FROM menu WHERE id=:menu_id", menu_id=int(id))[0]
 
-    return render_template("preview.html", menu = menu, qty = quantity, user = user, total_cost = menu['price']*quantity, cart=cart)
+    return render_template("preview.html", menu = menu, qty = quantity, user = user, total_cost = menu['price']*quantity, cart=quantity)
 
 def delete_cart_handler(id, database):
     
@@ -77,22 +85,22 @@ def process_cart_handler(request, database):
 
     #Keep tab of cart processing
     current_balance = user["balance"]
-    failed_order = {}
-    successful_order = {}
+    failed_order = []
+    successful_order = []
 
     #Process Order one at a time
     for order in request.form:
 
         #Collect Current Order information
         menu_id = int(order)
-        menu = database.request("SELECT * FROM menu WHERE id=:menu_id", menu_id=menu_id)[0]
+        menu = database.execute("SELECT * FROM menu WHERE id=:menu_id", menu_id=menu_id)[0]
 
         # VERIFY CURRENT ORDER
 
         # Check for Menu availiability
-        if not menu["status"] == "pending":
-            menu["reason"] == "Order is no longer availiable"
-            failed_order[menu["name"]] = menu
+        if not menu["status"] == "available":
+            menu["reason"] = "Order is no longer available"
+            failed_order.append(menu)
             continue
         
         #Verify quantity
@@ -102,19 +110,19 @@ def process_cart_handler(request, database):
 
             # Check for Money in Purse eligibility
             if current_balance < total_cost:
-                menu["reason"] == "Insufficient Balance"
-                failed_order[menu["name"]] = menu
+                menu["reason"] = "Insufficient Balance"
+                failed_order.append(menu)
                 continue
 
             # Check for Quantity Supplied
             if quantity == 0:
-                menu["reason"] == "Quantity Not Specified"
-                failed_order[menu["name"]] = menu
+                menu["reason"] = "Quantity Not Specified"
+                failed_order.append(menu)
                 continue
         except:
             # When Quantity is not supplied
-            menu["reason"] == "Quantity Not Specified"
-            failed_order[menu["name"]] = menu
+            menu["reason"] = "Quantity Not Specified"
+            failed_order.append(menu)
             continue
         
         #PROCESS VALID ORDERS
@@ -123,7 +131,8 @@ def process_cart_handler(request, database):
         database.execute("INSERT INTO orders (user, vendor, quantity, total_cost, price, time_stamp) VALUES ( :user, :vendor, :quantity, :total_cost, :price, :time_stamp)",
                                             user = user["username"], 
                                             vendor = menu["vendor"], 
-                                            quantity = total_cost, 
+                                            quantity = quantity, 
+                                            total_cost = total_cost,
                                             price = menu["price"], 
                                             time_stamp = datetime.now())
 
@@ -138,13 +147,15 @@ def process_cart_handler(request, database):
 
         #Update for next Order 
         current_balance -= total_cost
-        successful_order[menu["name"]] = menu
-                
+        successful_order.append(menu)
+        
+    session['cart'] = 0
 
     #Update user information after processing all orders
-    database.execute("UPDATE users SET balance = :balance WHERE username = :username", balance = current_balance, username = user["username"])
+    database.execute("UPDATE users SET balance = :balance, cart=:cart WHERE username = :username", balance = current_balance, cart="", username = user["username"])
 
     #Return to Order Summary
-    flash("Order was successful and is been processed.", "success")
-    return render_template('this.html', success=successful_order, failure=failed_order)
+    flash("Order was processed successful.", "success")
+    return render_template('cart_summary.html', success=successful_order, failure=failed_order)
 
+    
