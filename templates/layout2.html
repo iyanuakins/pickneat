@@ -29,7 +29,7 @@
                 <div class="collapse navbar-collapse" id="navbar">
                         <ul class="navbar-nav ml-auto mt-2">
                             {% if session["user_type"] != "admin" %}
-                                <li class="nav-item"><span class="btn btn-outline-dark" id="balance"></span></li>
+                                <li class="nav-item nav-link"><span class="btn btn-outline-dark" id="balance"></span></li>
                             {% endif %}
                             <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{session["username"]}}</span></a></li>
                             <li class="nav-item"><a class="nav-link" href="/logout"><span class="btn btn-danger">Log Out</span></a></li>
@@ -122,7 +122,6 @@
             <script>
                 let isSidebarActive = false;
                 $("document").ready(function(){
-                    
                     $("#toggle-sidebar").on("click", function(){
                         if (!isSidebarActive) {
                             $("#sidebar").addClass('deactivate');
@@ -137,11 +136,11 @@
                         type: "post",
                         url: "/get_balance",
                         contentType: "application/json; charset=utf-8",
-                        data : JSON.stringify({username: {{session["username"]}}}),
+                        data : JSON.stringify({username: "{{session["username"]}}"}),
                         dataType: "json",
                         success: function (response) {
                             if (response["res"] == "success"){
-                                $("#balance").text(`Acc Balance: &#8358;${response["balance"]}`)
+                                $("#balance").html(`Acc Balance: &#8358;${response["balance"]}`)
                             }
                         }
                     });

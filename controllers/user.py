@@ -231,4 +231,4 @@ def get_balance_handler(request, database):
         res = request.get_json()
         user = database.execute("SELECT balance FROM users WHERE username=:username", username = res["username"])
         balance = user[0]["balance"]
-        return {res: "success", balance: balance}
+        return {"res": "success", "balance": balance}
