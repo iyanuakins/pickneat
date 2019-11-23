@@ -67,7 +67,8 @@
         <p id="pointSelected">Point selected:</p>
     </div>
     {% endif %}
-
+    {{ sort }}
+    {{detail_table}}
     <!-- Rendering Sample of Table -->
     {% if detail_table %}
     <div class="container">
@@ -80,7 +81,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% for item in detail_table %}
+                    {% for item in sort %}
                     <tr>
                         <td>{{item}}</td>
                         <td>{{detail_table[item]}}</td>
@@ -140,8 +141,8 @@
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
-            data : [{% for item in values %}
-                      {{item}},
+            data : [{% for item in labels %}
+                      {{values[item]}},
                     {% endfor %}],
             spanGaps: false
         }]
