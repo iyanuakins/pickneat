@@ -1,0 +1,65 @@
+{%extends "layout2.html" %}
+
+{% block title %}
+    Cart Info
+{%endblock%}
+<style>
+        td {
+           border: 1px solid black;
+           width: 100px;
+           height: 50px;
+        }
+</style>
+{% block main %}
+    {% if cart_menu %}
+        <form action="/process_cart" method="POST">
+            <div class="container">
+                <table action="/process_cart" method="POST" id="table_id" class="table table-striped" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Meal</th>
+                                <th>Vendor</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Total Cost</th>
+                                <th>Preview</th>
+                            </tr>
+                        </thead>
+                            {% for order in cart_menu %}
+                            <tbody>
+                                <tr>                                    
+                                    <td>{{order['name']}}</td>
+                                    <td>{{order['vendor']}}</td>
+                                    <td>{{order['price']}}</td>
+                                    <td><input type="text" class="form-control control{{order['id']}}" onblur="blurred()" value="{{order['quantity']}}" name="{{order['id']}}"></td>
+                                    <td><input type="text" class="form-control total_cost" disabled></td>
+                                    <td rowspan="4"><img src="{{order['image']}}" style="width:20vw; height:10vw" alt="Cannot Display Food Preview" class="img-fluid"></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr>                                    
+                                    <th colspan="4">Total Cost</th>
+                                    <th><input type="text" class="form-control"  readonly id="total_cost" value="" name=""></th>
+                                </tr>
+                            </tfoot>
+                    </table>
+                </div>
+                <div class="form-group float-right">
+                    <button type="submit" id="submit" class="btn btn-success">Process Cart</button>
+                </div>
+        </form>
+    {% else %}
+        <div class="card-group mt-5">
+            <div class="card">
+                <div class="card-body">
+                <h5 class="card-title">Empty Cart</h5>
+                <p class="card-text">Your cart is empty at the moment...</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+<script>
+
+</script>
+{% endblock %}
