@@ -15,39 +15,52 @@ def manage_single_order_handler(id, database):
     
 #Accepts Order
 def accept_order_handler(id, database):
-    order = database.execute("SELECT * FROM orders WHERE id=:id", id=int(id))
-    if not order[0]["status"] == "pending":
+    order = database.execute("SELECT * FROM orders WHERE id=:id", id=int(id))[0]
+    if not order["status"] == "pending":
         flash("Order Does Not Exist", 'danger')
         return redirect("/manage_order")
 
     database.execute("UPDATE orders SET status='confirmed' WHERE id=:id", id=int(id))
-    vendor = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))
 
-    database.execute("UPDATE users SET balance=:balance WHERE username=:username", balance=vendor[0]["balance"]+order[0]["total_cost"], username=session.get("username"))
+    vendor = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))[0]
 
-    database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES (:username, 'order', :amount, 'accepted order', 'confirmed', :time_stamp)",
-                                                username=session.get("username"),
-                                                amount=order[0]["total_cost"], 
-                                                time_stamp = datetime.now(),)
+    database.execute("UPDATE users SET balance=:balance WHERE username=:username", balance=vendor["balance"]+order["total_cost"], username=session.get("username"))
+
+    #Insert transaction details into database
+    database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :status, :time_stamp)", 
+                                        username = session["username"], 
+                                        transaction_type = "order", 
+                                        amount = order['total_cost'], 
+                                        description = f"Order was Processed Successfully",
+                                        status = "confirmed", 
+                                        time_stamp = datetime.now())
+
+    session['balance'] -= order['total_cost']
+
     flash("Order Accepted Successfully", 'success')
     return redirect("/manage_order")
 
 
 #Rejecting Order
 def cancel_order_handler(id, database):
-    order = database.execute("SELECT * FROM orders WHERE id=:id", id=int(id))
-    if not order[0]["status"] == "pending":
+    order = database.execute("SELECT * FROM orders WHERE id=:id", id=int(id))[0]
+    if not order["status"] == "pending":
         flash("Order Does Not Exist", 'danger')
         return redirect("/manage_order")
 
     database.execute("UPDATE orders SET status='cancelled' WHERE id=:id", id=int(id))
-    buyer = database.execute("SELECT * FROM users WHERE username=:username", username=order[0]["user"])
+    buyer = database.execute("SELECT * FROM users WHERE username=:username", username=order["user"])[0]
 
-    database.execute("UPDATE users SET balance=:balance WHERE username=:username", balance=buyer[0]["balance"]+order[0]["total_cost"], username=buyer[0]["username"])
+    database.execute("UPDATE users SET balance=:balance WHERE username=:username", balance=buyer["balance"]+order["total_cost"], username=buyer["username"])
 
-    database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES (:username, 'order', :amount, 'cancelled order', 'cancelled', :time_stamp)",
-                                                username=buyer[0]["username"],
-                                                amount=order[0]["total_cost"], 
-                                                time_stamp = datetime.now(),)
+    #Insert transaction details into database
+    database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :status, :time_stamp)", 
+                                        username = buyer["username"], 
+                                        transaction_type = "order", 
+                                        amount = order['total_cost'], 
+                                        description = f"Order for meal cancelled by the Vendor",
+                                        status = "cancelled", 
+                                        time_stamp = datetime.now())
+
     flash("Order Cancelled Successfully", 'warning')
     return redirect("/manage_order")
