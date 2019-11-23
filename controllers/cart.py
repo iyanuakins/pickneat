@@ -32,7 +32,6 @@ def display_cart_handler(database):
 
     return render_template('display_cart.html', cart=cart, cart_menu=cart_menu)
 
-
 def add_cart_handler(id, request, database):
     try:
         quantity = int(request.form["quantity"])
@@ -150,6 +149,7 @@ def process_cart_handler(request, database):
         successful_order.append(menu)
         
     session['cart'] = 0
+    session['balance'] = current_balance
 
     #Update user information after processing all orders
     database.execute("UPDATE users SET balance = :balance, cart=:cart WHERE username = :username", balance = current_balance, cart="", username = user["username"])
@@ -158,4 +158,3 @@ def process_cart_handler(request, database):
     flash("Order was processed successful.", "success")
     return render_template('cart_summary.html', success=successful_order, failure=failed_order)
 
-    
