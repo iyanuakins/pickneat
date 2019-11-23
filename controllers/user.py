@@ -205,3 +205,23 @@ def logout_required(f):
             return redirect("/dashboard")
         return f(*args, **kwargs)
     return decorated_function
+
+def admin_route_guard(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session["user_type"] != "admin":
+            session.clear()
+            flash("Out of bound, please login", "danger")
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function
+
+def vendor_route_guard(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session["user_type"] != "vendor":
+            session.clear()
+            flash("Out of bound, please login", "danger")
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function
