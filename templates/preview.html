@@ -24,9 +24,16 @@
                         <form  method="post">
                             <input type="number" hidden value="{{qty}}" name="quantity" id="qty">
                             <input type="number" name="menu_id" hidden value="{{menu["id"]}}" id="menuId">
-                            <div class="form-group float-right">
-                                <button type="submit" id="submit" class="btn btn-success">Pay from wallet</button>
-                            </div>
+                            {% if not cart %}
+                                <div class="form-group float-right">
+                                    <button type="submit" id="submit" class="btn btn-success">Pay from wallet</button>
+                                </div>
+                            {% else %}
+                                <div class="form-group">
+                                    <a href="/display_cart" class="float-left" ><input type="button" value="Display Cart" class="btn btn-success"></a>
+                                    <a href="/browse" class="float-right" ><input type="button" value="Browse Menu" class="btn btn-warning"></a>
+                                </div>
+                            {% endif %}
                         </form>
                     </div>
                     </div>
