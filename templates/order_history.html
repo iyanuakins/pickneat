@@ -4,8 +4,6 @@
     Order History 
 {%endblock%}
 
-{% block main %}
-
         <form method="POST" action="/order_history" id="view">
         <div class="row">
             <div class="col-3">
@@ -31,6 +29,8 @@
             </div>
         </div>
         </form>
+
+{% block main %}
 
     <!-- Default Page Rendering in Table -->
     {% if table %}
