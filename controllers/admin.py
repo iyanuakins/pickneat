@@ -66,3 +66,7 @@ def app_management_handler(request, database):
             apps = database.execute("SELECT username, business_name, business_number, business_address FROM users WHERE application = :app", app = "pending")
             flash("Vendor application successfully rejected", "success")
             return render_template("vendor_verification.html", apps = apps)
+
+def transaction_log_handler(request, database):
+    table = database.execute("SELECT * FROM transactions")
+    return render_template("all_transactions.html", table = table)

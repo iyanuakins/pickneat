@@ -5,26 +5,50 @@
 {%endblock%}
 
 {% block main %}
-    <table>
-        <thead>
-            <tr>
-                <th>S/N</th>
-                <th>Transaction Type</th>
-                <th>Vendor</th>
-                <th>Price</th>
-                <th>Quantity Ordered</th>
-                <th>Total Price</th>
-                <th>Time</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            
-            <tr>
-                <td></td>
-                <td> </td>
-            </tr>
-        </tbody>
-    </table>
+    {% if table %}
+        <div class="container">
+            <table class="table table-striped" id="logTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Transaction Type</th>
+                            <th>Username</th>
+                            <th>Amount</th>
+                            <th>Description</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in table %}
+                            <tr>
+                                <td>{{loop.index}}</td>
+                                <td>{{transaction["transaction_type"].upper()}}</td>
+                                <td>{{transaction["username"]}}</td>
+                                <td>{{transaction["amount"]}}</td>
+                                <td>{{transaction["description"]}}</td>
+                                <td>{{transaction["time_stamp"]}}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    {% else %}
+    <div class="card-group mt-5">
+            <div class="card">
+                <div class="card-header bg-success">
+                    <div class="card-title">
+                        <h3 class="font-weight-bolder text-center text-white"> CLEAN SLATE</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                <p class="card-text text-center font-weight-bold">No Transaction history available.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <script>
+        $(document).ready(function () {
+            $("#logTable").DataTable();
+        });
+    </script>
 {% endblock %}
