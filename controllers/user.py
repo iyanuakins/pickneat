@@ -79,11 +79,13 @@ def profile_handler(request, database):
     except:
         business_address = user[0]["business_address"]
     try:
-        phone_number = int("234"+request.form.get("phone_number"))
+        int(request.form.get("phone_number"))
+        phone_number = request.form['phone_number']
     except:
         phone_number = user[0]["phone_number"]
     try:
-        business_number = int("234"+request.form.get("business_number"))
+        int("234"+request.form.get("business_number"))
+        business_number = request.form['business_number']
     except:
         business_number = user[0]["business_number"]
     
@@ -126,29 +128,36 @@ def profile_handler(request, database):
 def dashboard_handler(database):
 
     #Retrieves User Information To Enable Processing
-    user = database.execute("SELECT user_type, user_view FROM users WHERE username=:username", username=session.get("username"))
-    session["user_type"] = user[0]["user_type"]
-    session["user_view"] = user[0]["user_view"]
-    user_type = user[0]["user_type"]
-    user_view = user[0]["user_view"]
+    user = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))[0]
+    session["user_type"] = user["user_type"]
+    session["user_view"] = user["user_view"]
+    session["balance"] = user["balance"]
+
+    user_type = user["user_type"]
+    user_view = user["user_view"]
+
+    #Process cart Information
+    try:
+        cart = user["cart"].split("-")
+
+        #Set Cart Information on Session
+        session["cart"] = len(cart) - 1
+    except:
+        session["cart"] = 0
+
+    userdetail = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))[0]
 
     #Renders Admin DashBoard
     if user_type == "admin":
-        userdetail = database.execute("SELECT full_name, username, email, phone_number, address, user_image, balance FROM users WHERE username=:username",
-                                                                        username=session.get("username"))
-        return render_template("admin_dashboard.html", user=userdetail[0])
+        return render_template("admin_dashboard.html", user=userdetail)
 
     #Renders Vendor DashBoard
     if user_type == "vendor" and user_view == "vendor":
-        userdetail = database.execute("SELECT username, email, user_image, balance, business_name, business_address, business_number FROM users WHERE username=:username", 
-                                                                        username=session.get("username"))
-        return render_template("vendor_dashboard.html", user=userdetail[0])
+        return redirect("/history_chart")
 
     #Renders Buyer DashBoard
     if user_type == "user" or user_view == "user":
-        userdetail = database.execute("SELECT full_name, username, email, phone_number,	address, user_image, balance, status, user_view FROM users WHERE username=:username",
-                                                                        username=session.get("username"))
-        return render_template("dashboard.html", user=userdetail[0])
+        return render_template("dashboard.html", user=userdetail)
     
     session.clear()
     return redirect("/login")
@@ -171,8 +180,20 @@ def withdrawal_handler(request, database):
         flash("Insufficient Balance", 'danger')
         return redirect("/withdraw")
 
+    session['balance'] -= amount
+
     database.execute("UPDATE users SET balance=:new_balance WHERE username=:username", new_balance=user[0]["balance"]-amount,  username=session.get("username"))
     
+
+    #Insert transaction details into database
+    database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :status, :time_stamp)", 
+                                        username = session["username"], 
+                                        transaction_type = "withdrawal", 
+                                        amount = amount, 
+                                        description = f"Made withdrawal of NGN {amount} ",
+                                        status = "success", 
+                                        time_stamp = datetime.now())
+
     flash("Withdraw Successful", 'success')
     return redirect('/dashboard')
 

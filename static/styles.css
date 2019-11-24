@@ -213,3 +213,13 @@ a:link {
         background-color: #28a745;
         font-weight: 500;
     }
+
+    /* For Cart Counter */
+    .cart
+    {
+        background-color: mediumvioletred;
+        font-weight: bolder;
+        border-radius: 50%;
+        color: wheat;
+        font-size: small;
+    }

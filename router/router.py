@@ -8,8 +8,8 @@ from controllers.log import transaction_history_handler, order_history_handler
 from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler, add_menu_handler, \
                       view_menu_handler, single_view_menu_handler, order_handler, order_preview_handler
 from controllers.order import manage_order_handler,  manage_single_order_handler, accept_order_handler, manage_order_handler, cancel_order_handler
-
-
+from controllers.cart import add_cart_handler, delete_cart_handler, display_cart_handler, clear_cart_handler, process_cart_handler
+from controllers.history import history_chart_handler
 
 def router(app=0, database=0, id=0):
     @app.route("/")
@@ -93,6 +93,7 @@ def router(app=0, database=0, id=0):
         return render_template("all_menus.html")
 
     @app.route("/fund")
+    @login_required
     def fund():
         user = database.execute("SELECT * FROM users WHERE username = :username", username = session.get("username"))
         order = database.execute("SELECT * FROM orders WHERE user = :user AND status='pending'", user = session.get("username"))
@@ -146,5 +147,36 @@ def router(app=0, database=0, id=0):
         return switch_vendor_view(view, database)
 
     @app.route("/preview", methods = ["GET","POST"])
+    @login_required
     def preview_order():
         return order_preview_handler(request, database)
+    
+    @app.route("/display_cart")
+    @login_required
+    def display_cart():
+        return display_cart_handler(database)
+
+    @app.route("/add_cart/<id>", methods=["POST", "GET"])
+    @login_required
+    def add_cart(id):
+        return add_cart_handler(id, request, database)
+    
+    @app.route("/delete_cart/<id>", methods=["POST"])
+    @login_required
+    def delete_cart_handler(id):
+        return delete_cart_handler(id, database)
+
+    @app.route("/clear_cart")
+    @login_required
+    def clear_cart():
+        return clear_cart_handler(database)
+
+    @app.route("/process_cart", methods=["POST"])
+    @login_required
+    def process_cart():
+        return process_cart_handler(request, database)
+
+    @app.route("/history_chart", methods=["GET", "POST"])
+    @login_required
+    def history_cart():
+        return history_chart_handler(request, database)
