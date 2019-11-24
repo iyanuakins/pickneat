@@ -247,9 +247,22 @@ def vendor_route_guard(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def get_balance_handler(request, database):
+def get_information_handler(request, database):
     if request.method == "POST":
         res = request.get_json()
-        user = database.execute("SELECT balance FROM users WHERE username=:username", username = res["username"])
+        user = database.execute("SELECT balance, cart FROM users WHERE username=:username", username = res["username"])
         balance = user[0]["balance"]
-        return {"res": "success", "balance": balance}
+
+
+        try:
+            cart = user[0]['cart'].split('-')
+            cart_number = []
+            for item in cart:
+                menu_id = item.split('.')[0]
+                if not menu_id in cart_number and '.' in item:
+                    cart_number.append(menu_id)  
+            cart_number = len(cart_number)
+        except:
+            cart_number = 0
+
+        return {"res": "success", "balance": balance, 'cart':f'{cart_number}'}

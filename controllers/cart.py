@@ -18,19 +18,18 @@ def display_cart_handler(database):
                 except:
                     cart[menu_id] = int(quantity)
 
+        total_cost = 0
         
         for order in cart:
             menu = database.execute("SELECT * FROM menu WHERE id=:menu_id", menu_id=order)[0]
             menu['quantity'] = cart[order]
-
+            total_cost += int(cart[order])*int(menu['price'])
             cart_menu.append(menu)
 
     except:
-        return render_template('display_cart.html', cart={})
+        return render_template('display_cart.html', cart_menu={})
 
-    session["cart"] = len(cart)
-
-    return render_template('display_cart.html', cart=cart, cart_menu=cart_menu)
+    return render_template('display_cart.html', total=total_cost, cart_menu=cart_menu)
 
 def add_cart_handler(id, request, database):
     try:
@@ -53,7 +52,7 @@ def add_cart_handler(id, request, database):
 
     return render_template("preview.html", menu = menu, qty = quantity, user = user, total_cost = menu['price']*quantity, cart=quantity)
 
-def delete_cart_handler(id, database):
+def delete_cart_handler(database, id):
     
     cart = database.execute("SELECT * FROM users WHERE username=:username", username=session["username"])[0]["cart"].split("-")
     newcart = []
@@ -61,8 +60,6 @@ def delete_cart_handler(id, database):
     for order in cart:
         if not order.split(".")[0] == id.split(".")[0]:
             newcart.append(order)
-    
-    session["cart"] = len(newcart)
 
     newcart = "-".join(newcart)
 
@@ -73,8 +70,6 @@ def delete_cart_handler(id, database):
 def clear_cart_handler(database):
 
     database.execute("UPDATE users SET cart=:cart WHERE username=:username", username=session["username"], cart="")
-
-    session["cart"] = 0
 
     return redirect("/display_cart")
 
@@ -108,7 +103,7 @@ def process_cart_handler(request, database):
         
         #Verify quantity
         try:
-            quantity = int(request.form[order])
+            quantity = int(request.form[order]) if int(request.form[order]) > 0 else 1
             total_cost = int(menu["price"])*quantity
 
             # Check for Money in Purse eligibility
@@ -117,11 +112,6 @@ def process_cart_handler(request, database):
                 failed_order.append(menu)
                 continue
 
-            # Check for Quantity Supplied
-            if quantity == 0:
-                menu["reason"] = "Quantity Not Specified"
-                failed_order.append(menu)
-                continue
         except:
             # When Quantity is not supplied
             menu["reason"] = "Quantity Not Specified"
@@ -152,8 +142,6 @@ def process_cart_handler(request, database):
         current_balance -= total_cost
         successful_order.append(menu)
         
-    session['cart'] = 0
-    session['balance'] = current_balance
 
     #Update user information after processing all orders
     database.execute("UPDATE users SET balance = :balance, cart=:cart WHERE username = :username", balance = current_balance, cart="", username = user["username"])
@@ -161,4 +149,3 @@ def process_cart_handler(request, database):
     #Return to Order Summary
     flash("Order was processed successful.", "success")
     return render_template('cart_summary.html', success=successful_order, failure=failed_order)
-

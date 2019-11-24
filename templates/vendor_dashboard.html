@@ -75,7 +75,7 @@
                 mode: 'single',
                 callbacks: {
                 label: function(tooltipItems, data) {
-                        return 'NGN '+tooltipItems.yLabel;
+                        return 'NGN' +tooltipItems.yLabel;
                         }
                 }
             },
@@ -86,7 +86,7 @@
         var pointSelected = document.getElementById("pointSelected");
         var dataSelected = [
                     {% for item in labels %}
-                        '{{detail}} NGN {{values[item]}} on {{item}}',
+                        '{{detail}} &#8358;{{values[item]}} on {{item}}',
                     {% endfor %}
                     ];
 
