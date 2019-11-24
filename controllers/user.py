@@ -1,7 +1,7 @@
 import os
 from functools import wraps
 from flask import flash, render_template, session, redirect
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 from werkzeug.utils import secure_filename
 from controllers.error import error
 from datetime import datetime
@@ -66,6 +66,18 @@ def profile_handler(request, database):
         flash("Enter Valid Number", 'danger')
         return redirect("/profile")
 
+    #Change Password implementation
+    try:
+        if request.form['password']:
+            if not request.form['confirmation'] == request.form['password']:
+                flash('Password Do Not Match', 'danger')
+                return redirect('/profile')
+            password = generate_password_hash(request.form['password'])
+        else:
+            password = user[0]['password']
+    except:
+        password = user[0]['password']
+
     #Get Values from fields or retain former
     full_name = user[0]["full_name"] if not request.form.get("full_name").strip() else request.form.get("full_name")
     email = user[0]["email"] if not request.form.get("email").strip() else request.form.get("email")
@@ -111,9 +123,10 @@ def profile_handler(request, database):
         remove_image = user[0]["user_image"].rsplit("/images/", 1)[1]
         os.remove(os.path.join("static/images", remove_image))
 
+    username = session['username']
     #Updates User Information to Database
-    database.execute("UPDATE users SET (full_name, email, phone_number, address, user_image, business_name, business_address, business_number)=(:full_name, :email, :phone_number, :address, :user_image, :business_name, :business_address, :business_number) WHERE username=:username",
-                                            full_name = full_name, email = email, phone_number = phone_number, address = address, user_image = user_image, business_name = business_name, business_address = business_address,  business_number = business_number, username=session.get("username"))
+    database.execute(f"UPDATE users SET (full_name, password, email, phone_number, address, user_image, business_name, business_address, business_number)\
+        =('{full_name}', '{password}', '{email}', '{phone_number}', '{address}', '{user_image}', '{business_name}', '{business_address}', '{business_number}') WHERE username='{username}'")
 
     #Stores New Image in Project
     if request.files["user_image"]:
