@@ -149,7 +149,7 @@ def dashboard_handler(database):
 
     #Renders Admin DashBoard
     if user_type == "admin":
-        return render_template("admin_dashboard.html", user=userdetail)
+        return redirect("/admin_dashboard")
 
     #Renders Vendor DashBoard
     if user_type == "vendor" and user_view == "vendor":

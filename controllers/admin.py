@@ -78,3 +78,38 @@ def order_log_handler(request, database):
 def menu_log_handler(request, database):
     menus = database.execute("SELECT * FROM menu")
     return render_template("menu_log.html", menus = menus)
+
+def admin_dashboard_handler(request, database):
+    
+    if request.method == "GET":
+        legend = "Users" 
+        detail = "Users registration"
+
+    records = database.execute("SELECT * FROM users")
+    
+    #Retrieves if any data for labels and values for Chart
+    values = {}
+    labels = []
+  
+    for user in records:
+
+        date = user["time_stamp"].split(" ")[0]
+
+        #Transaction types handlers
+        if user['user_type'] != "admin":
+            if not f'{date}' in labels:
+                labels.append(f'{date}')
+            try:
+                values[f'{date}'] += 1
+            except:
+                values[f'{date}'] = 1
+    labels.sort()
+    #Transaction is a Dictionary of Items
+    return render_template(
+                            'admin_dashboard.html', 
+                            values=values,
+                            labels=labels, 
+                            legend=legend, 
+                            detail=detail
+                            )
+
