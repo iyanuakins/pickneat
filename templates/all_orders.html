@@ -5,26 +5,78 @@
 {%endblock%}
 
 {% block main %}
-    <table>
-        <thead>
-            <tr>
-                <th>S/N</th>
-                <th>Food Ordered</th>
-                <th>Vendor</th>
-                <th>Price</th>
-                <th>Quantity Ordered</th>
-                <th>Total Price</th>
-                <th>Time</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            
-            <tr>
-                <td></td>
-                <td> </td>
-            </tr>
-        </tbody>
-    </table>
+    {% if orders %}
+        <div class="container">
+            <table class="table table-striped" id="logTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>S/N</th>
+                            <th>User</th>
+                            <th>Vendor</th>
+                            <th>Price</th>
+                            <th>Quantity Ordered</th>
+                            <th>Total Price</th>
+                            <th>Status</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                            {% if order["status"] == "confirmed" %}
+                                <tr class="bg-success">
+                                    <td>{{loop.index}}</td>
+                                    <td>{{order["user"]}}</td>
+                                    <td>{{order["vendor"]}}</td>
+                                    <td>{{order["price"]}}</td>
+                                    <td>{{order["quantity"]}}</td>
+                                    <td>{{order["total_price"]}}</td>
+                                    <td>{{order["status"]}}</td>
+                                    <td>{{order["time_stamp"]}}</td>
+                                </tr>
+                            {% elif order["status"] == "cancelled" %}
+                                <tr class="bg-danger">
+                                    <td>{{loop.index}}</td>
+                                    <td>{{order["user"]}}</td>
+                                    <td>{{order["vendor"]}}</td>
+                                    <td>{{order["price"]}}</td>
+                                    <td>{{order["quantity"]}}</td>
+                                    <td>{{order["total_price"]}}</td>
+                                    <td>{{order["status"]}}</td>
+                                    <td>{{order["time_stamp"]}}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td>{{loop.index}}</td>
+                                    <td>{{order["user"]}}</td>
+                                    <td>{{order["vendor"]}}</td>
+                                    <td>{{order["price"]}}</td>
+                                    <td>{{order["quantity"]}}</td>
+                                    <td>{{order["total_price"]}}</td>
+                                    <td>{{order["status"]}}</td>
+                                    <td>{{order["time_stamp"]}}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    {% else %}
+    <div class="card-group mt-5">
+            <div class="card">
+                <div class="card-header bg-success">
+                    <div class="card-title">
+                        <h3 class="font-weight-bolder text-center text-white"> CLEAN SLATE</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                <p class="card-text text-center font-weight-bold">No Order history available.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <script>
+        $(document).ready(function () {
+            $("#logTable").DataTable();
+        });
+    </script>
 {% endblock %}

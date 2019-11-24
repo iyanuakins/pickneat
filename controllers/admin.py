@@ -70,3 +70,7 @@ def app_management_handler(request, database):
 def transaction_log_handler(request, database):
     table = database.execute("SELECT * FROM transactions")
     return render_template("all_transactions.html", table = table)
+
+def order_log_handler(request, database):
+    orders = database.execute("SELECT * FROM orders")
+    return render_template("all_orders.html", orders = orders)
