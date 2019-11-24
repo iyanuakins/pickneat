@@ -3,31 +3,31 @@
 {% block title %}
     Transaction History 
 {%endblock%}
+<form method="POST" action="/transaction_history" id="view">
+<div class="row">
+    <div class="col-3">
+        <select name="date_type" class="custom-select">
+            <option value="yearly">Yearly</option>
+            <option value="month">Monthly</option>
+        </select>
+    </div>
+    <div class="col-3">
+        <select name="transaction" class="custom-select">
+            <option value="funding">Funding</option>
+            <option value="withdrawal">Withdrawals</option>
+        </select>     
+    </div>
+    <div class="col-3">
+        <select name="view" class="custom-select" onchange="select_view()" id="history_view">
+            <option value="" selected>View</option>
+            <option value="table">Table</option>
+            <option value="chart">Graph</option>
+        </select>
+    </div>
+</div>
+</form>
 
 {% block main %}
-        <form method="POST" action="/transaction_history" id="view">
-        <div class="row">
-            <div class="col-3">
-                <select name="date_type" class="custom-select">
-                    <option value="yearly">Yearly</option>
-                    <option value="month">Monthly</option>
-                </select>
-            </div>
-            <div class="col-3">
-                <select name="transaction" class="custom-select">
-                    <option value="funding">Funding</option>
-                    <option value="withdrawal">Withdrawals</option>
-                </select>     
-            </div>
-            <div class="col-3">
-                <select name="view" class="custom-select" onchange="select_view()" id="history_view">
-                    <option value="" selected>View</option>
-                    <option value="table">Table</option>
-                    <option value="chart">Graph</option>
-                </select>
-            </div>
-        </div>
-        </form>
 
     <!-- Default Page Rendering in Table -->
     {% if table %}
@@ -97,6 +97,7 @@
       </div>
     </div>
     {% endif %}
+
 <script>
     // Responds to View Select
     const select_view = () => $("#history_view").val() ? $("#view").submit() : False
