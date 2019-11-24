@@ -89,7 +89,11 @@ def process_cart_handler(request, database):
 
     #Process Order one at a time
     for order in request.form:
-
+        try:
+            int(order)
+        except:
+            continue
+        
         #Collect Current Order information
         menu_id = int(order)
         menu = database.execute("SELECT * FROM menu WHERE id=:menu_id", menu_id=menu_id)[0]
