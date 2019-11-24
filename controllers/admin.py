@@ -74,3 +74,7 @@ def transaction_log_handler(request, database):
 def order_log_handler(request, database):
     orders = database.execute("SELECT * FROM orders")
     return render_template("all_orders.html", orders = orders)
+
+def menu_log_handler(request, database):
+    menus = database.execute("SELECT * FROM menu")
+    return render_template("menu_log.html", menus = menus)

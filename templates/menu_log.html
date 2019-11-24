@@ -1,0 +1,68 @@
+{%extends "layout2.html" %}
+
+{% block title %}
+    menu History 
+{%endblock%}
+
+{% block main %}
+    {% if menus %}
+        <div class="container">
+            <table class="table table-striped" id="logTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Vendor</th>
+                            <th>Menu name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Thumbnail</th>
+                            <th>Time Added</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for menu in menus %}
+                            {% if menu["status"] == "available" %}
+                                <tr class="bg-success">
+                                    <td>{{loop.index}}</td>
+                                    <td>{{menu["vendor"]}}</td>
+                                    <td>{{menu["name"]}}</td>
+                                    <td>&#8358;{{menu["price"]}}</td>
+                                    <td>{{menu["description"]}}</td>
+                                    <td><img src="{{menu["image"]}}" width="70px" height="auto" alt="Menu Thumbnail"></td>
+                                    <td>{{menu["time_stamp"]}}</td>
+                                </tr>
+                            {% else %}
+                                <tr class="bg-danger">
+                                    <td>{{loop.index}}</td>
+                                    <td>{{menu["vendor"]}}</td>
+                                    <td>{{menu["name"]}}</td>
+                                    <td>&#8358;{{menu["price"]}}</td>
+                                    <td>{{menu["description"]}}</td>
+                                    <td><img src="{{menu["image"]}}" width="70px" height="auto" alt="Menu Thumbnail"></td>
+                                    <td>{{menu["time_stamp"]}}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
+    {% else %}
+    <div class="card-group mt-5">
+            <div class="card">
+                <div class="card-header bg-success">
+                    <div class="card-title">
+                        <h3 class="font-weight-bolder text-center text-white"> CLEAN SLATE</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                <p class="card-text text-center font-weight-bold">No menu available.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <script>
+        $(document).ready(function () {
+            $("#logTable").DataTable();
+        });
+    </script>
+{% endblock %}

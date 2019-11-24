@@ -1,7 +1,7 @@
 
 from flask import redirect, render_template, request, session
 from controllers.auth import login_handler,register_handler
-from controllers.admin import user_management_handler, user_view_handler, app_management_handler, transaction_log_handler, order_log_handler
+from controllers.admin import user_management_handler, user_view_handler, app_management_handler, transaction_log_handler, order_log_handler, menu_log_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler, withdrawal_handler, switch_vendor_view, \
                         login_required, logout_required, admin_route_guard, vendor_route_guard, get_balance_handler
 from controllers.log import transaction_history_handler, order_history_handler
@@ -214,3 +214,9 @@ def router(app=0, database=0, id=0):
     @admin_route_guard
     def order_log():
         return order_log_handler(request, database)
+
+    @app.route("/menu_log")
+    @login_required
+    @admin_route_guard
+    def menu_log():
+        return menu_log_handler(request, database)
