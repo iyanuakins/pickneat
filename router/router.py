@@ -1,7 +1,7 @@
 
 from flask import redirect, render_template, request, session
 from controllers.auth import login_handler,register_handler
-from controllers.admin import user_management_handler, user_view_handler
+from controllers.admin import user_management_handler, user_view_handler, app_management_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler, withdrawal_handler, switch_vendor_view, \
                         login_required, logout_required, admin_route_guard, vendor_route_guard, get_balance_handler
 from controllers.log import transaction_history_handler, order_history_handler
@@ -196,3 +196,9 @@ def router(app=0, database=0, id=0):
     @login_required
     def history_cart():
         return history_chart_handler(request, database)
+
+    @app.route("/vendor_verification", methods=["GET", "POST"])
+    @login_required
+    @admin_route_guard
+    def vendor_verification():
+        return app_management_handler(request, database)

@@ -1,4 +1,4 @@
-from flask import render_template, session, redirect
+from flask import render_template, session, redirect, flash
 from werkzeug.security import check_password_hash
 from werkzeug.utils import secure_filename
 from controllers.error import error
@@ -41,3 +41,28 @@ def user_view_handler(request, database):
             error("Action must be selected", 400)
         database.execute("UPDATE users SET status = :status WHERE id = :id", status = request.form.get("action"), id = request.form.get("id"))
         return redirect("/manage_users")
+
+def app_management_handler(request, database):
+    if request.method == "GET":
+        apps = database.execute("SELECT username, business_name, business_number, business_address FROM users WHERE application = :app", app = "pending")
+        return render_template("vendor_verification.html", apps = apps)
+
+    if request.method == "POST":
+        #Retrieves User Information from Database
+        if  not request.form.get("action") or not request.form.get("username"):
+            flash("Bad form request", "danger")
+            apps = database.execute("SELECT username, business_name, business_number, business_address FROM users WHERE application = :app", app = "pending")
+            return render_template("vendor_verification.html", apps = apps)
+        
+        action = request.form.get("action")
+
+        if action == "accept":
+            database.execute("UPDATE users SET user_type = :user_type, application = :application WHERE username = :username", user_type = "vendor", application = "", username = request.form.get("username"))
+            apps = database.execute("SELECT username, business_name, business_number, business_address FROM users WHERE application = :app", app = "pending")
+            flash("Vendor application successfully accepted", "success")
+            return render_template("vendor_verification.html", apps = apps)
+        elif action == "reject":
+            database.execute("UPDATE users SET application = :application WHERE username = :username", application = "", username = request.form.get("username"))
+            apps = database.execute("SELECT username, business_name, business_number, business_address FROM users WHERE application = :app", app = "pending")
+            flash("Vendor application successfully rejected", "success")
+            return render_template("vendor_verification.html", apps = apps)
