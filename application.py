@@ -1,6 +1,6 @@
 import os
 from cs50 import SQL
-from flask import Flask
+from flask import Flask, render_template
 from flask_session import Session
 from tempfile import mkdtemp
 from router.router import router
@@ -31,3 +31,7 @@ database = SQL("sqlite:///pickneat.db")
 
 #Holder all route
 router(app, database, id)
+
+@app.route('/xyz')
+def xyz():
+    return render_template('test.html')
