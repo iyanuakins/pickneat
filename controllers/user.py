@@ -226,3 +226,30 @@ def logout_required(f):
             return redirect("/dashboard")
         return f(*args, **kwargs)
     return decorated_function
+
+def admin_route_guard(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session["user_type"] != "admin":
+            session.clear()
+            flash("Out of bound, please login", "danger")
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function
+
+def vendor_route_guard(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if session["user_type"] != "vendor":
+            session.clear()
+            flash("Out of bound, please login", "danger")
+            return redirect("/login")
+        return f(*args, **kwargs)
+    return decorated_function
+
+def get_balance_handler(request, database):
+    if request.method == "POST":
+        res = request.get_json()
+        user = database.execute("SELECT balance FROM users WHERE username=:username", username = res["username"])
+        balance = user[0]["balance"]
+        return {"res": "success", "balance": balance}
