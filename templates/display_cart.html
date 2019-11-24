@@ -3,13 +3,7 @@
 {% block title %}
     Cart Info
 {%endblock%}
-<style>
-        td {
-           border: 1px solid black;
-           width: 100px;
-           height: 50px;
-        }
-</style>
+
 {% block main %}
     {% if cart_menu %}
         <form action="/process_cart" method="POST">
@@ -25,15 +19,15 @@
                                 <th>Preview</th>
                             </tr>
                         </thead>
+                        <tbody>
                             {% for order in cart_menu %}
-                            <tbody>
                                 <tr>                                    
                                     <td>{{order['name']}}</td>
                                     <td>{{order['vendor']}}</td>
-                                    <td>{{order['price']}}</td>
-                                    <td><input type="text" class="form-control control{{order['id']}}" onblur="blurred()" value="{{order['quantity']}}" name="{{order['id']}}"></td>
-                                    <td><input type="text" class="form-control total_cost" disabled></td>
-                                    <td rowspan="4"><img src="{{order['image']}}" style="width:20vw; height:10vw" alt="Cannot Display Food Preview" class="img-fluid"></td>
+                                    <td><input type="text" class="form-control"  value="{{order['quantity']}}" name="{{order['id']}}"></td>
+                                    <td><input type="text" class="form-control1" readonly value="{{order['price']}}" name="price" ></td>
+                                    <td><input type="text" class="form-control2" readonly value="" name="quantity" ></td>
+                                    <td><img src="{{order['image']}}" style="width:20vw; height:10vw" alt="Cannot Display Food Preview" class="img-fluid"></td>
                                 </tr>
                             {% endfor %}
                             </tbody>
@@ -45,8 +39,9 @@
                             </tfoot>
                     </table>
                 </div>
-                <div class="form-group float-right">
-                    <button type="submit" id="submit" class="btn btn-success">Process Cart</button>
+                <div class="form-group">
+                    <a href="/clear_cart" class="float-left" ><input type="button" value="Clear Cart" class="btn btn-info"></a>
+                    <input type="submit" value="Process Cart" class="btn btn-success float-right">
                 </div>
         </form>
     {% else %}
@@ -60,6 +55,29 @@
         </div>
     {% endif %}
 <script>
+    $('document').ready(()=>{
+        let quantity = $('.form-control').serializeArray()
+        let price = $('.form-control1').serializeArray()
+        let totalCost = 0
+        $(".form-control2").map(function(index) {
+            this.value = parseInt(quantity[index]['value']) * parseInt(price[index]['value'])
+            totalCost += parseInt(this.value)
+        })
 
+        $('#total_cost').val(totalCost)
+
+
+        $('.form-control').blur(function(){
+            let quantity = $('.form-control').serializeArray()
+            let price = $('.form-control1').serializeArray()
+            let totalCost = 0
+            $(".form-control2").map(function(index) {
+                this.value = parseInt(quantity[index]['value']) * parseInt(price[index]['value'])
+                totalCost += parseInt(this.value)
+            })
+    
+            $('#total_cost').val(totalCost)
+        })
+    })
 </script>
-{% endblock %}
+{% endblock %}  
