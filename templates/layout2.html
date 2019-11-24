@@ -29,7 +29,7 @@
                 <div class="collapse navbar-collapse" id="navbar">
                         <ul class="navbar-nav ml-auto mt-2">
                             
-                            <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{session["balance"]}}</span></a></li>
+                            <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success"> Your Balance: NGN {{user.balance}}</span></a></li>
                             <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{session["username"]}}</span></a></li>
                             <li class="nav-item"><a class="nav-link" href="/logout"><span class="btn btn-danger">Log Out</span></a></li>
                         </ul>
@@ -77,7 +77,7 @@
                                     {% else %}
                                         <ul>
                                                 <li><a href='/dashboard'> Dashboard </a></li>
-                                                    <li><a href='/fund' > Fund Account </a></li>
+                                                    <li><a href='/fund' > Fund Wallet </a></li>
                                                     <li><a href='/browse' > Browse Menu </a></li>
                                                     <li><a href='/profile' > Edit Profile </a></li>
                                                     <li><a href='/apply' > Become a Vendor </a></li>
