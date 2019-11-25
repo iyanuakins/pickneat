@@ -4,6 +4,12 @@
     Funding
 {%endblock%}
 
+{% block body %}
+
+{% endblock body %}
+  <body class="bg-wallet">
+    
+  </body>
 {% block main %}
 {% endblock %}
 
@@ -12,36 +18,69 @@
 {{super()}}
 <div class="container float-left" id="payment">
         <form>
-            <h2 class="form-group">Payment Summary</h2>
-            <p>Food</p>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Full Name</span>
+              </div>
+              <input type="text" class="form-control" value="{{user[0].full_name}}"  aria-label="Username" aria-describedby="basic-addon1" disabled>
+            </div>
+            
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text" id="basic-addon1">@</span>
+                </div>
+                <input type="text" class="form-control" value="{{user[0].email}}"  aria-label="Username" aria-describedby="basic-addon1" disabled>
+              </div>
+            
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">₦</span>
+              </div>
+              <input id="fund_wallet" type="text" class="form-control" placeholder="Amount(to the nearest Naira)" aria-label="Amount (to the nearest Naira)">
+              <div class="input-group-append">
+                <span class="input-group-text">.00</span>
+              </div>
+            </div>
             <script src="https://js.paystack.co/v1/inline.js"></script>
-            <button type="button" class="btn btn-primary" onclick="payWithPaystack()">Pay</button> 
+            <button type="button" class="btn btn-primary float-right" onclick="payWithPaystack()">Fund Wallet</button> 
         </form>
 </div>
+
+
 
        
       <script>
         function payWithPaystack(){
           var handler = PaystackPop.setup({
             key: 'pk_test_ea7bd699c3f04a25dd346ca2b6c9fced161e2ea1',
-            email: "{{user[0]['email']}}",
-            amount: {{order[0]['total_cost']}},
+            email: "{{user[0].email}}",
+            amount: $('#fund_wallet').val()*100,
             currency: "NGN",
             // ref: ''+Math.floor((Math.random() * 1000000000) + 1), // generates a pseudo-unique reference. Please replace with a reference you generated. Or remove the line entirely so our API will generate one for you
-            firstname: "{{user[0]['full_name']}}",
-            lastname: "{{user[0]['username']}}",
+            firstname: "{{user[0].full_name}}",
+            lastname: "{{user[0].username}}",
             // label: "Optional string that replaces customer email"
             metadata: {
                custom_fields: [
                   {
                       display_name: "Mobile Number",
                       variable_name: "mobile_number",
-                      value: "{{user[0]['phone_number']}}"
+                      value: "{{user[0].phone_number}}"
                   }
                ]
             },
             callback: function(response){
-                alert('success. transaction ref is ' + response.reference);
+
+              $.ajax({
+                url: `/fund`,
+                type: 'POST',
+                contentType : "application/json; charset=utf-8",
+                data: JSON.stringify({'amount':$('#fund_wallet').val()}),
+                dataType: "json",
+                success: function(response){
+                  alert('Your New Account Balance is '+ response['amount'] );
+                }
+              })
             },
             onClose: function(){
                 alert('window closed');
