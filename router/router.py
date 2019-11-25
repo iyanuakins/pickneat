@@ -3,7 +3,7 @@ from flask import redirect, render_template, request, session
 from controllers.auth import login_handler,register_handler
 from controllers.admin import user_management_handler, user_view_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler, withdrawal_handler, switch_vendor_view, \
-                        login_required, logout_required, admin_route_guard, vendor_route_guard, get_information_handler
+                        login_required, logout_required, admin_route_guard, vendor_route_guard, get_information_handler, forgot_password_handler
 from controllers.log import transaction_history_handler, order_history_handler
 from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler, add_menu_handler, \
                       view_menu_handler, single_view_menu_handler, order_handler, order_preview_handler
@@ -41,6 +41,10 @@ def router(app=0, database=0, id=0):
     def logout():
         session.clear()
         return redirect("/login")
+
+    @app.route('/forgot_password', methods=["GET", "POST"])
+    def forgot_password():
+        return forgot_password_handler(request, database)
 
     @app.route("/apply", methods=["GET", "POST"])
     @login_required

@@ -3,8 +3,10 @@
 {% block title %}
     Order View
 {%endblock%}
+
 <div class="container">
     {% block main %}
+    
     <table id="table_view" class="table table-striped" style="width:100%">
         <thead>
             <tr>
@@ -31,11 +33,12 @@
         </tbody>
     </table>
         
-<script>
-    //Handles Table Behaviour
-    $(document).ready( function () {
-        $('#table_view').DataTable();
-    } );
-</script>
+    <script>
+        //Handles Table Behaviour
+        $(document).ready( function () {
+            $('#table_view').DataTable();
+        } );
+    </script>
+
     {% endblock %}
 </div>

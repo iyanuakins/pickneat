@@ -5,78 +5,78 @@
 {%endblock%}
 
 {% block main %}
-<div class="row">
+    <div class="row">
         <div class="offset-md-2 col-md-8 mt-3" >
-                <div id="mainDiv"></div>
+            <div id="mainDiv"></div>
             <div class="card mb-3 mt-5">
                 <div class="row no-gutters">
                     <div class="col-md-4">
                         <img src="../{{menu["image"]}}"  class="card-img-top" alt="Preview Unavailiable">
                     </div>
                     <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">Menu Name: {{menu["name"]}}</h5>
-                        <p class="card-text">Price per quantity: &#8358;{{menu["price"]}}</p>
-                        <p class="card-text font-weight-bold">Quantity: {{qty}}</p>
-                        <p class="card-text font-weight-bold">Total Amount: &#8358;<span id="total_cost">{{total_cost}}</span></p>
-                        <p class="card-text font-weight-bold">Phone number: {{user["phone_number"]}}</p>
-                        <p class="card-text font-weight-bold">Delivery Address: {{user["address"]}}</p>
-                        <form  method="post">
-                            <input type="number" hidden value="{{qty}}" name="quantity" id="qty">
-                            <input type="number" name="menu_id" hidden value="{{menu["id"]}}" id="menuId">
-                            {% if not cart %}
-                                <div class="form-group float-right">
-                                    <button type="submit" id="submit" class="btn btn-success">Pay from wallet</button>
-                                </div>
-                            {% elif cart and session['username'] %}
-                                <div class="form-group">
-                                    <a href="/display_cart" class="float-left" ><input type="button" value="Display Cart" class="btn btn-success"></a>
-                                    <a href="/browse" class="float-right" ><input type="button" value="Browse Menu" class="btn btn-warning"></a>
-                                </div>
-                            {% endif %}
-                        </form>
-                    </div>
+                        <div class="card-body">
+                            <h5 class="card-title">Menu Name: {{menu["name"]}}</h5>
+                            <p class="card-text">Price per quantity: &#8358;{{menu["price"]}}</p>
+                            <p class="card-text font-weight-bold">Quantity: {{qty}}</p>
+                            <p class="card-text font-weight-bold">Total Amount: &#8358;<span id="total_cost">{{total_cost}}</span></p>
+                            <p class="card-text font-weight-bold">Phone number: {{user["phone_number"]}}</p>
+                            <p class="card-text font-weight-bold">Delivery Address: {{user["address"]}}</p>
+                            <form  method="post">
+                                <input type="number" hidden value="{{qty}}" name="quantity" id="qty">
+                                <input type="number" name="menu_id" hidden value="{{menu["id"]}}" id="menuId">
+                                {% if not cart %}
+                                    <div class="form-group float-right">
+                                        <button type="submit" id="submit" class="btn btn-success">Pay from wallet</button>
+                                    </div>
+                                {% elif cart and session['username'] %}
+                                    <div class="form-group">
+                                        <a href="/display_cart" class="float-left" ><input type="button" value="Display Cart" class="btn btn-success"></a>
+                                        <a href="/browse" class="float-right" ><input type="button" value="Browse Menu" class="btn btn-warning"></a>
+                                    </div>
+                                {% endif %}
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<script>
-    $(document).ready(function () {
-        $("#submit").on("click", function (e) {
-            e.preventDefault();
-            let menu_id = $("#menuId").val()
-            let quantity = $("#qty").val()
-            let data = {
-                menu_id,
-                quantity
-            }
-            $.ajax({
-                type: "post",
-                url: "/order",
-                contentType: "application/json; charset=utf-8",
-                data : JSON.stringify(data),
-                dataType: "json",
-                success: function (response) {
-                    console.log(response);
-                    if (response["res"] == "insufficient"){
-                        $("#mainDiv").append(`<div class="alert alert-danger text-center alert-dismissible fade show" role="alert" id="msg">
-                                                    Insufficient fund, fund your account or pay with card
-                                                <button type="button" class="close" id="close" data-dismiss="alert" aria-label="Close" >
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>`)
-                        setTimeout(() => {
-                            $("#msg").remove();
-                        }, 3000);
-                    } else {
-                        window.location = "/dashboard"
-                    }
+    
+    <script>
+        $(document).ready(function () {
+            $("#submit").on("click", function (e) {
+                e.preventDefault();
+                let menu_id = $("#menuId").val()
+                let quantity = $("#qty").val()
+                let data = {
+                    menu_id,
+                    quantity
                 }
+                $.ajax({
+                    type: "post",
+                    url: "/order",
+                    contentType: "application/json; charset=utf-8",
+                    data : JSON.stringify(data),
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        if (response["res"] == "insufficient"){
+                            $("#mainDiv").append(`<div class="alert alert-danger text-center alert-dismissible fade show" role="alert" id="msg">
+                                                        Insufficient fund, fund your account or pay with card
+                                                    <button type="button" class="close" id="close" data-dismiss="alert" aria-label="Close" >
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>`)
+                            setTimeout(() => {
+                                $("#msg").remove();
+                            }, 3000);
+                        } else {
+                            window.location = "/dashboard"
+                        }
+                    }
+                });
+                
             });
-            
         });
-    });
-</script>
+    </script>
 {% endblock %}

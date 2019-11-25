@@ -224,6 +224,30 @@ def switch_vendor_view(view, database):
 
     return redirect("/dashboard")
 
+#Password Reset
+def forgot_password_handler(request, database):
+    if request.method == "GET":
+        return render_template('forgot_password.html')
+
+    if not request.form['username']:
+        flash('Username Must be Provided')
+        return redirect('/forgot_password')
+
+    if not request.form['password'] == request.form['confirmation']:
+        flash('Password Mismatch!', 'warning')
+        return redirect('/forgot_password')
+
+    user = database.execute('SELECT username FROM users WHERE username=:username', username=request.form['username'])
+
+    if not user:
+        flash('Your Password Request Was Acknowledged', 'info')
+        return redirect('/login')
+    
+    database.execute('UPDATE users SET password=:password WHERE username=:username', password=generate_password_hash(request.form['password']), username=request.form['username'])
+    
+    flash('Password Changed Successfully', 'success')
+    return redirect('/login')
+
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):

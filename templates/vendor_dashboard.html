@@ -5,11 +5,13 @@
 {%endblock%}
 
 {% block main %}
-<div class="jumbotron-fluid" style="height: 70vh;">
-        <div class="container">
-            <p id="pointSelected"></p>
-            <canvas id="myChart" name='width="600" height="400"'></canvas>
-        </div>
+<div class="jumbotron-fluid" style="height: 80vh;">
+
+    <div class="container">
+        <p id="pointSelected"></p>
+        <canvas id="myChart" name='width="600" height="400"'></canvas>
+    </div>
+
     <form action="/history_chart" method="POST" >
         <div class="input-group">
             <select class="custom-select" name="transaction">
@@ -22,6 +24,7 @@
             </div>
         </div>
     </form>
+
 </div>
 
 <script>
