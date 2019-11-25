@@ -1,6 +1,6 @@
 
 from flask import redirect, render_template, request, session
-from controllers.auth import login_handler,register_handler
+from controllers.auth import login_handler,register_handler, username_check_handler
 from controllers.admin import user_management_handler, user_view_handler, app_management_handler, transaction_log_handler, order_log_handler, \
                              menu_log_handler, admin_dashboard_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler, withdrawal_handler, switch_vendor_view, \
