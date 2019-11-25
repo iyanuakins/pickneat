@@ -48,11 +48,11 @@
     background-size: cover;
 }
 
-#payment_form {
 
+.bg-wallet {
+    background-image: url('/static/images/wallet.jpg');
+    background-size: cover;
 }
-
-
 
 .green{
     color: #5f5;
