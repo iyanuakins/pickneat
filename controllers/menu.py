@@ -80,7 +80,7 @@ def add_menu_handler(request, database):
         return render_template("menu_add.html")
 
     #Dummy for Image Url
-    user_image = ""
+    menu_image = ""
     extension = ""
 
     #Create Filename for File
@@ -171,7 +171,6 @@ def order_handler(request, database):
                 #     session.pop('qty')
                 flash("Order was successful and is been processed.", "success")
                 return {"res": "completed"}
-
 
 def order_preview_handler(request, database):
     if request.method == "POST":
