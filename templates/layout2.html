@@ -47,37 +47,40 @@
                             <nav id="sidebar">
                                 <div class="sidebar">
                                     {% if session["user_type"] == "admin" %}
-                                        <ul>
-                                                <li><a href='/dashboard' > Dashboard </a></li>
-                                                <li><a href='/transaction_log' > View Transactions </a></li>
-                                                <li><a href='/menu_log' > View Menus </a></li>
-                                                <li><a href='/manage_users' > Manage Users </a></li>
-                                                <li><a href='/order_log' > View Orders </a></li>
-                                                <li><a href='/vendor_verification' > Vendor Application </a></li>
-                                        </ul>
+                                    <ul>
+                                        <li><a href='/dashboard' > Dashboard </a></li>
+                                        <li><a href='/notification' > Notification <span class="badge-danger custom-badge" id="notifs">0</span> </a></li>
+                                        <li><a href='/transaction_log' > View Transactions </a></li>
+                                        <li><a href='/menu_log' > View Menus </a></li>
+                                        <li><a href='/manage_users' > Manage Users </a></li>
+                                        <li><a href='/order_log' > View Orders </a></li>
+                                        <li><a href='/vendor_verification' > Vendor Application </a></li>
+                                    </ul>
                                     {% elif  session["user_type"] == "vendor" and session["user_view"] == "vendor" %}
                                         <ul>
-                                                <li><a href='/dashboard' > Dashboard </a></li>
-                                                <li><a href='/manage_order' > Manage Orders </a></li>
-                                                <li><a href='/withdraw' > Withdraw </a></li>
-                                                <li><a href='/profile' > Edit Profile </a></li>
-                                                <li><a href='/manage_menu' > Manage Menu </a></li>
-                                                <li><a href='/transaction_history' > Transaction History </a></li>
-                                                <li><a href='/order_history' > Order History </a></li>
-                                                <li><a href='/contact' > Contact Admin </a></li>
+                                            <li><a href='/dashboard' > Dashboard </a></li>
+                                            <li><a href='/manage_order' > Manage Orders </a></li>
+                                            <li><a href='/withdraw' > Withdraw </a></li>
+                                            <li><a href='/notification' > Notification <span class="badge-danger custom-badge" id="notifs"></span> </a></li>
+                                            <li><a href='/profile' > Edit Profile </a></li>
+                                            <li><a href='/manage_menu' > Manage Menu </a></li>
+                                            <li><a href='/transaction_history' > Transaction History </a></li>
+                                            <li><a href='/order_history' > Order History </a></li>
+                                            <li><a href='/contact' > Contact Admin </a></li>
                                         </ul>
                                     {% else %}
                                         <ul>
-                                                <li><a href='/dashboard'> Dashboard </a></li>
-                                                    <li><a href='/fund' > Fund Account </a></li>
-                                                    <li><a href='/browse' > Browse Menu </a></li>
-                                                    <li><a href='/profile' > Edit Profile </a></li>
-                                                    {% if session["user_type"] != "vendor" %}
-                                                        <li><a href='/apply' > Become a Vendor </a></li>
-                                                    {% endif %}
-                                                    <li><a href='/transaction_history' > Transaction History </a></li>
-                                                    <li><a href='/order_history' > Order History </a></li>
-                                                    <li><a href='/contact' > Contact Admin </a></li>
+                                            <li><a href='/dashboard'> Dashboard </a></li>
+                                            <li><a href='/fund' > Fund Account </a></li>
+                                            <li><a href='/notification' > Notification <span class="badge-danger custom-badge" id="notifs">0</span> </a></li>
+                                            <li><a href='/browse' > Browse Menu </a></li>
+                                            <li><a href='/profile' > Edit Profile </a></li>
+                                            {% if session["user_type"] != "vendor" %}
+                                                <li><a href='/apply' > Become a Vendor </a></li>
+                                            {% endif %}
+                                            <li><a href='/transaction_history' > Transaction History </a></li>
+                                            <li><a href='/order_history' > Order History </a></li>
+                                            <li><a href='/contact' > Contact Admin </a></li> 
                                         </ul>
                                     {% endif %}
                 </div>
@@ -107,7 +110,7 @@
                                 <div class="container">
                                     <main>
                                         <div class="container text-center">
-                                                {% with messages = get_flashed_messages(with_categories=true) %}
+                                            {% with messages = get_flashed_messages(with_categories=true) %}
                                                 {% if messages %}
                                                     {% for category, message in messages %}
                                                         <div class="alert alert-{{category}} font-weight-bold alert-dismissible fade show" role="alert">
@@ -118,8 +121,8 @@
                                                         </div>
                                                     {% endfor %}
                                                 {% endif %}
-                                                {% endwith %}
-                                            </div>
+                                            {% endwith %}
+                                        </div>
                                         {% block main %}{% endblock main %}
                                     </main>
                                 </div>
@@ -153,6 +156,23 @@
                             }
                         }
                     });
+
+                    $.ajax({
+                        type: "post",
+                        url: "/message_count",
+                        contentType: "application/json; charset=utf-8",
+                        data : JSON.stringify({count: "messages"}),
+                        dataType: "json",
+                        success: function (response) {
+                            if (response["res"] == "success"){
+                                $("#notifs").text(response["count"]);
+                            }
+                        }
+                    });
+
+                    setTimeout(() => {
+                        $("#flashMsg").click();
+                    }, 3000);
                 })
             </script>
 {% endblock %}

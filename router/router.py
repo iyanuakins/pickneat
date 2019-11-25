@@ -244,3 +244,8 @@ def router(app=0, database=0, id=0):
     @admin_route_guard
     def admin_dashboard():
         return admin_dashboard_handler(request, database)
+
+    @app.route("/notification")
+    @login_required
+    def notifications():
+        return render_template("notifications.html")
