@@ -6,7 +6,9 @@
 
 {% block main %}
 <div class="container">
+
     <form action="/edit_menu/{{session["edit_menu"]}}" method="POST" enctype="multipart/form-data">
+
         <div class="col-lg-10 form-group">
                 <img src="{{"/"+menu["image"]}}" class="img-fluid" alt="Picture Unavailable" />
         </div>
@@ -59,6 +61,7 @@
         </div>
         
     </form>
+    
 </div>
 
 {% endblock %}

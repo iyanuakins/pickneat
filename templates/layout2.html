@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/styles.css" rel="stylesheet">
-    <link href="/static/sidebar.css" rel="stylesheet">
-    <script src='static/Chart.min.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
-    <script type="text/javascript" charset="utf8" src="/static/jquery.jold.paginator.min.js"></script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet">
+        <link href="/static/styles.css" rel="stylesheet">
+        <link href="/static/sidebar.css" rel="stylesheet">
+        <script src='static/Chart.min.js'></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
+        <script type="text/javascript" charset="utf8" src="/static/jquery.jold.paginator.min.js"></script>
 
-    <title> {% block title %}{% endblock title %}</title>
-</head>
+        <title> {% block title %}{% endblock title %}</title>
+    </head>
 {% block body%}
-<body>
+    <body>
 {% endblock %}
         <nav class="navbar navbar-expand-md navbar-light bg-light border">
                 <a class="navbar-brand" href="/dashboard"><span class="green">Pick</span><span class="white">n</span><span class="green">Eat</span><span class="green"></a>
@@ -36,7 +36,7 @@
                             {% endif %}
                             {% if session["user_type"] != "admin" %}
                                 <li class="nav-item nav-link"><span class="btn btn-outline-dark" id="balance"></span></li>
-                             {% endif %}
+                                {% endif %}
                             <li class="nav-item"><a class="nav-link" href="/profile"><span class="btn btn-outline-success">{{session["username"]}}</span></a></li>
                             <li class="nav-item"><a class="nav-link" href="/logout"><span class="btn btn-danger">Log Out</span></a></li>
                         </ul>
@@ -80,23 +80,42 @@
                                                     <li><a href='/contact' > Contact Admin </a></li>
                                         </ul>
                                     {% endif %}
-                                </div>
-                                {% if  session["user_type"] == "vendor" and session["user_view"] == "vendor" %}
-                                        <div class="switch">
-                                            <a href="/switch_view/user">
-                                                <button type="submit" class="btn btn-info btn-block">Switch to Buyer</button>
-                                            </a>
-                                        </div>
-                                {% endif %}
-                                {% if  session["user_type"] == "vendor" and session["user_view"] == "user" %}
-                                <div class="switch">
-                                    <a href="/switch_view/vendor">
-                                        <button type="submit" class="btn btn-info btn-block">Switch to Seller</button>
-                                    </a>
-                                </div>
-                            {% endif %}
-                            </nav>
+                                    <li><a href='/transaction_history' > Transaction History </a></li>
+                                    <li><a href='/order_history' > Order History </a></li>
+                                    <li><a href='/contact' > Contact Admin </a></li>
+                        </ul>
+                    {% endif %}
+                </div>
+                {% if  session["user_type"] == "vendor" and session["user_view"] == "vendor" %}
+                        <div class="switch">
+                            <a href="/switch_view/user">
+                                <button type="submit" class="btn btn-info btn-block">Switch to Buyer</button>
+                            </a>
+                        </div>
+                {% endif %}
+                {% if  session["user_type"] == "vendor" and session["user_view"] == "user" %}
+                <div class="switch">
+                    <a href="/switch_view/vendor">
+                        <button type="submit" class="btn btn-info btn-block">Switch to Seller</button>
+                    </a>
+                </div>
+            {% endif %}
+            </nav>
+
+            <!-- Page Content Holder -->
+            <div id="content">
+                <label  id="toggle-sidebar" class="btn btn-outline-success"  type="button">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </label>
+                <div class="container">
+                    <main>
+                        {% block main %}{% endblock main %}
+                    </main>
+                </div>
                 
+                              
                             <!-- Page Content Holder -->
                             <div id="content">
                                 <label  id="toggle-sidebar" class="btn btn-outline-success"  type="button">
@@ -157,8 +176,25 @@
                     setTimeout(() => {
                         $("#flashMsg").click();
                     }, 3000);
+
                 })
-            </script>
-        {% endblock %}
-</body>
+
+                    /* Retrieving information about Current User */
+                $.ajax({
+                    type: "post",
+                    url: "/get_information",
+                    contentType: "application/json; charset=utf-8",
+                    data : JSON.stringify({username: "{{session["username"]}}"}),
+                    dataType: "json",
+                    success: function (response) {
+                        if (response["res"] == "success"){
+                            $("#cart").append(`${response["cart"]}`)
+                            $("#balance").html(`Acc Balance: &#8358;${response["balance"]}`)
+                        }
+                    }
+                });
+            })
+        </script>
+{% endblock %}
+    </body>
 </html>

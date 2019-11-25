@@ -34,7 +34,7 @@
 
     <!-- Default Page Rendering in Table -->
     {% if table %}
-    <div class="container">
+        <div class="container">
             <table id="table_id" class="table table-striped" style="width:100%">
                     <thead>
                         <tr> 
@@ -57,51 +57,50 @@
                         {% endfor %}
                     </tbody>
             </table>
-    </div>
+        </div>
     {% endif %}               
            
     <!-- Default Page Rendering in Chart -->
     {% if chart %}
-    <div class="container">
-        <canvas id="myChart" width="600" height="400"></canvas>
-        <p id="pointSelected">Point selected:</p>
-    </div>
+        <div class="container">
+            <canvas id="myChart" width="600" height="400"></canvas>
+            <p id="pointSelected">Point selected:</p>
+        </div>
     {% endif %}
-    {{ sort }}
-    {{detail_table}}
+
     <!-- Rendering Sample of Table -->
     {% if detail_table %}
-    <div class="container">
-        <table id="table_id" class="table table-striped" style="width:100%">
-                <thead>
-                    <tr>
-                        <th>#</th>
-                        <th>Total Amount</th>
-                        <th>Transaction Type</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in sort %}
-                    <tr>
-                        <td>{{item}}</td>
-                        <td>{{detail_table[item]}}</td>
-                        <td>{{status_type.upper()}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-        </table>
-    </div>
+        <div class="container">
+            <table id="table_id" class="table table-striped" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Total Amount</th>
+                            <th>Transaction Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sort %}
+                        <tr>
+                            <td>{{item}}</td>
+                            <td>{{detail_table[item]}}</td>
+                            <td>{{status_type.upper()}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+            </table>
+        </div>
     {% endif %}
 
     {%if not table and not chart and not detail_table %}
-    <div class="card-group mt-5">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">No Orders</h5>
-          <p class="card-text">Place an order to view your order history.</p>
+        <div class="card-group mt-5">
+        <div class="card">
+            <div class="card-body">
+            <h5 class="card-title">No Orders</h5>
+            <p class="card-text">Place an order to view your order history.</p>
+            </div>
         </div>
-      </div>
-    </div>
+        </div>
     {% endif %}
 
 <script>
@@ -175,11 +174,6 @@
       // create a callback function for updating the selected index on the chart
       holder.onclick = function(evt){
         var activePoint = myChart.getElementAtEvent(evt);
-        console.log(activePoint);
-        console.log('x:' + activePoint[0]._view.x);
-        console.log('maxWidth: ' + activePoint[0]._xScale.maxWidth);
-        console.log('y: ' + activePoint[0]._view.y);
-        console.log('index: ' + activePoint[0]._index);
         pointSelected.innerHTML = 'Point selected... index: ' + activePoint[0]._index;
       };
 

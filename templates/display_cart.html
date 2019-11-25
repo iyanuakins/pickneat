@@ -75,19 +75,21 @@
             </div>
         </div>
     {% endif %}
-<script>
-    $('document').ready(()=>{
-        $('.form-control1').blur(function(){
-            let quantity = $('.form-control1').serializeArray()
-            let price = $('.form-control').serializeArray()
-            let cost = 0
-            for(let i in quantity) {
-                quantity[i]['value'] = (quantity[i]['value'] > 0) ? quantity[i]['value'] : 1;
-                price[i]['value'] = (price[i]['value'] > 0) ? price[i]['value'] : 1;
-                cost += quantity[i]['value'] * price[i]['value'];
-            }
-            $('#total_cost').val(cost)
+
+    <script>
+        $('document').ready(()=>{
+            $('.form-control1').blur(function(){
+                let quantity = $('.form-control1').serializeArray()
+                let price = $('.form-control').serializeArray()
+                let cost = 0
+                for(let i in quantity) {
+                    quantity[i]['value'] = (quantity[i]['value'] > 0) ? quantity[i]['value'] : 1;
+                    price[i]['value'] = (price[i]['value'] > 0) ? price[i]['value'] : 1;
+                    cost += quantity[i]['value'] * price[i]['value'];
+                }
+                $('#total_cost').val(cost)
+            })
         })
-    })
-</script>
+    </script>
+
 {% endblock %}  
