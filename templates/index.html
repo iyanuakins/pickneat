@@ -22,13 +22,15 @@
                 <div class="row">
               {% for menu in menus %}
                 <div class="col-md-4 col-sm-12 mt-2 mb-3 text-center">
-                  <div class="card">
-                        <img src={{menu["image"]}}  type="submit" class="card-img-top" alt="Preview Unavailiable">
+                  <div class="card menu-card">
+                        <img src={{menu["image"]}}  type="submit" class="card-img-top menu-card-head" alt="Preview Unavailiable">
                         <div class="card-body">
                           <h5 class="card-title">{{menu["name"]}}</h5>
-                          <p class="card-text">{{menu["description"]}}.</p>
+                          <p class="card-text">{{menu["description"] | truncate(70)}}.</p>
                           <p class="card-text">Price: &#8358;{{menu["price"]}} <small class="text-danger"><strike>&#8358;{{menu["price"] * 1.5}}</strike></small></p>
-                          <p><a href="/order_menu/{{menu['id']}}" class="btn btn-success">Order Menu</a></p>
+                        </div>
+                        <div class="card-footer">
+                            <p><a href="/order_menu/{{menu['id']}}" class="btn btn-success">Order Menu</a></p>
                         </div>
                     </div>
                   </div>
