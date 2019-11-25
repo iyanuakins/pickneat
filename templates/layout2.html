@@ -80,11 +80,6 @@
                                                     <li><a href='/contact' > Contact Admin </a></li>
                                         </ul>
                                     {% endif %}
-                                    <li><a href='/transaction_history' > Transaction History </a></li>
-                                    <li><a href='/order_history' > Order History </a></li>
-                                    <li><a href='/contact' > Contact Admin </a></li>
-                        </ul>
-                    {% endif %}
                 </div>
                 {% if  session["user_type"] == "vendor" and session["user_view"] == "vendor" %}
                         <div class="switch">
@@ -103,20 +98,6 @@
             </nav>
 
             <!-- Page Content Holder -->
-            <div id="content">
-                <label  id="toggle-sidebar" class="btn btn-outline-success"  type="button">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </label>
-                <div class="container">
-                    <main>
-                        {% block main %}{% endblock main %}
-                    </main>
-                </div>
-                
-                              
-                            <!-- Page Content Holder -->
                             <div id="content">
                                 <label  id="toggle-sidebar" class="btn btn-outline-success"  type="button">
                                     <span></span>
