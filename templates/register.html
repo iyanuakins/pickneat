@@ -25,41 +25,126 @@
                 {% endfor %}
             {% endif %}
         {% endwith %}
-        <form action="/register" method="POST">
+        <div id="msgDiv"></div>
+        <form method="POST">
             <div class="form-row">
                 <div class="col-md-12">
-                <input type="text" class="form-control" name="full_name" placeholder="Enter Fullname">
+                <input type="text" class="form-control" name="full_name" id="full_name" placeholder="Enter Fullname">
                 </div>
             </div><br><br>
             <div class="form-row">
                 <div class="col-md-12">
-                <input type="text" class="form-control" name="username" placeholder="Enter Unique Username">
+                <input type="text" class="form-control" name="username" id="username" placeholder="Enter Unique Username">
                 </div>
             </div><br><br>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                <input type="email" name="email" class="form-control" placeholder="Email">
+                <input type="email" name="email" id="email" class="form-control" placeholder="Email">
                 </div><br>
                 <div class="form-group col-md-6">
-                <input type="text" name="phone_number" class="form-control" placeholder="Phone Number">
+                <input type="text" name="phone_number" id="phone_number" class="form-control" placeholder="Phone Number">
                 </div>
             </div><br><br>
             <div class="form-group">
-                <input type="text" name="address" class="form-control" placeholder="Address">
+                <input type="text" name="address" id="address" class="form-control" placeholder="Address">
             </div><br><br>
             <div class="form-row">
                 <div class="form-group col-md-6">
-                        <input type="password" name="password" placeholder="Password" class="form-control" id="inputCity">
+                        <input type="password" name="password" id="password" placeholder="Password" class="form-control" id="inputCity">
+                        <small class="text-danger bg-white"></small>
                 </div>
                 <div class="form-group col-md-6">
-                        <input type="password" name="confirmation" placeholder="Confirm Password" class="form-control" id="inputCity">
+                        <input type="password" name="confirmation" id="confirmation" placeholder="Confirm Password" class="form-control" id="inputCity">
                 </div>
             </div><br>
             <div class="form-group">
-                <button type="submit" class="btn  btn-lg btn-success float-right">Register</button>
+                <button type="submit" id="submit" class="btn  btn-lg btn-success float-right">Register</button>
             </div>
             
         </form>
     </div>
+    <script>
+            $(document).ready(function () {
+                $("#username").blur(function (e) { 
+                    e.preventDefault();
+                    $.ajax({
+                        type: "post",
+                        url: "/check_username",
+                        contentType: "application/json; charset=utf-8",
+                        data : JSON.stringify({username: $("#username").val()}),
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response);
+                            if (response["error"]) {
+                                $("#msgDiv").append(`<div class="alert alert-danger text-center font-weight-bold alert-dismissible fade show" role="alert" id="msg">
+                                                            ${response["error"]}
+                                                        <button type="button" class="close" id="close" data-dismiss="alert" aria-label="Close" >
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>`)
+                                $("#username").removeClass("valid-input");
+                                $("#username").addClass("invalid-input");
+                                setTimeout(() => {
+                                    $("#msg").remove();
+                                }, 3000);
+                            } else {
+                                $("#username").removeClass("invalid-input");
+                                $("#username").addClass("valid-input");
+                            }
+                        }
+                    });
+                });
+
+
+                $("#submit").on("click", function (e) {
+                    e.preventDefault();
+                    let full_name = $("#full_name").val();
+                    let username = $("#username").val();
+                    let email = $("#email").val();
+                    let address = $("#address").val();
+                    let phone_number = $("#phone_number").val();
+                    let password = $("#password").val();
+                    let confirmation = $("#confirmation").val();
+                    let data = {
+                        full_name,
+                        username,
+                        email,
+                        address,
+                        phone_number,
+                        password,
+                        confirmation,
+                    }
+                    console.log(data);
+                    $.ajax({
+                        type: "post",
+                        url: "/register",
+                        contentType: "application/json; charset=utf-8",
+                        data : JSON.stringify(data),
+                        dataType: "json",
+                        success: function (response) {
+                            console.log(response);
+                            if (response["error"]) {
+                                $("#msgDiv").append(`<div class="alert alert-danger text-center font-weight-bold alert-dismissible fade show" role="alert" id="msg">
+                                                            ${response["error"]}
+                                                        <button type="button" class="close" id="close" data-dismiss="alert" aria-label="Close" >
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>`)
+                                $('html, body').animate({
+                                    scrollTop: ($('#msgDiv').offset().top)
+                                },500);
+                                setTimeout(() => {
+                                    $("#msg").remove();
+                                }, 3200);
+                            } else {
+                                location = "/login"
+                            }
+                            
+                        }
+                    });
+                    
+                });
+            });
+        </script>
 {% endblock %}
 
