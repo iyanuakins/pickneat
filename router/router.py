@@ -17,7 +17,10 @@ def router(app=0, database=0, id=0):
     def index():
         menus = database.execute("SELECT * FROM menu ORDER BY random() LIMIT 3;")
         return render_template("index.html", menus = menus)
-
+    @app.route("/check_username", methods=["POST"])
+    def check_username():
+        return username_check_handler(request, database)
+      
     @app.route("/register", methods=["GET", "POST"])
     @logout_required
     def register():
