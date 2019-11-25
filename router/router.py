@@ -3,13 +3,13 @@ from flask import redirect, render_template, request, session, Response
 from controllers.auth import login_handler,register_handler
 from controllers.admin import user_management_handler, user_view_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler, withdrawal_handler, switch_vendor_view, \
-                        login_required, logout_required
+                        login_required, logout_required, admin_route_guard, vendor_route_guard, get_balance_handler
 from controllers.log import transaction_history_handler, order_history_handler
 from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler, add_menu_handler, \
                       view_menu_handler, single_view_menu_handler, order_handler, order_preview_handler
 from controllers.order import manage_order_handler,  manage_single_order_handler, accept_order_handler, manage_order_handler, cancel_order_handler
-
-
+from controllers.cart import add_cart_handler, delete_cart_handler, display_cart_handler, clear_cart_handler, process_cart_handler
+from controllers.history import history_chart_handler
 
 def router(app=0, database=0, id=0):
     @app.route("/")
@@ -54,11 +54,13 @@ def router(app=0, database=0, id=0):
 
     @app.route("/manage_users", methods=["GET", "POST"])
     @login_required
+    @admin_route_guard
     def manage_users():
         return user_management_handler(request, database)
 
     @app.route("/manage_user", methods=["GET", "POST"])
     @login_required
+    @admin_route_guard
     def manage_user():
         return user_view_handler(request, database)
     
@@ -74,17 +76,19 @@ def router(app=0, database=0, id=0):
 
     @app.route("/manage_menu")
     @login_required
-    @login_required
+    @vendor_route_guard
     def menu_manage():
         return menu_handler(database)
 
     @app.route("/edit_menu/<id>", methods=["GET", "POST"])
     @login_required
+    @vendor_route_guard
     def edit_menu(id):
         return edit_menu_handler(request, database, id)
 
     @app.route("/add_menu", methods=["GET", "POST"])
     @login_required
+    @vendor_route_guard
     def add_menu():
         return add_menu_handler(request, database)
 
@@ -110,26 +114,31 @@ def router(app=0, database=0, id=0):
 
     @app.route("/delete_menu/<id>")
     @login_required
+    @vendor_route_guard
     def delete_menu(id):
         return delete_menu_handler(id, request, database)
 
     @app.route("/manage_order")
     @login_required
+    @vendor_route_guard
     def manage_order():
         return manage_order_handler(database)
 
     @app.route("/manage_order/<id>")
     @login_required
+    @vendor_route_guard
     def manage_single_order(id):
         return manage_single_order_handler(id, database)
 
     @app.route("/cancel_order/<id>")
     @login_required
+    @vendor_route_guard
     def cancel_order(id):
         return cancel_order_handler(id, database)
 
     @app.route("/accept_order/<id>")
     @login_required
+    @vendor_route_guard
     def accept_order(id):
         return accept_order_handler(id, database)
 
@@ -142,19 +151,57 @@ def router(app=0, database=0, id=0):
         return single_view_menu_handler(id, request, database)
 
     @app.route("/order", methods = ["POST"])
+    @login_required
     def order():
         return order_handler(request, database)
     
     @app.route("/withdraw", methods=["GET", "POST"])
     @login_required
+    @vendor_route_guard
     def withdraw_cash():
         return withdrawal_handler(request, database)
         
     @app.route("/switch_view/<view>")
     @login_required
+    @vendor_route_guard
     def switch_view(view):
         return switch_vendor_view(view, database)
 
     @app.route("/preview", methods = ["GET","POST"])
+    @login_required
     def preview_order():
         return order_preview_handler(request, database)
+
+    @app.route("/get_balance", methods = ["GET","POST"])
+    def get_balance():
+        return get_balance_handler(request, database)
+    
+    @app.route("/display_cart")
+    @login_required
+    def display_cart():
+        return display_cart_handler(database)
+
+    @app.route("/add_cart/<id>", methods=["POST", "GET"])
+    @login_required
+    def add_cart(id):
+        return add_cart_handler(id, request, database)
+    
+    @app.route("/delete_cart/<id>", methods=["POST"])
+    @login_required
+    def delete_cart_handler(id):
+        return delete_cart_handler(id, database)
+
+    @app.route("/clear_cart")
+    @login_required
+    def clear_cart():
+        return clear_cart_handler(database)
+
+    @app.route("/process_cart", methods=["POST"])
+    @login_required
+    def process_cart():
+        return process_cart_handler(request, database)
+
+    @app.route("/history_chart", methods=["GET", "POST"])
+    @login_required
+    def history_cart():
+        return history_chart_handler(request, database)
