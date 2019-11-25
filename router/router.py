@@ -97,11 +97,21 @@ def router(app=0, database=0, id=0):
     def all_menus():
         return render_template("all_menus.html")
 
-    @app.route("/fund")
+    
+    @app.route("/fund", methods=["GET", "POST"])
     @login_required
     def fund():
         user = database.execute("SELECT * FROM users WHERE username = :username", username = session.get("username"))
+
+        if request.method == "POST":
+            data = request.get_json()
+            amount = int(user[0]["balance"])+int(data['amount'])
+            database.execute('UPDATE users SET balance=:bal WHERE username=:user', bal=amount, user=user[0]["username"])
+            return {'amount':amount}
+
         order = database.execute("SELECT * FROM orders WHERE user = :user AND status='pending'", user = session.get("username"))
+        # credit = database.execute("UPDATE users SET balance = balance + :funding WHERE username = :username", funding = xxxxx, username 
+        #                                                 = session.get("username"))
         return render_template("funding_page.html", order = order, user = user)
 
     @app.route("/delete_menu/<id>")
