@@ -66,3 +66,50 @@ def app_management_handler(request, database):
             apps = database.execute("SELECT username, business_name, business_number, business_address FROM users WHERE application = :app", app = "pending")
             flash("Vendor application successfully rejected", "success")
             return render_template("vendor_verification.html", apps = apps)
+
+def transaction_log_handler(request, database):
+    table = database.execute("SELECT * FROM transactions")
+    return render_template("all_transactions.html", table = table)
+
+def order_log_handler(request, database):
+    orders = database.execute("SELECT * FROM orders")
+    return render_template("all_orders.html", orders = orders)
+
+def menu_log_handler(request, database):
+    menus = database.execute("SELECT * FROM menu")
+    return render_template("menu_log.html", menus = menus)
+
+def admin_dashboard_handler(request, database):
+    
+    if request.method == "GET":
+        legend = "Users" 
+        detail = "Users registration"
+
+    records = database.execute("SELECT * FROM users")
+    
+    #Retrieves if any data for labels and values for Chart
+    values = {}
+    labels = []
+  
+    for user in records:
+
+        date = user["time_stamp"].split(" ")[0]
+
+        #Transaction types handlers
+        if user['user_type'] != "admin":
+            if not f'{date}' in labels:
+                labels.append(f'{date}')
+            try:
+                values[f'{date}'] += 1
+            except:
+                values[f'{date}'] = 1
+    labels.sort()
+    #Transaction is a Dictionary of Items
+    return render_template(
+                            'admin_dashboard.html', 
+                            values=values,
+                            labels=labels, 
+                            legend=legend, 
+                            detail=detail
+                            )
+

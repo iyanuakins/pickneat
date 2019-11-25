@@ -50,7 +50,7 @@
                                         <ul>
                                                 <li><a href='/dashboard' > Dashboard </a></li>
                                                 <li><a href='/transaction_log' > View Transactions </a></li>
-                                                <li><a href='/manage_menu' > Manage Menu </a></li>
+                                                <li><a href='/menu_log' > View Menus </a></li>
                                                 <li><a href='/manage_users' > Manage Users </a></li>
                                                 <li><a href='/order_log' > View Orders </a></li>
                                                 <li><a href='/vendor_verification' > Vendor Application </a></li>
@@ -72,7 +72,9 @@
                                                     <li><a href='/fund' > Fund Account </a></li>
                                                     <li><a href='/browse' > Browse Menu </a></li>
                                                     <li><a href='/profile' > Edit Profile </a></li>
-                                                    <li><a href='/apply' > Become a Vendor </a></li>
+                                                    {% if session["user_type"] != "vendor" %}
+                                                        <li><a href='/apply' > Become a Vendor </a></li>
+                                                    {% endif %}
                                                     <li><a href='/transaction_history' > Transaction History </a></li>
                                                     <li><a href='/order_history' > Order History </a></li>
                                                     <li><a href='/contact' > Contact Admin </a></li>
