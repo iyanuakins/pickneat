@@ -4,61 +4,80 @@ from datetime import datetime
 from controllers.error import error
 
 #Registration Handler
+def username_check_handler(request, database):
+    if request.method == "POST":
+        req = request.get_json()
+        # Query database for username
+        rows = database.execute("SELECT * FROM users WHERE username = :username",
+                          username=req["username"].lower())
+        if len(rows) > 0:
+            res = {"error": "Username taken, try another"}
+            return res
+        return {"valid": "good"}
+        
+                          
+#Registration Handler
 def register_handler(request, database):
     if request.method == "POST":
+        req = request.get_json()
         # Ensure name was submitted
-        if not request.form.get("full_name"):
-            flash("Must provide full name", "danger")
-            return redirect("/register")
+        if not req["full_name"]:
+            res = {"error": "Must provide full name"}
+            return res
 
         # Ensure username was submitted
-        if not request.form.get("username").strip():
-            flash("Must provide username", "danger")
-            return redirect("/register")
+        if not req["username"].strip():
+            res = {"error": "Must provide username"}
+            return res
 
         # Ensure phone number was submitted
-        try:
-            if int(request.form.get("phone_number")):
-                pass
-        except:
-            flash("Must provide phone number", "danger")
-            return redirect("/register")
+        if not req["full_name"]:
+            res = {"error": "Must provide phone number"}
+            return res
+        else:
+            try:
+                if int(req["phone_number"]):
+                    pass
+            except:
+                res = {"error": "Must provide valid phone number"}
+                return res
 
 
         # Ensure username was submitted
-        if not request.form.get("email"):
-            flash("Must provide email", "danger")
-            return redirect("/register")
+        if not req["email"]:
+            res = {"error": "Must provide email"}
+            return res
 
         # Ensure password was submitted
-        elif not request.form.get("password").strip():
-            flash("Must provide password", "danger")
-            return redirect("/register")
+        elif not req["password"].strip():
+            res = {"error": "Must provide password"}
+            return res
 
         # Ensure password confirmation was submitted
-        elif not request.form.get("confirmation").strip():
-            flash("Must repeat password enterd for confirmation", "danger")
-            return redirect("/register")
+        elif not req["confirmation"].strip():
+            res = {"error": "Must repeat password enterd for confirmation"}
+            return res
 
         #Confirm Password match
-        elif request.form.get("confirmation").strip() != request.form.get("password").strip():
-            flash("Passwords entered does not match", "danger")
-            return redirect("/register")
+        elif req["confirmation"].strip() != req["password"].strip():
+            res = {"error": "Passwords entered does not match"}
+            return res
 
         # Query database for username
         rows = database.execute("SELECT * FROM users WHERE username = :username",
-                          username=request.form.get("username"))
+                          username=req["username"].lower())
 
         if len(rows) > 0:
-            flash("Username taken, try another", "danger")
-            return redirect("/register")
+            res = {"error": "Username taken, try another"}
+            return res
 
         # Query database for username
         database.execute("INSERT INTO users (full_name, username, email, phone_number, address, user_type, password, time_stamp) VALUES ( :full_name, :username, :email, :phone_number, :address, :user_type, :password, :time_stamp)",
-                                                 full_name = request.form.get("full_name"), username = request.form.get("username").strip(), email = request.form.get("email").strip(), phone_number = request.form.get("phone_number"), address = request.form.get("address"),
-                                                  user_type = "user", password = generate_password_hash(request.form.get("password").strip()), time_stamp = datetime.now())
-
-        return render_template("login.html")
+                                                 full_name = req["full_name"], username = req["username"].lower().strip(), email = req["email"].strip(), phone_number = req["phone_number"], address = req["address"],
+                                                  user_type = "user", password = generate_password_hash(req["password"].strip()), time_stamp = datetime.now())
+        res = {"success": "Done"}
+        flash("Registratioin successful, Please login", "success")
+        return res
     else:
         return render_template("register.html")
 
@@ -80,7 +99,7 @@ def login_handler(request, database):
         return redirect("/login")
 
     #Recieves Information about User from Database
-    user = database.execute("SELECT * FROM users WHERE username=:username", username=request.form.get("username"))
+    user = database.execute("SELECT * FROM users WHERE username=:username", username=request.form.get("username").lower())
 
     #Check for the autheticity of Password and Username Supplied
     try:
