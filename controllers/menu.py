@@ -143,19 +143,19 @@ def single_view_menu_handler(id, request, database):
 
 def order_handler(request, database):
     if request.method == "POST":
-        res = request.get_json()
+        req = request.get_json()
         if session.get("username"):
-            menu = database.execute("SELECT * FROM menu WHERE id = :id ", id = res["menu_id"])
+            menu = database.execute("SELECT * FROM menu WHERE id = :id ", id = req["menu_id"])
             vendor = menu[0]["vendor"]
             price = int(menu[0]["price"])
             menu_name = menu[0]["name"]
-            total_cost = int(res["quantity"]) * menu[0]["price"]
+            total_cost = int(req["quantity"]) * menu[0]["price"]
             user = database.execute("SELECT balance FROM users WHERE username = :user ", user = session["username"])
             user_balance = user[0]["balance"]
             if user_balance < total_cost:
                 return {"res": "insufficient"}
             else:
-                qty = int(res["quantity"])
+                qty = int(req["quantity"])
                 database.execute("UPDATE users SET balance = :new_balance WHERE username = :user ", new_balance = user_balance - total_cost, user = session["username"])
                 
                 #Insert order details into database
@@ -166,9 +166,9 @@ def order_handler(request, database):
                 #Insert transaction details into database
                 database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :status, :time_stamp)", 
                                                     username = session["username"], transaction_type = "order", amount = total_cost, description = desc, status = "pending", time_stamp = datetime.now())
-                # if session.get("menu_id"):
-                #     session.pop('menu_id')
-                #     session.pop('qty')
+                if session.get("menu_id"):
+                    session.pop('menu_id')
+                    session.pop('qty')
                 flash("Order was successful and is been processed.", "success")
                 return {"res": "completed"}
 

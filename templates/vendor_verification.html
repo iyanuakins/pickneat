@@ -1,9 +1,71 @@
-{%extends "layout.html" %}
+{%extends "layout2.html" %}
 
 {% block title %}
-    Log In 
+    Vendor Verification 
 {%endblock%}
 
 {% block main %}
-    <p>There was an error</p>
+    {%if not apps %}
+        <div class="card-group mt-5">
+            <div class="card">
+                <div class="card-header bg-success">
+                    <div class="card-title">
+                        <h3 class="font-weight-bolder text-center text-white"> CLEAN SLATE</h3>
+                    </div>
+                </div>
+                <div class="card-body">
+                <p class="card-text text-center font-weight-bold">No Vendor Application submitted.</p>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <table class="table table-striped" id="myTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>S/N</th>
+                    <th>Username</th>
+                    <th>Business Name</th>
+                    <th>Business Address</th>
+                    <th>Business Number</th>
+                    <th colspan="2" class="text-center">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for app in apps %}
+                    <tr>
+                        <td>{{loop.index}}</td>
+                        <td>{{app["username"]}}</td>
+                        <td>{{app["business_name"]}}</td>
+                        <td>{{app["business_address"]}}</td>
+                        <td>{{app["business_number"]}}</td>
+                        <td> 
+                            <form action="/vendor_verification" method="post">
+                                <input type="text" hidden name="username" value="{{app["username"]}}">
+                                <input type="text" hidden name="action" value="accept">
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </form>
+                        </td>
+                        <td> 
+                            <form action="/vendor_verification" method="post">
+                                <input type="text" hidden name="username" value="{{app["username"]}}">
+                                <input type="text" hidden name="action" value="reject">
+                                <button type="submit" class="btn btn-danger">Reject</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+    <script>
+        $(document).ready(function () {
+            $("#myTable").DataTable();
+
+            $("#filter").on("change", function (e) {
+                e.preventDefault();
+                $( "#filter_button" ).click();
+            })
+        });
+    </script>
 {% endblock %}

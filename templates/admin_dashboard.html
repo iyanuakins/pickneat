@@ -5,10 +5,91 @@
 {%endblock%}
 
 {% block main %}
-    <div class="jumbotron-fluid float-left">
-        <div class="container">
-            <h1 class="display-4">Welcome, {{session["username"]}}.</h1>
-            <p class="lead">You are registered as a {{session["user_type"]}}</p>
+<div class="jumbotron-fluid" style="height: 70vh;">
+        <div class="card">
+            <div class="card-header bg-success">
+                <div class="card-title">
+                    <h3 class="font-weight-bolder text-center text-white"> User Registration Profile</h3>
+                </div>
+            </div>
+            <div class="card-body">
+                <!-- <p id="pointSelected"></p> -->
+                <canvas id="myChart" name='width="600" height="400"'></canvas>
+            </div>
         </div>
-    </div>
+</div>
+
+<script>
+    
+        // Global parameters:
+        // do not resize the chart canvas when its container does (keep at 600x400px)
+            Chart.defaults.global.responsive = true;
+        
+        // define the chart data
+        var chartData = {
+            labels : [{% for item in labels %}
+                        "{{item}}",
+                        {% endfor %}],
+            datasets : [{
+                label: '{{ legend }}',
+                fill: true,
+                lineTension: 0.1,
+                backgroundColor: "#a0e5b0",
+                borderColor: "#28a745",
+                borderCapStyle: 'butt',
+                borderDash: [],
+                borderDashOffset: 0.0,
+                borderJoinStyle: 'miter',
+                pointBorderColor: "#27362a",
+                pointBackgroundColor: "#fff",
+                pointBorderWidth: 1,
+                pointHoverRadius: 5,
+                pointHoverBackgroundColor: "#75ca86",
+                pointHoverBorderColor: "#022209",
+                pointHoverBorderWidth: 2,
+                pointRadius: 1,
+                pointHitRadius: 10,
+                data : [{% for item in labels %}
+                            {{values[item]}},
+                        {% endfor %}],
+                spanGaps: false
+            }]
+        }
+        
+        // get chart canvas
+        var holder = document.getElementById("myChart");
+        var ctx = document.getElementById("myChart").getContext("2d");
+    
+        // create the chart using the chart canvas
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: chartData,
+            options: {
+            tooltips: {
+                enabled: true,
+                mode: 'single',
+                callbacks: {
+                label: function(tooltipItems, data) {
+                        return tooltipItems.yLabel +' User(s) registered';
+                        }
+                }
+            },
+            }
+        });
+    
+        // get the text element below the chart
+        // var pointSelected = document.getElementById("pointSelected");
+        // var dataSelected = [
+        //             {% for item in labels %}
+        //                 '{{values[item]}} user registered on {{item}}',
+        //             {% endfor %}
+        //             ];
+
+        // // create a callback function for updating the selected index on the chart
+        // holder.onclick = function(evt){
+        //     var activePoint = myChart.getElementAtEvent(evt);
+        //     pointSelected.innerHTML = 'Transaction Detail: ' + dataSelected[activePoint[0]._index];
+        // };
+    
+    </script>
 {% endblock %}
