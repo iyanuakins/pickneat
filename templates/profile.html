@@ -5,10 +5,13 @@
 {%endblock%}
 
 {% block main %}
-<form action="/profile" method="POST" enctype="multipart/form-data">
+
+    <form action="/profile" method="POST" enctype="multipart/form-data">
+
         <div class="col-lg-10 form-group text-center">
             <img src={{user["user_image"]}} class="img-fluid" alt="Picture Unavailable" style="height: 50vh"/>
         </div>
+
         <div class="form-group">
             <div class="col-lg-10 input-group mb-3">
                 <div class="input-group-prepend">
@@ -17,6 +20,7 @@
                 <textarea class="form-control" name="full_name" rows="1" aria-label="full_name">{{user["full_name"]}}</textarea>
             </div>
         </div>
+
         <div class="form-group">
             <div class="col-lg-10 input-group mb-3">
                 <div class="input-group-prepend">
@@ -24,66 +28,115 @@
                 </div>
                 <input type="text" class="form-control" id="email" name="phone_number" value={{user["phone_number"]}} aria-label="phone_number" aria-describedby="phone_number_prepend">
             </div>
-            <div class="form-group">
-                <div class="col-lg-10 input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="email_prepend">@</span>
-                    </div>
-                    <input type="text" class="form-control" name="email"  value={{user["email"]}} aria-label="email" aria-describedby="email_prepend">
+        </div>
+
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="email_prepend">@</span>
                 </div>
+                <input type="text" class="form-control" name="email"  value={{user["email"]}} aria-label="email" aria-describedby="email_prepend">
             </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-lg-10 input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="username_prepend">Username</span>
+                </div>
+                <input type="text" class="form-control" value={{session["username"]}} aria-label="username" aria-describedby="username_prepend" readonly>
+            </div>
+        </div>
+
+        <div class="form-group col-lg-10 mb-3">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Address</span>
+                </div>
+                <textarea class="form-control" name="address" rows="1" aria-label="Address">{{user["address"]}}</textarea>
+            </div>
+        </div>
+
+        {% if session["user_type"] == "vendor" %}
             <div class="form-group">
                 <div class="col-lg-10 input-group mb-3">
                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="username_prepend">Username</span>
+                        <span class="input-group-text" id="business_name_prepend">Business Name</span>
                     </div>
-                    <input type="text" class="form-control" value={{session["username"]}} aria-label="username" aria-describedby="username_prepend" readonly>
+                    <input type="text" class="form-control" name="business_name" value={{user["business_name"]}} aria-label="business_name" aria-describedby="business_name_prepend">
                 </div>
             </div>
             <div class="form-group col-lg-10 mb-3">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                      <span class="input-group-text">Address</span>
+                        <span class="input-group-text">Buiness Address</span>
                     </div>
-                    <textarea class="form-control" name="address" rows="1" aria-label="Address">{{user["address"]}}</textarea>
-                  </div>
+                    <textarea class="form-control" name="business_address" rows="1" aria-label="Address">{{user["business_address"]}}</textarea>
+                </div>
             </div>
-            {% if session["user_type"] == "vendor" %}
-                <div class="form-group">
-                    <div class="col-lg-10 input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="business_name_prepend">Business Name</span>
-                        </div>
-                        <input type="text" class="form-control" name="business_name" value={{user["business_name"]}} aria-label="business_name" aria-describedby="business_name_prepend">
+            <div class="form-group">
+                <div class="col-lg-10 input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="business_number_prepend">Business Number</span>
                     </div>
+                    <input type="text" class="form-control" name="business_number" value={{user["business_number"]}} aria-label="business_number" aria-describedby="business_number_prepend">
                 </div>
-                <div class="form-group col-lg-10 mb-3">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                          <span class="input-group-text">Buiness Address</span>
-                        </div>
-                        <textarea class="form-control" name="business_address" rows="1" aria-label="Address">{{user["business_address"]}}</textarea>
-                      </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-lg-10 input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="business_number_prepend">Business Number</span>
-                        </div>
-                        <input type="text" class="form-control" name="business_number" value={{user["business_number"]}} aria-label="business_number" aria-describedby="business_number_prepend">
-                    </div>
-                </div>
+            </div>
+        {% endif %}
+
+        <div class="col-lg-10 form-group">
+            <div class="custom-file">
+            <input type="file" class="custom-file-input" name="user_image" id="user_image">
+            <label class="custom-file-label" for="user_image">Change Profile Picture</label>
+            </div>
+        </div> 
+
+        <div id="passwording"> </div>
+
+        <div class="col-lg-10 form-group"> 
+            <button type="submit" class="btn btn-success float-right" >Update Profile</button>
+            <input type="text" id="request" class="btn btn-info float-left" readonly value="Change Password ?" />
+        </div>
+
+    </form>
+
+    <script>
+        $('#request').click(function(){
+            
+            {% if session['user_type'] == 'vendor' %}
+                view = 7
+            {% else %}
+                view = 4
             {% endif %}
-            <div class="col-lg-10 form-group">
-                <div class="custom-file">
-                <input type="file" class="custom-file-input" name="user_image" id="user_image">
-                <label class="custom-file-label" for="user_image">Change Profile Picture</label>
+
+            let length = $('.form-control').serializeArray().length;
+
+            if(length > view)
+            {
+                $('#passwording').empty()
+            }else
+            {
+                $('#passwording').append(`
+                <div class="form-group">
+                    <div class="col-lg-10 input-group mb-3 mt-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="password_prepend">New Password</span>
+                        </div>
+                        <input type="password" class="form-control" value="" name="password" aria-label="password" aria-describedby="password_prepend">
+                    </div>
                 </div>
-            </div> 
+                <div class="form-group">
+                    <div class="col-lg-10 input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="confirmation_prepend">Confirm Password</span>
+                        </div>
+                        <input type="password" class="form-control" value="" name="confirmation" aria-label="confirmation" aria-describedby="confirmation_prepend">
+                    </div>
+                </div>
+                `)
+            }
+        
+        })
+    </script>
 
-    <div class="col-lg-10 form-group">
-        <button type="submit" class="btn btn-success float-right" >Update Profile</button>
-    </div>
-
-</div>
 {% endblock %}
