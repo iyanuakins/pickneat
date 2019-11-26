@@ -289,17 +289,41 @@ def get_information_handler(request, database):
         res = request.get_json()
         user = database.execute("SELECT balance, cart FROM users WHERE username=:username", username = res["username"])
         balance = user[0]["balance"]
-
-
+        print(res['local_menu'])
         try:
-            cart = user[0]['cart'].split('-')
+            cart = f"{user[0]['cart']}{res['local_menu']}".split('-')
             cart_number = []
             for item in cart:
                 menu_id = item.split('.')[0]
                 if not menu_id in cart_number and '.' in item:
                     cart_number.append(menu_id)  
             cart_number = len(cart_number)
+            if res['local_menu']:
+                database.execute("UPDATE users SET cart=:cart WHERE username=:username", cart=f"{user[0]['cart']}{res['local_menu']}", username=res['username'])
         except:
             cart_number = 0
-
         return {"res": "success", "balance": balance, 'cart':f'{cart_number}'}
+
+def funding_handler(request, database):
+
+    user = database.execute("SELECT * FROM users WHERE username = :username", username = session.get("username"))
+
+    if request.method == "POST":
+        data = request.get_json()
+        amount = int(user[0]["balance"])+int(data['amount'])
+        database.execute('UPDATE users SET balance=:bal WHERE username=:user', bal=amount, user=user[0]["username"])
+
+
+        #Insert transaction details into database
+        database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :status, :time_stamp)", 
+                                        username = session["username"], 
+                                        transaction_type = "funding", 
+                                        amount = amount, 
+                                        description = f"Order was Processed Successfully",
+                                        status = "success", 
+                                        time_stamp = datetime.now())
+        return {'amount':amount}
+                                    
+    order = database.execute("SELECT * FROM orders WHERE user = :user AND status='pending'", user = session.get("username"))
+
+    return render_template("funding_page.html", order = order, user = user)

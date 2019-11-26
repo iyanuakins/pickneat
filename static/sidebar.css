@@ -160,7 +160,7 @@
 }
 
 .bg-image-contacts {
-    background-image: url('/static/images/img_contacts.jpg');
+    background: linear-gradient(rgba(22,41,16,0.5),rgba(22,41,16,0.5)), url('/static/images/img_contacts.jpg');
     background-size: cover;
 }
 

@@ -32,10 +32,9 @@ def display_cart_handler(database):
     return render_template('display_cart.html', total=total_cost, cart_menu=cart_menu)
 
 def add_cart_handler(id, request, database):
-    try:
-        quantity = int(request.form["quantity"])
-    except:
-        quantity = 1
+
+    menu_id = id.split('.')[0]
+    quantity = int(id.split('.')[1])
 
     user = database.execute("SELECT * FROM users WHERE username=:username", username=session["username"])[0]
     cart = user['cart']
@@ -43,12 +42,15 @@ def add_cart_handler(id, request, database):
     if user["cart"] == "None":
         cart = '-'
 
-    database.execute("UPDATE users SET cart=:cart WHERE username=:username", username=session["username"], cart=f'{cart}{id}.{quantity}-')
+    print(cart)
+    database.execute("UPDATE users SET cart=:cart WHERE username=:username", username=session["username"], cart=f'{cart}{menu_id}.{quantity}-')
 
-    session["menu_id"] = int(id)
+    session["menu_id"] = int(menu_id)
     session["qty"] = int(quantity)
 
-    menu = database.execute("SELECT * FROM menu WHERE id=:menu_id", menu_id=int(id))[0]
+    print(f'{cart}{menu_id}.{quantity}-')
+
+    menu = database.execute("SELECT * FROM menu WHERE id=:menu_id", menu_id=int(menu_id))[0]
 
     return render_template("preview.html", menu = menu, qty = quantity, user = user, total_cost = menu['price']*quantity, cart=quantity)
 
@@ -149,3 +151,34 @@ def process_cart_handler(request, database):
     #Return to Order Summary
     flash("Order was processed successful.", "success")
     return render_template('cart_summary.html', success=successful_order, failure=failed_order)
+
+
+def display_guest_cart_handler(id, database):
+    cart = {}
+    cart_menu = []
+
+    try:
+        recieved_cart = id.split("-")
+
+        for order in recieved_cart:
+            if "." in order:
+                menu_id = order.split('.')[0]
+                quantity = order.split('.')[1]
+
+                try:
+                    cart[menu_id] += int(quantity)
+                except:
+                    cart[menu_id] = int(quantity)
+
+        total_cost = 0
+        
+        for order in cart:
+            menu = database.execute("SELECT * FROM menu WHERE id=:menu_id", menu_id=order)[0]
+            menu['quantity'] = cart[order]
+            total_cost += int(cart[order])*int(menu['price'])
+            cart_menu.append(menu)
+
+    except:
+        return render_template('display_guest_cart.html', cart_menu={})
+
+    return render_template('display_guest_cart.html', total=total_cost, cart_menu=cart_menu)

@@ -16,7 +16,6 @@
                                 <th>Vendor</th>
                                 <th>Quantity</th>
                                 <th>Unit Price</th>
-                                <th>Preview</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -39,9 +38,6 @@
                                     </td>
                                     <td>
                                         <input type="text" class="form-control" readonly value="{{order['price']}}" name="price" >
-                                    </td>
-                                    <td>
-                                        <img src="{{order['image']}}" style="width:20vw; height:10vw" alt="Cannot Display Food Preview" class="img-fluid">
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -78,8 +74,7 @@
 
     <script>
         $('document').ready(()=>{
-            $('.form-control1').change(function(){
-                if(this.value < 1) this.value=1
+            $('.form-control1').blur(function(){
                 let quantity = $('.form-control1').serializeArray()
                 let price = $('.form-control').serializeArray()
                 let cost = 0

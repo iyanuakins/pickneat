@@ -5,6 +5,7 @@
 {%endblock%}
 
 {% block main %}
+
 <div class="container ">
     <div>
         <a href="/add_menu">
@@ -27,11 +28,11 @@
       {% for menu in menus %}
       <a href="/edit_menu/{{menu['id']}}">
         <div class="col-md-3 col-sm-12 mt-2 mb-3 text-center item item-visible">
-          <div class="card" style="width: 18rem">
+          <div class="card" style="width: 18rem; height:45vh;">
                 <img src={{menu["image"]}}  type="submit" class="card-img-top" alt="Preview Unavailiable">
                 <div class="card-body">
                   <h5 class="card-title">{{menu["name"]}}</h5>
-                  <p class="card-text">{{menu["description"]}}.</p>
+                  <p class="card-text">{{menu["description"] | truncate(60)}}.</p>
                 </div>
             </div>
           </div>

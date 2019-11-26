@@ -24,13 +24,15 @@ def accept_order_handler(id, database):
 
     vendor = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))[0]
 
-    database.execute("UPDATE users SET balance=:balance WHERE username=:username", balance=vendor["balance"]+order["total_cost"], username=session.get("username"))
+    actual_amount = int(order['total_cost'])-(0.2*int(order['total_cost']))
+
+    database.execute("UPDATE users SET balance=:balance WHERE username=:username", balance=vendor["balance"]+actual_amount, username=session.get("username"))
 
     #Insert transaction details into database
     database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :status, :time_stamp)", 
                                         username = session["username"], 
                                         transaction_type = "order", 
-                                        amount = order['total_cost'], 
+                                        amount = actual_amount, 
                                         description = f"Order was Processed Successfully",
                                         status = "confirmed", 
                                         time_stamp = datetime.now())
