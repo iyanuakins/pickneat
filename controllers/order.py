@@ -24,7 +24,7 @@ def accept_order_handler(id, database):
 
     vendor = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))[0]
 
-    actual_amount = int(order['total_cost'])-(0.2*int(order['total_cost']))
+    actual_amount = int(order['total_cost'])-(0.02*int(order['total_cost']))
 
     database.execute("UPDATE users SET balance=:balance WHERE username=:username", balance=vendor["balance"]+actual_amount, username=session.get("username"))
 
