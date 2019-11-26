@@ -289,7 +289,6 @@ def get_information_handler(request, database):
         res = request.get_json()
         user = database.execute("SELECT balance, cart FROM users WHERE username=:username", username = res["username"])
         balance = user[0]["balance"]
-        print(res['local_menu'])
         try:
             cart = f"{user[0]['cart']}{res['local_menu']}".split('-')
             cart_number = []
@@ -319,7 +318,7 @@ def funding_handler(request, database):
                                         username = session["username"], 
                                         transaction_type = "funding", 
                                         amount = amount, 
-                                        description = f"Order was Processed Successfully",
+                                        description = f"Funded Account Successfully with {amount}",
                                         status = "success", 
                                         time_stamp = datetime.now())
         return {'amount':amount}
