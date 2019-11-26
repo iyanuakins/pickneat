@@ -38,7 +38,7 @@
         <div class="input-group-prepend">
           <span class="input-group-text">₦</span>
         </div>
-        <input id="fund_wallet" type="text" class="form-control" placeholder="Amount(to the nearest Naira)" aria-label="Amount (to the nearest Naira)">
+        <input id="fund_wallet" type="text" class="form-control" maxlength=5 pattern="[^a-zA-Z]" placeholder="Amount(to the nearest Naira)" aria-label="Amount (to the nearest Naira)">
         <div class="input-group-append">
           <span class="input-group-text">.00</span>
         </div>
@@ -80,6 +80,7 @@
                 dataType: "json",
                 success: function(response){
                   alert('Your New Account Balance is '+ response['amount'] );
+                  window.location='/dashboard'
                 }
               })
             },

@@ -140,7 +140,6 @@ def single_view_menu_handler(id, request, database):
         user = database.execute("SELECT business_name, business_address, user_image FROM users WHERE username = :vendor ", vendor = vendor)
         return render_template("single_menu.html", menu = menu[0], vendor = user[0])
 
-
 def order_handler(request, database):
     if request.method == "POST":
         req = request.get_json()

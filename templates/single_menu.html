@@ -42,7 +42,11 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <a href="/add_cart/{{menu['id']}}" class="float-left" ><input type="button" value="Add to Cart" class="btn btn-info"></a>
+                                    {% if session['username'] %}
+                                    <input type="button" id="quantity" onClick="add_cart({{menu['id']}})" value="Add to Cart" class="btn btn-info float-left">
+                                    {% else %}
+                                    <input type="button" onClick="add_guest_cart({{menu['id']}})" value="Add to Cart" class="btn btn-info float-left">                                
+                                    {% endif %}
                                     <input type="submit" value="Preview order" class="btn btn-success float-right">
                                 </div>
                             </form>
@@ -82,5 +86,17 @@
             });
             
         });
+                function add_cart(id){
+                  quantity = $('#qty').val()
+                window.location = `/add_cart/${id}.${quantity}`
+                }
+                function add_guest_cart(id){
+                    let cart = localStorage['cart'] ? localStorage['cart'] : '';
+                    quantity = $('#qty').val();
+                    
+                    newCart = `${cart}${id}.${quantity}-`;
+                    localStorage.setItem('cart', newCart);
+                    window.location = '/browse'
+                  }
     </script>
 {% endblock %}
