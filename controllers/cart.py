@@ -42,13 +42,10 @@ def add_cart_handler(id, request, database):
     if user["cart"] == "None":
         cart = '-'
 
-    print(cart)
     database.execute("UPDATE users SET cart=:cart WHERE username=:username", username=session["username"], cart=f'{cart}{menu_id}.{quantity}-')
 
     session["menu_id"] = int(menu_id)
     session["qty"] = int(quantity)
-
-    print(f'{cart}{menu_id}.{quantity}-')
 
     menu = database.execute("SELECT * FROM menu WHERE id=:menu_id", menu_id=int(menu_id))[0]
 
