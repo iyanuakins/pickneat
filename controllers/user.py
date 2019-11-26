@@ -317,8 +317,8 @@ def funding_handler(request, database):
         database.execute("INSERT INTO transactions (username, transaction_type, amount, description, status, time_stamp) VALUES ( :username, :transaction_type, :amount, :description, :status, :time_stamp)", 
                                         username = session["username"], 
                                         transaction_type = "funding", 
-                                        amount = amount, 
-                                        description = f"Funded Account Successfully with {amount}",
+                                        amount = data['amount'], 
+                                        description = f"Funded Account Successfully with {data['amount']}",
                                         status = "success", 
                                         time_stamp = datetime.now())
         return {'amount':amount}
