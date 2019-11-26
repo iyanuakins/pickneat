@@ -5,37 +5,90 @@
 {%endblock%}
 
 {% block main %}
-<div class="container mb-3">
-  <div>
-    <a href="/add_menu">
-      <button type="submit" class="btn btn-info btn-block">Add New Menu</button>
-    </a>
-  </div>
-  {%if not menus %}
-    <div class="card-group mt-5">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title">No Preview</h5>
-          <p class="card-text">Upload menu to manage.</p>
+
+<div class="container ">
+    <div>
+        <a href="/add_menu">
+          <button type="submit" class="btn btn-info btn-block">Add New Menu</button>
+        </a>
+    </div>
+
+    {%if not menus %}
+      <div class="card-group mt-5">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">No Preview</h5>
+            <p class="card-text">Upload menu to manage.</p>
+          </div>
         </div>
       </div>
-    </div>
     {% endif %}
-    <div class="row">
-        {% for menu in menus %}
-        <div class="col-lg-4 col-sm-12 mt-2 mb-3 text-center">
-          <a href="/edit_menu/{{menu['id']}}">
-          <div class="card" style="width: 18rem">
+
+    <div class="row items-container mt-5">
+      {% for menu in menus %}
+      <a href="/edit_menu/{{menu['id']}}">
+        <div class="col-md-3 col-sm-12 mt-2 mb-3 text-center item item-visible">
+          <div class="card" style="width: 18rem; height:45vh;">
                 <img src={{menu["image"]}}  type="submit" class="card-img-top" alt="Preview Unavailiable">
                 <div class="card-body">
                   <h5 class="card-title">{{menu["name"]}}</h5>
-                  <p class="card-text">{{menu["description"]}}.</p>
+                  <p class="card-text">{{menu["description"] | truncate(60)}}.</p>
                 </div>
             </div>
-          </a>
           </div>
-        {% endfor %}
+        </a>
+      {% endfor %}
     </div>
-    
+    <div class="row">
+      <div class="pagination-indicator"></div> 
+      <ul class="pagination-container"></ul>
+    </div>
 </div>
+
+  <script>
+        (function($){
+
+      // Initiate the paginator on the .items-container element.
+      var paginator = new $('.items-container').joldPaginator({
+          'perPage': 6,
+          'items': '.item',
+          'paginator': '.pagination-container',
+          'indicator': {
+              'selector': '.pagination-indicator',
+              'text': 'Showing item {start}-{end} of {total}',
+          }
+      });
+
+
+      // Toggle items
+      $('body').on('change', '.js-toggle-items', function(e) {
+        e.preventDefault();
+
+          var checked = this.checked;
+
+          $('.items-container').find('.item')
+              .removeClass('item-hidden')
+              .addClass('item-visible');
+
+          // Include historical reports (invalid)
+          if ( checked == true ) {
+              $('.items-container').find('.item-toggleable')
+                  .removeClass('item-hidden')
+                  .addClass('item-visible');
+          }
+
+          // Exclude historical reports (invalid)
+          if ( checked == false ) {
+              $('.items-container').find('.item-toggleable')
+                  .removeClass('item-visible')
+                  .addClass('item-hidden');
+          }
+
+          // Reset the paginator
+          paginator.init();
+
+      });
+
+  })(jQuery);
+  </script>
 {% endblock %}

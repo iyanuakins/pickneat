@@ -80,6 +80,7 @@
                 dataType: "json",
                 success: function(response){
                   alert('Your New Account Balance is '+ response['amount'] );
+                  window.location = '/dashboard'
                 }
               })
             },

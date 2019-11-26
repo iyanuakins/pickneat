@@ -4,12 +4,13 @@ from controllers.auth import login_handler,register_handler, username_check_hand
 from controllers.admin import user_management_handler, user_view_handler, app_management_handler, transaction_log_handler, order_log_handler, \
                              menu_log_handler, admin_dashboard_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler, withdrawal_handler, switch_vendor_view, \
-                        login_required, logout_required, admin_route_guard, vendor_route_guard, get_information_handler, forgot_password_handler
+                        login_required, logout_required, admin_route_guard, vendor_route_guard, get_information_handler, forgot_password_handler, \
+                            funding_handler
 from controllers.log import transaction_history_handler, order_history_handler
 from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler, add_menu_handler, \
                       view_menu_handler, single_view_menu_handler, order_handler, order_preview_handler
 from controllers.order import manage_order_handler,  manage_single_order_handler, accept_order_handler, manage_order_handler, cancel_order_handler
-from controllers.cart import add_cart_handler, delete_cart_handler, display_cart_handler, clear_cart_handler, process_cart_handler
+from controllers.cart import add_cart_handler, delete_cart_handler, display_cart_handler, clear_cart_handler, process_cart_handler, display_guest_cart_handler
 from controllers.history import history_chart_handler
 
 def router(app=0, database=0, id=0):
@@ -108,18 +109,7 @@ def router(app=0, database=0, id=0):
     @app.route("/fund", methods=["GET", "POST"])
     @login_required
     def fund():
-        user = database.execute("SELECT * FROM users WHERE username = :username", username = session.get("username"))
-
-        if request.method == "POST":
-            data = request.get_json()
-            amount = int(user[0]["balance"])+int(data['amount'])
-            database.execute('UPDATE users SET balance=:bal WHERE username=:user', bal=amount, user=user[0]["username"])
-            return {'amount':amount}
-
-        order = database.execute("SELECT * FROM orders WHERE user = :user AND status='pending'", user = session.get("username"))
-        # credit = database.execute("UPDATE users SET balance = balance + :funding WHERE username = :username", funding = xxxxx, username 
-        #                                                 = session.get("username"))
-        return render_template("funding_page.html", order = order, user = user)
+        return funding_handler(request, database)
 
     @app.route("/delete_menu/<id>")
     @login_required
@@ -244,3 +234,7 @@ def router(app=0, database=0, id=0):
     @admin_route_guard
     def admin_dashboard():
         return admin_dashboard_handler(request, database)
+
+    @app.route('/display_guest_cart/<id>')
+    def display_guest_cart(id):
+        return display_guest_cart_handler(id, database)
