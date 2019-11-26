@@ -9,11 +9,12 @@ from datetime import datetime
 
 #Vendor application Handler
 def application_handler(request, database):
-    #Handles Authentication of User
-    if not session.get("username"):
-        return redirect("/login")
-        
     if request.method == "GET":
+        #Retrieves User Information from Database
+        user = database.execute("SELECT application FROM users WHERE username=:username", username=session.get("username"))
+        if user[0]["application"] == "pending":
+            flash("You have a pending application under review", "info")
+            return redirect("/dashboard")
         return render_template("vendor_application.html")
 
     if not request.form.get("business_name"):
@@ -36,14 +37,24 @@ def application_handler(request, database):
         
 #User complaint Handler
 def complain_handler(request, database):
-
     #Retrieves User Information from Database
     user = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))
-
     if request.method == "GET":
         return render_template("contact.html", user = user[0])
-    
-    return render_template("dashboard.html")        
+    if not request.form.get("subject"):
+        flash("Must enter message subject", 'warning')
+        return redirect("/contact")
+
+    if not request.form.get("message"):
+        flash("Must enter message", 'warning')
+        return redirect("/contact")
+    #Insert transaction details into database
+    admins = database.execute("SELECT username FROM users WHERE user_type=:user_type", user_type="admin")
+    for admin in admins:
+        database.execute("INSERT INTO messages (sender, receiver, subject, message, status, time_stamp) VALUES ( :username, :receiver, :subject, :message, :status, :time_stamp)", 
+                                            username = session["username"], receiver = admin["username"], subject = request.form.get("subject"), message = request.form.get("message"), status = "unread", time_stamp = datetime.now())
+    flash("Message successfully sent, we will get back to you ASAP", 'success')
+    return redirect("/dashboard")       
 
 #Profile view and route handler
 def profile_handler(request, database):
@@ -325,4 +336,36 @@ def funding_handler(request, database):
                                     
     order = database.execute("SELECT * FROM orders WHERE user = :user AND status='pending'", user = session.get("username"))
 
+
+        return {"res": "success", "balance": balance, 'cart':f'{cart_number}'}
+
+def notification_count_handler(request, database):
+    if request.method == "POST":
+        counts = database.execute("SELECT receiver FROM messages WHERE receiver=:username AND status=:status", username = session["username"], status="unread")
+        if len(counts) > 0:
+            return {"res": "success", "count": len(counts)}
+        return {"res": "success", "count": 0}
+
+
+def notification_handler(request, database):
+    if request.method == "POST":
+        counts = database.execute("SELECT id FROM messages WHERE receiver=:username AND status=:status", username = session["username"], status="unread")
+        if len(counts) > 0:
+            return {"res": "success", "count": len(counts)}
+        return {"res": "success", "count": 0}
+    messages = database.execute("SELECT * FROM messages WHERE receiver=:username AND NOT status=:status", username = session["username"], status="deleted")
+    return render_template("notifications.html", messages = messages)
+
+def read_notification_handler(id, request, database):
+    if request.method == "GET":
+        message = database.execute("SELECT * FROM messages WHERE id=:id", id = id)
+        database.execute("UPDATE messages SET status=:status WHERE id=:id", id = id, status = "read")
+        return {"res": "success", "message": message[0]}
+        
+def del_notification_handler(id, request, database):
+    if request.method == "GET":
+        database.execute("UPDATE messages SET status=:status WHERE id=:id", id = id, status = "deleted")
+        flash("Message successfully deleted","success")
+        return {"res": "success"}
+                                 
     return render_template("funding_page.html", order = order, user = user)

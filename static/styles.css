@@ -196,6 +196,19 @@ a:link {
     min-height: 30.5rem;
     max-height: 30.5rem;
 }
+
+.custom-badge {
+    position: relative;
+    bottom: 7px;
+    right: 4px;
+    padding: 0 3px 0 3px;
+    border-radius: 50%;
+}
+
+.modal-backdrop {
+    z-index: -1 !important;
+  }
+
   /* ------------------------------------------
                 Pagination style
     -------------------------------------------*/

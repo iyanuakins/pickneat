@@ -1,0 +1,114 @@
+{%extends "layout2.html" %}
+
+{% block title %}
+Notifications
+{%endblock%}
+
+{% block main %}
+<div class="container">
+    <table id="table_id" class="table" id="myTable" style="width:100%">
+        <thead class="bg-dark text-white">
+            <tr>
+                <th colspan="2">Subject</th>
+                <th>From</th>
+                <th>Time</th>
+                <th colspan="2" class="text-center"> Actions </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for msg in messages %}
+            {% if msg["status"] == "unread" %}
+            <tr class="bg-light font-weight-bold">
+                <td colspan="2">{{msg["subject"]}}</td>
+                <td>{{msg["sender"]}}</td>
+                <td>{{msg["time_stamp"]}}</td>
+                <td><button value='{{msg["id"]}}' class="btn btn-success read"> Read Notif</button></td>
+                <td><button value='{{msg["id"]}}' class="btn btn-danger del"> Delete Notif</button></td>
+            </tr>
+            {% else %}
+            <tr class="bg-white">
+                <td colspan="2">{{msg["subject"]}}</td>
+                <td>{{msg["sender"]}}</td>
+                <td>{{msg["time_stamp"]}}</td>
+                <td><button value='{{msg["id"]}}' class="btn btn-outline-success read"> Read Notif</button></td>
+                <td><button value='{{msg["id"]}}' class="btn btn-danger del"> Delete Notif</button></td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="singleMsgSub"></h5>
+                <button type="button" id="closeModal2" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                </div>
+                <div class="modal-body">
+                    <p> <span class="font-weight-bold">Time: </span><span id="singleMsgDate"></span></p>
+                    <p> <span class="font-weight-bold">Sender: </span><span id="singleMsgSender"></span></p>
+                    <h3> <span class="font-weight-bold">Message:</span></h3>
+                    <p id="singleMsg"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closeModal" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+      </div>
+              <button type="button" class="btn btn-primary" hidden id="launch" data-toggle="modal" data-target="#exampleModal">Launch</button>
+
+
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#myTable").DataTable();
+
+        $(".read").on("click", function () {
+            let id = this.value
+            $.ajax({
+                type: "get",
+                url: `/read_notif/${id}`,
+                success: function (response) {
+                    if (response["res"] == "success") {
+                        let msg = response["message"]
+                        $("#singleMsgSub").text(msg["subject"]);
+                        $("#singleMsg").text(msg["message"]);
+                        $("#singleMsgSender").text(msg["sender"]);
+                        $("#singleMsgDate").text(msg["time_stamp"]);
+                        $("#launch").click();
+                    }
+                }
+            });
+        });
+
+        $(".del").on("click", function () {
+            let id = this.value
+            $.ajax({
+                type: "get",
+                url: `/del_notif/${id}`,
+                success: function (response) {
+                    if (response["res"] == "success") {
+                        location = "/notification"
+                    }
+                }
+            });
+        });
+
+        $("#closeModal").on("click", function () {
+            location.reload()
+        });
+
+        $("#closeModal2").on("click", function () {
+            location.reload()
+        });
+    });
+</script>
+</div>
+{% endblock %}
