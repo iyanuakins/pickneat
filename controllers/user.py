@@ -314,3 +314,33 @@ def get_information_handler(request, database):
             cart_number = 0
 
         return {"res": "success", "balance": balance, 'cart':f'{cart_number}'}
+
+def notification_count_handler(request, database):
+    if request.method == "POST":
+        counts = database.execute("SELECT receiver FROM messages WHERE receiver=:username AND status=:status", username = session["username"], status="unread")
+        if len(counts) > 0:
+            return {"res": "success", "count": len(counts)}
+        return {"res": "success", "count": 0}
+
+
+def notification_handler(request, database):
+    if request.method == "POST":
+        counts = database.execute("SELECT id FROM messages WHERE receiver=:username AND status=:status", username = session["username"], status="unread")
+        if len(counts) > 0:
+            return {"res": "success", "count": len(counts)}
+        return {"res": "success", "count": 0}
+    messages = database.execute("SELECT * FROM messages WHERE receiver=:username AND NOT status=:status", username = session["username"], status="deleted")
+    return render_template("notifications.html", messages = messages)
+
+def read_notification_handler(id, request, database):
+    if request.method == "GET":
+        message = database.execute("SELECT * FROM messages WHERE id=:id", id = id)
+        database.execute("UPDATE messages SET status=:status WHERE id=:id", id = id, status = "read")
+        return {"res": "success", "message": message[0]}
+        
+def del_notification_handler(id, request, database):
+    if request.method == "GET":
+        database.execute("UPDATE messages SET status=:status WHERE id=:id", id = id, status = "deleted")
+        flash("Message successfully deleted","success")
+        return {"res": "success"}
+        

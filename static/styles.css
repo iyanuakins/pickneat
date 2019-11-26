@@ -204,6 +204,10 @@ a:link {
     padding: 0 3px 0 3px;
     border-radius: 50%;
 }
+
+.modal-backdrop {
+    z-index: -1 !important;
+  }
   /* ------------------------------------------
                 Pagination style
     -------------------------------------------*/
