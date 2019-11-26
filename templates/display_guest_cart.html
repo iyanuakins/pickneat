@@ -74,7 +74,8 @@
 
     <script>
         $('document').ready(()=>{
-            $('.form-control1').blur(function(){
+            $('.form-control1').change(function(){
+                if(this.value < 1) this.value = 1
                 let quantity = $('.form-control1').serializeArray()
                 let price = $('.form-control').serializeArray()
                 let cost = 0
