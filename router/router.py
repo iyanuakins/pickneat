@@ -4,8 +4,8 @@ from controllers.auth import login_handler,register_handler, username_check_hand
 from controllers.admin import user_management_handler, user_view_handler, app_management_handler, transaction_log_handler, order_log_handler, \
                              menu_log_handler, admin_dashboard_handler
 from controllers.user import application_handler, complain_handler, profile_handler, dashboard_handler, withdrawal_handler, switch_vendor_view, \
-                        login_required, logout_required, admin_route_guard, vendor_route_guard, get_information_handler, forgot_password_handler, \
-                            funding_handler
+                        login_required, logout_required, admin_route_guard, vendor_route_guard, get_information_handler, forgot_password_handler,\
+                        notification_count_handler, notification_handler, read_notification_handler, del_notification_handler, funding_handler
 from controllers.log import transaction_history_handler, order_history_handler
 from controllers.menu import menu_handler, edit_menu_handler, delete_menu_handler, add_menu_handler, \
                       view_menu_handler, single_view_menu_handler, order_handler, order_preview_handler
@@ -235,6 +235,26 @@ def router(app=0, database=0, id=0):
     def admin_dashboard():
         return admin_dashboard_handler(request, database)
 
+    @app.route("/notification", methods=["GET", "POST"])
+    @login_required
+    def notifications():
+        return notification_handler(request, database)
+
+    @app.route("/notification_count", methods=["POST"])
+    @login_required
+    def notification_count():
+        return notification_count_handler(request, database)
+
+    @app.route("/del_notif/<int:id>")
+    def del_notification(id):
+        return del_notification_handler(id, request, database)
+
+    @app.route("/read_notif/<int:id>")
+    def read_notification(id):
+        return read_notification_handler(id, request, database)
+
+    @app.route('/display_guest_cart/', defaults={'id': '0.1-'})
     @app.route('/display_guest_cart/<id>')
     def display_guest_cart(id):
         return display_guest_cart_handler(id, database)
+

@@ -8,11 +8,91 @@
 <!-- <div class="container"> -->
     <div class="jumbotron-fluid float-left">
         <div class="container">
-            <h1 class="display-4">Welcome, {{session["username"]}}.</h1>
-            <p class="lead">You are registered as a {{session["user_type"]}}</p>
+            <div class="row">
+                <h1 class="display-4"><span style="color: blue;">Welcome, {{session["username"]}}.</span></h1>
+            </div>
+            <div class="row">
+                    <div class="card mt-5 mb-2">
+                            <div class="card-header bg-success">
+                                <div class="card-title">
+                                    <h3 class="font-weight-bolder text-center text-white"> HOT MEALS!</h3>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    {% for menu in menus %}
+                                    <div class="col-md-3 col-sm-12 mt-2 mb-3 text-center">
+                                    <div class="card menu-card">
+                                        <img src={{menu["image"]}}  type="submit" class="card-img-top menu-card-head" alt="Preview Unavailiable">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{menu["name"]}}</h5>
+                                            <p class="card-text">{{menu["description"] | truncate(70)}}.</p>
+                                            <p class="card-text">Price: &#8358;{{menu["price"]}} <small class="text-danger"><strike>&#8358;{{menu["price"] * 1.5}}</strike></small></p>
+                                        </div>
+                                        <div class="card-footer">
+                                                <p><a href="/order_menu/{{menu['id']}}" class="btn btn-success">Order Menu</a></p>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+            </div>
         </div>
     </div>
+    <!-- <div class="container">
+    <iframe src="https://calendar.google.com/calendar/embed?height=300&amp;wkst=1&amp;bgcolor=%237CB342&amp;ctz=Africa%2FLagos&amp;src=ZW4ubmcjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&amp;color=%231F753C&amp;showPrint=0&amp;showNav=1&amp;showDate=1&amp;mode=MONTH&amp;showTz=0&amp;showTabs=0" style="border-width:0" width="280" height="300" frameborder="0" scrolling="no"></iframe>
+    </div> -->
         
 
 <!-- </div> -->
+
+<!-- <div class="container">
+    <h2 class="" style="color: chartreuse;">Hot Meals</h2>
+    <div class="row">
+        {% for menu in menus %}
+        <a href="/order_menu/{{menu['id']}}"> <div class="col-md-3 col-sm-12 mt-2 mb-3 text-center">
+            <div class="card-body">
+                <div class="card">
+                    <img src={{menu["image"]}}  type="submit" class="card-img-top" alt="Preview Unavailiable">
+                    <div class="card-body">
+                        <h5 class="card-title">{{menu["name"]}}</h5>
+                        <p class="card-text">{{menu["description"]}}.</p>
+                        <p class="card-text">Price: &#8358;{{menu["price"]}} <small class="text-danger"><strike>&#8358;{{menu["price"] * 1.5}}</strike></small></p></a>
+                        <p><a href="/order_menu/{{menu['id']}}" class="btn btn-success">Order Menu</a></p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div> -->
+    
+    <!-- <div class="row">
+        <div class="col-sm-6">
+            <div class="card" style="background: chartreuse;">
+                <div class="card-body">
+                    <h5 class="card-title">Orders</h5>
+                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card" style="background: chartreuse;">
+                <div class="card-body">
+                    <h5 class="card-title">Free Meals</h5>
+                    <p class="card-text">Get a free meal after every 10 orders</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    
+    <!-- <div class="container ">
+        
+</div> -->
+
 {% endblock %}

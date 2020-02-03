@@ -27,7 +27,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="available_prepend">Availiable</span>
                 </div>
-                <input type="text" class="form-control" readonly  value={{user["balance"]*0.98}} aria-label="email" aria-describedby="available_prepend">
+                <input type="text" class="form-control" readonly  value='{{user["balance"]*0.98 // 1}}' aria-label="email" aria-describedby="available_prepend">
             </div>
         </div>
         <div class="form-group">

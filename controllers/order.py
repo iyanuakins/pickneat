@@ -21,10 +21,10 @@ def accept_order_handler(id, database):
         return redirect("/manage_order")
 
     database.execute("UPDATE orders SET status='confirmed' WHERE id=:id", id=int(id))
-
+    buyer = database.execute("SELECT username FROM users WHERE username=:username", username=order["user"])[0]
     vendor = database.execute("SELECT * FROM users WHERE username=:username", username=session.get("username"))[0]
 
-    actual_amount = int(order['total_cost'])-(0.2*int(order['total_cost']))
+    actual_amount = int(order['total_cost'])-(0.02*int(order['total_cost']))
 
     database.execute("UPDATE users SET balance=:balance WHERE username=:username", balance=vendor["balance"]+actual_amount, username=session.get("username"))
 
@@ -36,6 +36,10 @@ def accept_order_handler(id, database):
                                         description = f"Order was Processed Successfully",
                                         status = "confirmed", 
                                         time_stamp = datetime.now())
+    subject = "Notification of order processing"
+    message = f"This is to inform you that your of order has been accepted and is been processed by the vendor.\n Thanks for choosing pick'n'eat."
+    database.execute("INSERT INTO messages (sender, receiver, subject, message, status, time_stamp) VALUES ( :username, :receiver, :subject, :message, :status, :time_stamp)", 
+                                            username = "Admin", receiver = buyer["username"], subject = subject, message = message, status = "unread", time_stamp = datetime.now())
 
     session['balance'] -= order['total_cost']
 
@@ -52,7 +56,6 @@ def cancel_order_handler(id, database):
 
     database.execute("UPDATE orders SET status='cancelled' WHERE id=:id", id=int(id))
     buyer = database.execute("SELECT * FROM users WHERE username=:username", username=order["user"])[0]
-
     database.execute("UPDATE users SET balance=:balance WHERE username=:username", balance=buyer["balance"]+order["total_cost"], username=buyer["username"])
 
     #Insert transaction details into database
@@ -63,6 +66,9 @@ def cancel_order_handler(id, database):
                                         description = f"Order for meal cancelled by the Vendor",
                                         status = "cancelled", 
                                         time_stamp = datetime.now())
-
+    subject = "Notification of order cancellation"
+    message = f"This is to inform you that your of order has been cancelled by the vendor.\n A sum of {order['total_cost']} naira has been credited in to your wallet as refund.\n We regret all inconvinences.\n Thanks for choosing pick'n'eat."
+    database.execute("INSERT INTO messages (sender, receiver, subject, message, status, time_stamp) VALUES ( :username, :receiver, :subject, :message, :status, :time_stamp)", 
+                                            username = "Admin", receiver = buyer["username"], subject = subject, message = message, status = "unread", time_stamp = datetime.now())
     flash("Order Cancelled Successfully", 'warning')
     return redirect("/manage_order")
