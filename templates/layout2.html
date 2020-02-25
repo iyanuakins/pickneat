@@ -146,17 +146,24 @@
                         }
                     })
 
+                    let local_menu = (localStorage['cart']) ? localStorage['cart'] : "";
+                    let username =  "{{session['username']}}"
+    
                      /* Retrieving information about Current User */
-                    $.ajax({
+                     $.ajax({
                         type: "post",
                         url: "/get_information",
                         contentType: "application/json; charset=utf-8",
-                        data : JSON.stringify({username: "{{session["username"]}}"}),
+                        data : JSON.stringify({
+                            username,
+                            local_menu,
+                        }),
                         dataType: "json",
                         success: function (response) {
                             if (response["res"] == "success"){
-                                $("#cart").append(`${response["cart"]}`)
-                                $("#balance").html(`Acc Balance: &#8358;${response["balance"]}`)
+                                $("#cart").html(response['cart']);
+                                $("#balance").html(`Acc Balance: &#8358;${response["balance"]}`);
+                                localStorage.clear();
                             }
                         }
                     });

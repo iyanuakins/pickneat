@@ -253,6 +253,7 @@ def router(app=0, database=0, id=0):
     def read_notification(id):
         return read_notification_handler(id, request, database)
 
+    @app.route('/display_guest_cart/', defaults={'id': '0.1-'})
     @app.route('/display_guest_cart/<id>')
     def display_guest_cart(id):
         return display_guest_cart_handler(id, database)

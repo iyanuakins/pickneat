@@ -176,6 +176,6 @@ def display_guest_cart_handler(id, database):
             cart_menu.append(menu)
 
     except:
-        return render_template('display_guest_cart.html', cart_menu={})
+        return render_template('display_guest_cart.html', cart_menu={}, total=0)
 
     return render_template('display_guest_cart.html', total=total_cost, cart_menu=cart_menu)

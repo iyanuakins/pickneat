@@ -190,6 +190,7 @@ a:link {
 
 .menu-card-head{
     max-height: 13.5rem;
+    min-height: 13.5rem;
 }
 
 .menu-card{

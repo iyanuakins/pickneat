@@ -181,7 +181,8 @@ def dashboard_handler(database):
 
     #Renders Buyer DashBoard
     if user_type == "user" or user_view == "user":
-        return render_template("dashboard.html", user=userdetail)
+        menu = database.execute('SELECT * FROM menu WHERE status="available" ORDER BY random() LIMIT 4;')
+        return render_template("dashboard.html", user=userdetail, menus=menu)
     
     session.clear()
     return redirect("/login")
@@ -335,9 +336,8 @@ def funding_handler(request, database):
         return {'amount':amount}
                                     
     order = database.execute("SELECT * FROM orders WHERE user = :user AND status='pending'", user = session.get("username"))
+    return render_template("funding_page.html", order = order, user = user)
 
-
-        return {"res": "success", "balance": balance, 'cart':f'{cart_number}'}
 
 def notification_count_handler(request, database):
     if request.method == "POST":
