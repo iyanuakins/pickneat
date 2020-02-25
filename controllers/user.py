@@ -336,8 +336,8 @@ def funding_handler(request, database):
         return {'amount':amount}
                                     
     order = database.execute("SELECT * FROM orders WHERE user = :user AND status='pending'", user = session.get("username"))
-
     return render_template("funding_page.html", order = order, user = user)
+
 
 def notification_count_handler(request, database):
     if request.method == "POST":

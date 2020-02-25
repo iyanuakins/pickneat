@@ -161,9 +161,9 @@
                         dataType: "json",
                         success: function (response) {
                             if (response["res"] == "success"){
-                                $("#cart").html(response['cart'])
-                                $("#balance").html(`Acc Balance: &#8358;${response["balance"]}`)
-                                localStorage.clear()
+                                $("#cart").html(response['cart']);
+                                $("#balance").html(`Acc Balance: &#8358;${response["balance"]}`);
+                                localStorage.clear();
                             }
                         }
                     });
